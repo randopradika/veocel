@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+  VEOCEL design tokens, read off the home + beauty/skincare mockups.
+  Everything downstream references these — change a value here, not in a component.
+*/
+@theme {
+  /* Brand blues. `brand` is the heading/link blue that carries the whole site. */
+  --color-brand-50: #f2f9fd;
+  --color-brand-100: #ddeffa;
+  --color-brand-200: #bfe2f5;
+  --color-brand-300: #93cdee;
+  --color-brand-400: #58ade1;
+  --color-brand-500: #2a8bcd;
+  --color-brand: #1a70b8;
+  --color-brand-700: #145b96;
+  --color-brand-800: #10476f;
+
+  /* Neutrals. Copy is warm-grey, never pure black. */
+  --color-ink: #2b2b2b;
+  --color-ink-muted: #6f7276;
+  --color-ink-faint: #9ea2a7;
+  --color-hairline: #e4e7ea;
+  --color-canvas: #ffffff;
+
+  /* The site is set in a rounded geometric sans, all-lowercase headings. */
+  --font-sans: var(--font-nunito-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-nunito), var(--font-nunito-sans), sans-serif;
+
+  /* Display scale — the mockups jump hard from body copy to headline. */
+  --text-display: 5.5rem;
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: 3rem;
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h2: 2.25rem;
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h3: 1.375rem;
+  --text-h3--line-height: 1.25;
+
+  /* Generous corners on every card. */
+  --radius-card: 0.875rem;
+  --radius-panel: 1.25rem;
+
+  /* Vertical rhythm between blocks — the layout is mostly whitespace. */
+  --spacing-section: 7.5rem;
+  --spacing-section-sm: 4.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+    Headings use the display face. Casing is deliberately NOT forced here:
+    headings are written lowercase in Storyblok, and a blanket
+    `text-transform: lowercase` would also flatten "VEOCEL™" to "veocel™".
+  */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    background: var(--color-brand-200);
+    color: var(--color-brand-800);
+  }
+}
+
+@layer utilities {
+  /* Fluid headline used by the hero so "cellulosics" never wraps. */
+  .text-display-fluid {
+    font-size: clamp(2.75rem, 11vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  /* Label plates sit on photography; a soft scrim keeps them legible. */
+  .card-scrim {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.55) 0%,
+      rgb(0 0 0 / 0.25) 40%,
+      rgb(0 0 0 / 0) 75%
+    );
+  }
+
+  .animate-marquee {
+    animation: marquee 32s linear infinite;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+}

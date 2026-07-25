@@ -1,0 +1,467 @@
+{
+  "components": [
+    {
+      "name": "page",
+      "display_name": "Page",
+      "is_root": true,
+      "is_nestable": false,
+      "schema": {
+        "body": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": [
+            "hero",
+            "page_hero",
+            "intro_section",
+            "text_columns",
+            "category_grid",
+            "product_grid",
+            "process_row",
+            "image_banner",
+            "feature_split",
+            "feature_accordion",
+            "explore_tabs",
+            "news_list",
+            "brand_strip"
+          ]
+        },
+        "seo_title": {
+          "type": "text",
+          "description": "Used verbatim as the browser title. Include the brand — nothing is appended."
+        },
+        "seo_description": { "type": "textarea", "max_length": 160 }
+      }
+    },
+
+    {
+      "name": "config",
+      "display_name": "Site configuration",
+      "is_root": true,
+      "is_nestable": false,
+      "description": "Header, newsletter band and footer for the whole site. Must live at the slug 'config'.",
+      "schema": {
+        "main_nav": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["nav_item"]
+        },
+        "utility_nav": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["nav_item"],
+          "maximum": 4
+        },
+        "newsletter_heading": { "type": "text" },
+        "newsletter_placeholder": { "type": "text" },
+        "newsletter_action_url": {
+          "type": "text",
+          "description": "Your email provider's form endpoint. Leave empty and the signup field stays disabled rather than discarding addresses."
+        },
+        "social_heading": { "type": "text" },
+        "socials": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["social_link"]
+        },
+        "footer_tagline": { "type": "text" },
+        "footer_columns": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["footer_column"],
+          "maximum": 4
+        },
+        "copyright": { "type": "text" },
+        "legal_links": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["nav_item"]
+        }
+      }
+    },
+
+    {
+      "name": "nav_item",
+      "display_name": "Navigation item",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "label": { "type": "text", "required": true },
+        "link": { "type": "multilink" },
+        "children": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["nav_item"]
+        }
+      }
+    },
+
+    {
+      "name": "footer_column",
+      "display_name": "Footer column",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text" },
+        "links": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["nav_item"]
+        }
+      }
+    },
+
+    {
+      "name": "social_link",
+      "display_name": "Social link",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "platform": {
+          "type": "option",
+          "required": true,
+          "options": [
+            { "name": "LinkedIn", "value": "linkedin" },
+            { "name": "Instagram", "value": "instagram" },
+            { "name": "YouTube", "value": "youtube" },
+            { "name": "Facebook", "value": "facebook" },
+            { "name": "X", "value": "x" }
+          ],
+          "default_value": "linkedin"
+        },
+        "link": { "type": "multilink" }
+      }
+    },
+
+    {
+      "name": "hero",
+      "display_name": "Hero",
+      "is_root": false,
+      "is_nestable": true,
+      "description": "Full-bleed opening hero with a very large headline. One per page, first in the body.",
+      "schema": {
+        "eyebrow": { "type": "text" },
+        "headline": { "type": "text", "required": true },
+        "subline": { "type": "text" },
+        "background_image": { "type": "asset", "filetypes": ["images"] },
+        "scroll_hint": { "type": "text" }
+      }
+    },
+
+    {
+      "name": "intro_section",
+      "display_name": "Intro section",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "heading": { "type": "text" },
+        "body": { "type": "textarea" },
+        "layout": {
+          "type": "option",
+          "options": [
+            { "name": "Heading left, copy right", "value": "split" },
+            { "name": "Stacked", "value": "stacked" }
+          ],
+          "default_value": "split"
+        },
+        "align": {
+          "type": "option",
+          "description": "Applies to the stacked layout only.",
+          "options": [
+            { "name": "Left", "value": "left" },
+            { "name": "Centre", "value": "center" },
+            { "name": "Right", "value": "right" }
+          ],
+          "default_value": "left"
+        }
+      }
+    },
+
+    {
+      "name": "category_grid",
+      "display_name": "Category grid",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "columns": {
+          "type": "option",
+          "options": [
+            { "name": "Two", "value": "2" },
+            { "name": "Three", "value": "3" },
+            { "name": "Four", "value": "4" }
+          ],
+          "default_value": "2"
+        },
+        "items": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["category_card"],
+          "maximum": 8
+        }
+      }
+    },
+
+    {
+      "name": "category_card",
+      "display_name": "Category card",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "kicker": { "type": "text" },
+        "title": { "type": "text", "required": true },
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "link": { "type": "multilink" }
+      }
+    },
+
+    {
+      "name": "process_row",
+      "display_name": "Process row",
+      "is_root": false,
+      "is_nestable": true,
+      "description": "Statement heading over a row of lifecycle steps.",
+      "schema": {
+        "heading": { "type": "text" },
+        "align": {
+          "type": "option",
+          "options": [
+            { "name": "Left", "value": "left" },
+            { "name": "Centre", "value": "center" },
+            { "name": "Right", "value": "right" }
+          ],
+          "default_value": "center"
+        },
+        "steps": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["process_step"],
+          "maximum": 6
+        }
+      }
+    },
+
+    {
+      "name": "process_step",
+      "display_name": "Process step",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text", "required": true },
+        "description": { "type": "textarea" },
+        "image": { "type": "asset", "filetypes": ["images"] }
+      }
+    },
+
+    {
+      "name": "image_banner",
+      "display_name": "Image banner",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "title": { "type": "text" },
+        "subtitle": { "type": "textarea" },
+        "link_label": { "type": "text" },
+        "link": { "type": "multilink" },
+        "height": {
+          "type": "option",
+          "options": [
+            { "name": "Medium", "value": "medium" },
+            { "name": "Tall", "value": "tall" }
+          ],
+          "default_value": "medium"
+        }
+      }
+    },
+
+    {
+      "name": "explore_tabs",
+      "display_name": "Explore cards",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "heading": { "type": "text" },
+        "tabs": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["explore_tab"],
+          "maximum": 4
+        }
+      }
+    },
+
+    {
+      "name": "explore_tab",
+      "display_name": "Explore card",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text", "required": true },
+        "description": { "type": "textarea" },
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "link": { "type": "multilink" }
+      }
+    },
+
+    {
+      "name": "news_list",
+      "display_name": "News list",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "heading": { "type": "text" },
+        "intro": { "type": "textarea" },
+        "items": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["news_item"]
+        }
+      }
+    },
+
+    {
+      "name": "news_item",
+      "display_name": "News item",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "category": { "type": "text" },
+        "date": { "type": "datetime", "disable_time": true },
+        "title": { "type": "text", "required": true },
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "link": { "type": "multilink" }
+      }
+    },
+
+    {
+      "name": "page_hero",
+      "display_name": "Page hero",
+      "is_root": false,
+      "is_nestable": true,
+      "description": "Shorter hero for category pages. Choose 'Dark' only when a hero image is set.",
+      "schema": {
+        "title": { "type": "text", "required": true },
+        "subtitle": { "type": "textarea" },
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "theme": {
+          "type": "option",
+          "options": [
+            { "name": "Dark — white type over photography", "value": "dark" },
+            { "name": "Light — brand type on a tint", "value": "light" }
+          ],
+          "default_value": "dark"
+        }
+      }
+    },
+
+    {
+      "name": "text_columns",
+      "display_name": "Text columns",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "heading": { "type": "text" },
+        "body": { "type": "textarea" },
+        "align": {
+          "type": "option",
+          "options": [
+            { "name": "Heading left, copy right", "value": "split" },
+            { "name": "Centred heading, copy right", "value": "center" }
+          ],
+          "default_value": "split"
+        }
+      }
+    },
+
+    {
+      "name": "product_grid",
+      "display_name": "Product grid",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "heading": { "type": "text" },
+        "intro": { "type": "textarea" },
+        "items": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["product_card"],
+          "maximum": 6
+        }
+      }
+    },
+
+    {
+      "name": "product_card",
+      "display_name": "Product card",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text", "required": true },
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "link": { "type": "multilink" }
+      }
+    },
+
+    {
+      "name": "feature_split",
+      "display_name": "Feature split",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "image": { "type": "asset", "filetypes": ["images"] },
+        "icon": { "type": "asset", "filetypes": ["images"] },
+        "heading": { "type": "text" },
+        "body": { "type": "textarea" },
+        "media_position": {
+          "type": "option",
+          "options": [
+            { "name": "Image left", "value": "left" },
+            { "name": "Image right", "value": "right" }
+          ],
+          "default_value": "left"
+        }
+      }
+    },
+
+    {
+      "name": "feature_accordion",
+      "display_name": "Feature accordion",
+      "is_root": false,
+      "is_nestable": true,
+      "description": "Grid of expandable feature tiles. The first tile opens by default.",
+      "schema": {
+        "heading": { "type": "text" },
+        "items": {
+          "type": "bloks",
+          "restrict_components": true,
+          "component_whitelist": ["accordion_item"]
+        }
+      }
+    },
+
+    {
+      "name": "accordion_item",
+      "display_name": "Feature tile",
+      "is_root": false,
+      "is_nestable": true,
+      "schema": {
+        "title": { "type": "text", "required": true },
+        "body": { "type": "textarea" },
+        "icon": { "type": "asset", "filetypes": ["images"] }
+      }
+    },
+
+    {
+      "name": "brand_strip",
+      "display_name": "Brand strip",
+      "is_root": false,
+      "is_nestable": true,
+      "description": "Scrolling retailer logos. Transparent PNG or SVG works best.",
+      "schema": {
+        "heading": { "type": "text" },
+        "logos": { "type": "multiasset", "filetypes": ["images"] },
+        "link_label": { "type": "text" },
+        "link": { "type": "multilink" }
+      }
+    }
+  ]
+}
