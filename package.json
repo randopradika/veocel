@@ -9,6 +9,7 @@
     "lint": "eslint",
     "storyblok:login": "storyblok login",
     "storyblok:push": "node scripts/push-components.mjs",
+    "storyblok:seed": "node scripts/seed-stories.mjs",
     "storyblok:pull": "storyblok components pull --space"
   },
   "dependencies": {
