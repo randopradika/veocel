@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "storyblok:login": "storyblok login",
+    "storyblok:push": "node scripts/push-components.mjs",
+    "storyblok:pull": "storyblok components pull --space"
   },
   "dependencies": {
     "@storyblok/react": "^7.2.2",
@@ -21,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.11",
+    "storyblok": "^4.21.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -38,6 +38,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Storyblok CLI working directory — a generated copy of storyblok/components.json.
+# The canonical schema is the one under storyblok/. (CLI credentials live in
+# ~/.storyblok, not here.)
+.storyblok
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

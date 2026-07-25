@@ -32,18 +32,33 @@ placeholder in the right aspect ratio.
    cp .env.example .env.local
    ```
 
-2. Push the component library into your space (creates all 24 components with their
-   fields, whitelists and dropdowns):
+2. Authenticate the CLI (opens a browser; the token is stored in `~/.storyblok`):
 
    ```bash
-   npx storyblok login
+   npm run storyblok:login
    ```
+
+3. Push the component library into your space — this creates all 24 components with
+   their fields, whitelists and dropdowns. Space id is under Settings › General:
 
    ```bash
-   npx storyblok components push --file storyblok/components.json --space YOUR_SPACE_ID
+   npm run storyblok:push -- YOUR_SPACE_ID
    ```
 
-3. Create the stories:
+   The CLI only reads components from `.storyblok/components/<spaceId>/components.json`,
+   so [`scripts/push-components.mjs`](scripts/push-components.mjs) copies the
+   canonical `storyblok/components.json` into place first. That file must stay a
+   **top-level JSON array** — the CLI silently skips entries without a `schema` key,
+   so an object wrapper pushes nothing while still reporting success. The script
+   asserts this before running.
+
+   To pull a space's schema back down (overwrites `.storyblok/`, not `storyblok/`):
+
+   ```bash
+   npm run storyblok:pull -- YOUR_SPACE_ID
+   ```
+
+4. Create the stories:
    - `home` — content type **Page**
    - `beauty-skincare` — content type **Page**
    - `config` — content type **Site configuration** (header, footer, newsletter).
@@ -52,13 +67,13 @@ placeholder in the right aspect ratio.
    `lib/mock/pages.ts` and `lib/mock/config.ts` are the reference for what to put in
    each field.
 
-4. Point the space's preview URL at the draft route so the Visual Editor works:
+5. Point the space's preview URL at the draft route so the Visual Editor works:
 
    ```
    https://<your-host>/api/draft?secret=<STORYBLOK_PREVIEW_SECRET>&slug=
    ```
 
-5. Add a webhook on story publish so changes go live immediately instead of waiting
+6. Add a webhook on story publish so changes go live immediately instead of waiting
    out the one-hour revalidate window:
 
    ```
