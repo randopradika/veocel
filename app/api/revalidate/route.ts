@@ -22,12 +22,15 @@ export async function POST(request: NextRequest) {
   }
 
   /*
-   * Next 16 requires a cache-life profile as the second argument. "max" is what
-   * Next itself prescribes for on-demand purges, and it invalidates entries of any
-   * age — correct for a publish webhook, which must never serve the old version.
-   * (`updateTag` is the other option but refuses to run in a route handler.)
+   * The second argument is a cache-life profile describing how stale an entry may
+   * be and still count as fresh. `{ expire: 0 }` means "nothing is fresh", which is
+   * what actually purges the entry — a publish webhook must never serve the
+   * previous version. The named `"max"` profile does NOT work here: it implies a
+   * ~1-year freshness window, so the call succeeds while purging nothing.
+   * (`updateTag` would be the alternative, but it refuses to run outside a Server
+   * Action.)
    */
-  revalidateTag("storyblok", "max");
+  revalidateTag("storyblok", { expire: 0 });
 
   return Response.json({ revalidated: true });
 }
