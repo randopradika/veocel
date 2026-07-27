@@ -62,9 +62,17 @@ async function cdnGet<T>(
     ...params,
   });
 
+  /*
+   * Never cache when:
+   *   - draft — the Visual Editor expects to see every change immediately
+   *   - development — otherwise a publish in Storyblok can take up to an hour to
+   *     appear locally, which makes content work unusable. Production keeps the
+   *     tagged cache, purged on demand by the publish webhook (/api/revalidate).
+   */
+  const bypassCache = draft || process.env.NODE_ENV === "development";
+
   const response = await fetch(`${CDN}/${path}?${query}`, {
-    // Draft content must never be cached — the editor expects every keystroke.
-    ...(draft
+    ...(bypassCache
       ? { cache: "no-store" as const }
       : { next: { revalidate: REVALIDATE_SECONDS, tags: ["storyblok"] } }),
   });
