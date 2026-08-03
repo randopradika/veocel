@@ -231,6 +231,14 @@ export type ProductGridBlok = SbBlock & {
 export type FeatureSplitBlok = SbBlock & {
   component: "feature_split";
   image?: StoryblokAsset;
+  /**
+   * Optional second image, revealed under a magnifying lens on hover — used for a
+   * before/after, e.g. the sheet mask turning translucent when wet.
+   *
+   * The lens appears only when both this and `image` are set; otherwise the block
+   * renders as a plain image.
+   */
+  image_reveal?: StoryblokAsset;
   icon?: StoryblokAsset;
   heading?: string;
   body?: string;

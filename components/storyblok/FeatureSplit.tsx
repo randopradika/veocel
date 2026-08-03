@@ -3,28 +3,46 @@ import { Container, Section } from "@/components/ui/Container";
 import type { FeatureSplitBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { MagnifierImage } from "./MagnifierImage";
 
 /**
  * Half image, half framed copy panel — the "translucency technology" block.
  * `media_position` flips the pair; the image keeps visual order on mobile by
  * always rendering first in the DOM.
+ *
+ * When `image_reveal` is set alongside `image`, the media half becomes an
+ * interactive before/after with a magnifying lens. With only one image it stays a
+ * plain picture, so the block degrades to its original behaviour rather than
+ * shipping a lens with nothing to reveal.
  */
 export function FeatureSplit({ blok }: { blok: FeatureSplitBlok }) {
   const mediaRight = blok.media_position === "right";
+  const mediaClassName = `relative aspect-[4/3] md:aspect-auto md:min-h-[26rem] ${
+    mediaRight ? "md:order-2" : ""
+  }`;
+
+  const comparable = Boolean(blok.image?.filename && blok.image_reveal?.filename);
 
   return (
     <Section {...editable(blok)} spacing="tight">
       <Container>
         <div className="grid overflow-hidden rounded-panel border border-hairline md:grid-cols-2">
-          <BlockImage
-            asset={blok.image}
-            alt={blok.heading ?? ""}
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className={`relative aspect-[4/3] md:aspect-auto md:min-h-[26rem] ${
-              mediaRight ? "md:order-2" : ""
-            }`}
-            placeholderTone="brand"
-          />
+          {comparable ? (
+            <MagnifierImage
+              base={blok.image!}
+              reveal={blok.image_reveal!}
+              alt={blok.heading ?? ""}
+              className={mediaClassName}
+            />
+          ) : (
+            <BlockImage
+              asset={blok.image}
+              alt={blok.heading ?? ""}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className={mediaClassName}
+              placeholderTone="brand"
+            />
+          )}
 
           <div className="flex flex-col items-center justify-center gap-5 bg-white px-8 py-14 text-center md:px-14">
             {blok.icon?.filename ? (

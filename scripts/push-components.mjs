@@ -14,7 +14,7 @@
  * `{ "components": [...] }` wrapper would report success while importing nothing.
  */
 import { spawn } from "node:child_process";
-import { copyFile, mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -44,6 +44,17 @@ if (!Array.isArray(components)) {
 
 const targetDir = join(".storyblok", "components", spaceId);
 await mkdir(targetDir, { recursive: true });
+
+/*
+ * Clear stale JSON first. The CLI reads *every* JSON file in this directory, so a
+ * leftover from `storyblok components pull` (which writes alongside, not over)
+ * makes the push abort with "Duplicate components found". This directory is
+ * generated and git-ignored — the canonical schema in `storyblok/` is untouched.
+ */
+for (const file of await readdir(targetDir)) {
+  if (file.endsWith(".json")) await rm(join(targetDir, file));
+}
+
 await copyFile(SOURCE, join(targetDir, "components.json"));
 
 console.log(`Pushing ${components.length} components to space ${spaceId}…`);

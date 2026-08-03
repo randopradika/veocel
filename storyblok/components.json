@@ -620,6 +620,13 @@
           "images"
         ]
       },
+      "image_reveal": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Optional 'after' image. When set, hovering the main image shows a magnifying lens revealing this one; touch and keyboard users toggle the full image instead."
+      },
       "icon": {
         "type": "asset",
         "filetypes": [
