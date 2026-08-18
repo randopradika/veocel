@@ -95,12 +95,6 @@ export const mockConfig: ConfigBlok = {
       title: "applications",
       links: [
         {
-          _uid: "fl-1",
-          component: "nav_item",
-          label: "beauty + skincare",
-          link: { cached_url: "beauty-skincare", linktype: "story" },
-        },
-        {
           _uid: "fl-2",
           component: "nav_item",
           label: "personal + body care",

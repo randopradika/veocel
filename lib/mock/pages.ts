@@ -1,7 +1,7 @@
 import type { PageBlok, SbStory } from "../types";
 
 /**
- * Local stand-ins for the `home` and `beauty-skincare` stories, so both designs
+ * Local stand-ins for the `home` and `fiber-types` stories, so both designs
  * render before a Storyblok space exists. `getStory()` in `lib/storyblok.ts`
  * falls back to these when no access token is configured.
  *
@@ -55,13 +55,6 @@ const home: PageBlok = {
       component: "category_grid",
       columns: "2",
       items: [
-        {
-          _uid: "h-cat-1",
-          component: "category_card",
-          kicker: "with VEOCEL™",
-          title: "beauty + skincare",
-          link: { cached_url: "beauty-skincare", linktype: "story" },
-        },
         {
           _uid: "h-cat-2",
           component: "category_card",
@@ -211,142 +204,6 @@ const home: PageBlok = {
   ],
 };
 
-const beautySkincare: PageBlok = {
-  _uid: "mock-beauty",
-  component: "page",
-  seo_title: "beauty + skincare | VEOCEL™",
-  seo_description:
-    "Tender fibers for premium skincare — sheet masks, cleansing wipes and makeup removal wipes made with VEOCEL™ branded fibers.",
-  body: [
-    {
-      _uid: "b-hero",
-      component: "page_hero",
-      theme: "dark",
-      title: "beauty + skincare",
-      subtitle: "improving your sustainable beauty routine with VEOCEL™",
-    },
-    {
-      _uid: "b-text-1",
-      component: "text_columns",
-      align: "split",
-      heading: "tender fibers, premium skincare",
-      body:
-        "VEOCEL™ branded fibers for beauty applications offer a soft, gentle touch on skin " +
-        "while meeting high standards of quality and sustainability. Botanic origin, smooth " +
-        "fiber surface and high moisture absorption make them a considered choice for face " +
-        "masks and wipes — the kind of everyday product where what touches your skin matters.",
-    },
-    {
-      _uid: "b-text-2",
-      component: "text_columns",
-      align: "center",
-      heading: "personal care and hygiene products",
-      body:
-        "Quality and value-conscious consumers are looking for products that support their " +
-        "everyday routines without compromise. VEOCEL™ branded fibers help brands deliver " +
-        "comfort, performance and a clear sustainability story in a category people reach " +
-        "for every single day.",
-    },
-    {
-      _uid: "b-products",
-      component: "product_grid",
-      items: [
-        {
-          _uid: "b-prod-1",
-          component: "product_card",
-          title: "facial sheet mask",
-          link: { cached_url: "beauty-skincare/facial-sheet-mask", linktype: "story" },
-        },
-        {
-          _uid: "b-prod-2",
-          component: "product_card",
-          title: "facial cleansing wipes",
-          link: { cached_url: "beauty-skincare/facial-cleansing-wipes", linktype: "story" },
-        },
-        {
-          _uid: "b-prod-3",
-          component: "product_card",
-          title: "makeup removal wipes",
-          link: { cached_url: "beauty-skincare/makeup-removal-wipes", linktype: "story" },
-        },
-      ],
-    },
-    {
-      _uid: "b-split",
-      component: "feature_split",
-      media_position: "left",
-      heading: "translucency technology",
-      body:
-        "Our sheet mask material makes VEOCEL™ lyocell fibers become translucent when wet, " +
-        "so the mask visually disappears on the skin. The result is a lighter, more " +
-        "comfortable mask that stays where it is placed — and a clearer view of the skin " +
-        "underneath.",
-    },
-    {
-      _uid: "b-features",
-      component: "feature_accordion",
-      heading: "VEOCEL™ beauty features",
-      items: [
-        {
-          _uid: "b-feat-1",
-          component: "accordion_item",
-          title: "tender touch on skin",
-          body:
-            "The smooth surface of VEOCEL™ branded fibers gives a soft, gentle feel — " +
-            "designed for direct, repeated contact with delicate facial skin.",
-        },
-        {
-          _uid: "b-feat-2",
-          component: "accordion_item",
-          title: "wood based fibers",
-          body:
-            "Derived from wood grown in sustainably managed forests, a renewable raw " +
-            "material rather than a fossil one.",
-        },
-        {
-          _uid: "b-feat-3",
-          component: "accordion_item",
-          title: "clean & safe fibers",
-          body:
-            "Produced to strict standards and certified for skin contact, with no harmful " +
-            "substances added along the way.",
-        },
-        {
-          _uid: "b-feat-4",
-          component: "accordion_item",
-          title: "biodegradable fibers",
-          body:
-            "Certified compostable and biodegradable — the fibers return to nature at the " +
-            "end of their life cycle.",
-        },
-        {
-          _uid: "b-feat-5",
-          component: "accordion_item",
-          title: "responsible production",
-          body:
-            "Made in an environmentally responsible closed-loop process that recovers water " +
-            "and solvent for reuse.",
-        },
-        {
-          _uid: "b-feat-6",
-          component: "accordion_item",
-          title: "fibers w/ climate actions",
-          body:
-            "Part of a portfolio with science-based targets for reducing greenhouse gas " +
-            "emissions across the value chain.",
-        },
-      ],
-    },
-    {
-      _uid: "b-brands",
-      component: "brand_strip",
-      heading: "where to buy",
-      link_label: "view all brands",
-      link: { cached_url: "where-to-buy", linktype: "story" },
-    },
-  ],
-};
-
 /*
  * The fiber types page.
  *
@@ -359,8 +216,10 @@ const fiberTypes: PageBlok = {
   _uid: "mock-fiber-types",
   component: "page",
   seo_title: "VEOCEL™ fibers — lyocell and viscose fiber types",
+  // Storyblok caps seo_description at 160 characters; the API rejects the whole
+  // story on save if this runs over.
   seo_description:
-    "The VEOCEL™ fiber portfolio: lyocell, viscose and viscostar fibers, how they are produced, what they are certified against and which nonwoven applications each one suits.",
+    "The VEOCEL™ fiber portfolio: lyocell, viscose and viscostar — how each is produced, what it is certified against, and which nonwoven applications it suits.",
   body: [
     {
       _uid: "f-hero",
@@ -386,12 +245,6 @@ const fiberTypes: PageBlok = {
           component: "hero_nav_card",
           label: "VEOCEL™ fibers for hygiene",
           link: { cached_url: "intimate-hygiene-care", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-4",
-          component: "hero_nav_card",
-          label: "VEOCEL™ fibers for beauty",
-          link: { cached_url: "beauty-skincare", linktype: "story" },
         },
         {
           _uid: "f-nav-5",
@@ -602,6 +455,5 @@ const fiberTypes: PageBlok = {
 
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
-  "beauty-skincare": story("beauty-skincare", "beauty + skincare", beautySkincare),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
 };

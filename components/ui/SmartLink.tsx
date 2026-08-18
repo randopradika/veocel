@@ -10,7 +10,7 @@ import type { StoryblokLink } from "@/lib/types";
 /**
  * Turns a Storyblok link field into an href.
  *
- * Storyblok stores internal links as `cached_url` ("beauty-skincare"), external
+ * Storyblok stores internal links as `cached_url` ("fiber-types"), external
  * ones as `url`. Returns `null` when the field is empty so callers can render
  * something non-interactive instead of an `<a href="">`.
  */

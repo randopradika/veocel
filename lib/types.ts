@@ -222,7 +222,7 @@ export type NewsListBlok = SbBlock & {
 };
 
 /* ------------------------------------------------------------------ *
- * Category (beauty + skincare) page blocks
+ * Category page blocks
  * ------------------------------------------------------------------ */
 
 export type PageHeroBlok = SbBlock & {
