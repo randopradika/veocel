@@ -44,22 +44,31 @@ export function HeroNavCards({ cards }: { cards: HeroNavCardBlok[] }) {
             <SmartLink
               link={card.link}
               current={current}
-              className={`group flex h-full rounded-[0.9rem] border px-4 py-3.5 text-white transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                current
-                  ? "border-brand bg-brand"
-                  : "border-white/45 hover:border-white hover:bg-white/15"
+              /*
+                Figma "1 Menu Tab" (492:1152): the selected tab is a pale fill
+                with blue type, not a solid blue plate — `bg-[#bae4f4]` and
+                `text-[#4177b5]` there, taken here from the nearest tokens.
+                Hovering previews that same appearance, so the fill means one
+                thing across the strip: the page you are on, or the one you are
+                about to open.
+              */
+              className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                current ? "bg-brand-200 text-brand" : "text-white hover:bg-brand-200 hover:text-brand"
               }`}
             >
               <span {...editable(card)} className="flex flex-1 flex-col justify-between gap-6">
+                {/* Outlined on a plain tab, filled once the tab is selected. */}
                 <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border text-[0.6rem] leading-none ${
-                    current ? "border-white/70" : "border-white/55"
+                  className={`flex h-5 w-5 items-center justify-center rounded-full border text-[0.6rem] leading-none text-white transition-colors duration-200 ${
+                    current
+                      ? "border-brand bg-brand"
+                      : "border-white group-hover:border-brand group-hover:bg-brand"
                   }`}
                   aria-hidden
                 >
                   {index + 1}
                 </span>
-                <span className="text-[0.82rem] leading-snug font-medium">{card.label}</span>
+                <span className="text-[0.95rem] leading-[1.27] font-bold">{card.label}</span>
               </span>
             </SmartLink>
           </li>
