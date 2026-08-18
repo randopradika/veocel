@@ -87,6 +87,20 @@
         ],
         "maximum": 4
       },
+      "search_placeholder": {
+        "type": "text",
+        "description": "Placeholder on the footer search field. The form submits to the /search page."
+      },
+      "parent_logo": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Parent-company mark (Lenzing) shown in the footer. Omitted when empty."
+      },
+      "parent_logo_link": {
+        "type": "multilink"
+      },
       "copyright": {
         "type": "text"
       },
@@ -202,6 +216,30 @@
       },
       "scroll_hint": {
         "type": "text"
+      },
+      "nav_cards": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "hero_nav_card"
+        ],
+        "maximum": 8,
+        "description": "Numbered shortcut cards pinned along the bottom of the hero."
+      }
+    }
+  },
+  {
+    "name": "hero_nav_card",
+    "display_name": "Hero nav card",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "required": true
+      },
+      "link": {
+        "type": "multilink"
       }
     }
   },
@@ -345,6 +383,30 @@
           "process_step"
         ],
         "maximum": 6
+      },
+      "layout": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Ring — circle of steps, copy beside",
+            "value": "ring"
+          },
+          {
+            "name": "Row — horizontal strip under the heading",
+            "value": "row"
+          }
+        ],
+        "default_value": "ring"
+      },
+      "body": {
+        "type": "textarea",
+        "description": "Copy shown beside the ring. Leave a blank line between paragraphs."
+      },
+      "link_label": {
+        "type": "text"
+      },
+      "link": {
+        "type": "multilink"
       }
     }
   },

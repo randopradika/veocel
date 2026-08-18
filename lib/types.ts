@@ -79,6 +79,11 @@ export type ConfigBlok = SbBlock & {
   socials?: SocialLinkBlok[];
   footer_tagline?: string;
   footer_columns?: FooterColumnBlok[];
+  /** Shown on the footer search field. The form posts to the /search page. */
+  search_placeholder?: string;
+  /** Parent-company mark (Lenzing) in the footer. Omitted when unset. */
+  parent_logo?: StoryblokAsset;
+  parent_logo_link?: StoryblokLink;
   copyright?: string;
   legal_links?: NavItemBlok[];
 };
@@ -113,6 +118,14 @@ export type HeroBlok = SbBlock & {
   subline?: string;
   background_image?: StoryblokAsset;
   scroll_hint?: string;
+  /** Numbered shortcut cards pinned along the bottom edge of the hero. */
+  nav_cards?: HeroNavCardBlok[];
+};
+
+export type HeroNavCardBlok = SbBlock & {
+  component: "hero_nav_card";
+  label: string;
+  link?: StoryblokLink;
 };
 
 export type IntroSectionBlok = SbBlock & {
@@ -150,6 +163,15 @@ export type ProcessRowBlok = SbBlock & {
   heading?: string;
   align?: "left" | "center" | "right";
   steps?: ProcessStepBlok[];
+  /**
+   * `ring` arranges the steps evenly around a circle with the copy beside them —
+   * the natural-circularity diagram. `row` is a single horizontal strip.
+   */
+  layout?: "row" | "ring";
+  /** Supporting copy, shown next to the ring. Blank lines start a new paragraph. */
+  body?: string;
+  link_label?: string;
+  link?: StoryblokLink;
 };
 
 export type ImageBannerBlok = SbBlock & {

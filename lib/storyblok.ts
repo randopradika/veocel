@@ -107,6 +107,39 @@ export async function getStory(slug: string): Promise<SbStory<PageBlok> | null> 
   );
 }
 
+/**
+ * Full-text search across pages, backing the footer's search form.
+ *
+ * Storyblok does the matching server-side via `search_term`. Without a token the
+ * local mock is scanned instead, so search still works offline.
+ */
+export async function searchStories(term: string): Promise<SbStory<PageBlok>[]> {
+  const query = term.trim();
+  if (!query) return [];
+
+  if (!isStoryblokConfigured()) {
+    const needle = query.toLowerCase();
+    return Object.values(mockStories).filter((story) =>
+      JSON.stringify(story.content).toLowerCase().includes(needle),
+    );
+  }
+
+  const draft = await isDraft();
+  const result = await cdnGet<{ stories: SbStory<PageBlok>[] }>(
+    "stories",
+    { search_term: query, per_page: "25", content_type: "page" },
+    draft,
+  );
+
+  // A failed search should read as "nothing found", not take the page down.
+  if (!result.ok) {
+    console.error(`[storyblok] search for "${query}" failed with status ${result.status}`);
+    return [];
+  }
+
+  return result.data.stories;
+}
+
 /** Slugs of every published page, for `generateStaticParams`. */
 export async function getAllPageSlugs(): Promise<string[]> {
   if (!isStoryblokConfigured()) {

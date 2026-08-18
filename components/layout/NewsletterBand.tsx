@@ -1,11 +1,11 @@
 import { ArrowMarker } from "@/components/ui/ArrowButton";
-import { Container } from "@/components/ui/Container";
 import { SmartLink } from "@/components/ui/SmartLink";
 import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
 
 /**
- * Pale blue band above the footer: newsletter signup on the left, social links on
- * the right.
+ * Band above the footer, split into two tinted halves: newsletter signup on the
+ * left, social links on the right. Each half centres its own content, and the
+ * tints run edge to edge rather than sitting inside the page gutters.
  *
  * The form posts directly to the email provider's own endpoint
  * (`config.newsletter_action_url`). There is no local API route and no subscriber
@@ -16,68 +16,65 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
   const action = config.newsletter_action_url?.trim();
 
   return (
-    <section className="bg-brand-200/70 text-brand-800" aria-labelledby="newsletter-heading">
-      <Container>
-        <div className="grid gap-10 py-12 md:grid-cols-2 md:gap-16">
-          <div>
-            <h2 id="newsletter-heading" className="text-sm font-semibold">
-              {config.newsletter_heading ?? "newsletter subscription"}
-            </h2>
+    <section className="grid text-brand-800 md:grid-cols-2" aria-labelledby="newsletter-heading">
+      <div className="flex flex-col items-center bg-brand-100 px-6 py-12">
+        <h2 id="newsletter-heading" className="text-sm font-semibold">
+          {config.newsletter_heading ?? "newsletter subscriptions"}
+        </h2>
 
-            <form
-              action={action || undefined}
-              method={action ? "post" : undefined}
-              className="mt-4 flex items-center gap-3 border-b border-brand-800/25 pb-2"
-            >
-              <label htmlFor="newsletter-email" className="sr-only">
-                E-mail address
-              </label>
-              <input
-                id="newsletter-email"
-                type="email"
-                name="EMAIL"
-                required
-                disabled={!action}
-                placeholder={config.newsletter_placeholder ?? "type your e-mail address…"}
-                className="w-full bg-transparent text-sm placeholder:text-brand-800/55 focus:outline-none disabled:cursor-not-allowed"
-              />
-              <button
-                type="submit"
-                disabled={!action}
-                className="group rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-40"
+        <form
+          action={action || undefined}
+          method={action ? "post" : undefined}
+          className="mt-4 flex w-full max-w-sm items-center gap-3 border-b border-brand-800/30 pb-2"
+        >
+          <label htmlFor="newsletter-email" className="sr-only">
+            E-mail address
+          </label>
+          <input
+            id="newsletter-email"
+            type="email"
+            name="EMAIL"
+            required
+            disabled={!action}
+            placeholder={config.newsletter_placeholder ?? "type your e-mail address"}
+            className="w-full bg-transparent text-sm italic placeholder:text-brand-800/55 focus:outline-none disabled:cursor-not-allowed"
+          />
+          <button
+            type="submit"
+            disabled={!action}
+            className="group rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-40"
+          >
+            <span className="sr-only">Subscribe</span>
+            <ArrowMarker tone="brand" size="sm" />
+          </button>
+        </form>
+
+        {!action ? (
+          <p className="mt-2 text-[0.7rem] text-brand-800/60">
+            Signup opens once a provider endpoint is set in the Storyblok config story.
+          </p>
+        ) : null}
+      </div>
+
+      <div className="flex flex-col items-center bg-brand-200 px-6 py-12">
+        <h2 className="text-sm font-semibold">
+          {config.social_heading ?? "follow us on social media"}
+        </h2>
+
+        <ul className="mt-4 flex items-center gap-3">
+          {(config.socials ?? []).map((social) => (
+            <li key={social._uid}>
+              <SmartLink
+                link={social.link}
+                ariaLabel={social.platform}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-white transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
-                <span className="sr-only">Subscribe</span>
-                <ArrowMarker tone="brand" size="sm" />
-              </button>
-            </form>
-
-            {!action ? (
-              <p className="mt-2 text-[0.7rem] text-brand-800/60">
-                Signup opens once a provider endpoint is set in the Storyblok config story.
-              </p>
-            ) : null}
-          </div>
-
-          <div className="md:pl-12">
-            <h2 className="text-sm font-semibold">
-              {config.social_heading ?? "follow us on social media"}
-            </h2>
-            <ul className="mt-4 flex items-center gap-3">
-              {(config.socials ?? []).map((social) => (
-                <li key={social._uid}>
-                  <SmartLink
-                    link={social.link}
-                    ariaLabel={social.platform}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-white transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                  >
-                    <SocialIcon platform={social.platform} />
-                  </SmartLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </Container>
+                <SocialIcon platform={social.platform} />
+              </SmartLink>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }
