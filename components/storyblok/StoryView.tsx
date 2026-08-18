@@ -14,8 +14,8 @@ import { BlockRenderer } from "./BlockRenderer";
  * Shared by `app/page.tsx` (the home story) and `app/[...slug]/page.tsx` so the
  * two routes can't drift apart.
  */
-export async function StoryView({ slug }: { slug: string }) {
-  const story = await getStory(slug);
+export async function StoryView({ slug, locale }: { slug: string; locale?: string }) {
+  const story = await getStory(slug, locale);
   if (!story) notFound();
 
   const { isEnabled: draft } = await draftMode();
@@ -36,8 +36,8 @@ export async function StoryView({ slug }: { slug: string }) {
  * `"%s | VEOCEL™"` template appends a second suffix. Stories with no SEO title
  * fall back to the story name and do go through the template.
  */
-export async function storyMetadata(slug: string): Promise<Metadata> {
-  const story = await getStory(slug);
+export async function storyMetadata(slug: string, locale?: string): Promise<Metadata> {
+  const story = await getStory(slug, locale);
   if (!story) return {};
 
   const seoTitle = story.content.seo_title?.trim();

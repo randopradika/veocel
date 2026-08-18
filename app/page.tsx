@@ -1,15 +1,12 @@
-import { StoryView, storyMetadata } from "@/components/storyblok/StoryView";
+import { redirect } from "next/navigation";
+
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 
 /**
- * Home page — the `home` story in Storyblok.
- *
- * A separate route from the catch-all because Storyblok's root story is addressed
- * by the slug "home" while the site serves it at "/".
+ * Every page lives under a locale prefix, so the bare root sends visitors to the
+ * default language. A redirect rather than a rewrite: one canonical URL per page
+ * keeps the language visible and shareable.
  */
-export function generateMetadata() {
-  return storyMetadata("home");
-}
-
-export default function HomePage() {
-  return <StoryView slug="home" />;
+export default function RootPage() {
+  redirect(`/${DEFAULT_LOCALE}`);
 }

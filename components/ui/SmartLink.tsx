@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
 import type { StoryblokLink } from "@/lib/types";
 
 /**
@@ -32,6 +36,21 @@ function isExternal(href: string): boolean {
   return /^(https?:|mailto:|tel:)/.test(href);
 }
 
+/**
+ * The locale segment of the current URL.
+ *
+ * Read from the pathname rather than passed down: Storyblok links are stored
+ * without a language prefix, and every block that renders one would otherwise
+ * need the locale threaded through it. This is the only reason the component runs
+ * on the client, and it renders nothing but an anchor.
+ */
+function useLocale(): string {
+  const pathname = usePathname() ?? "/";
+  const [, first = ""] = pathname.split("/");
+  // Two-letter segment, optionally with a region ("de", "pt-br").
+  return /^[a-z]{2}(-[a-z]{2})?$/i.test(first) ? first : DEFAULT_LOCALE;
+}
+
 type SmartLinkProps = {
   link?: StoryblokLink;
   children: ReactNode;
@@ -45,6 +64,7 @@ type SmartLinkProps = {
  * when it doesn't — cards stay visually identical either way.
  */
 export function SmartLink({ link, children, className, ariaLabel }: SmartLinkProps) {
+  const locale = useLocale();
   const href = resolveHref(link);
 
   if (!href) {
@@ -67,7 +87,7 @@ export function SmartLink({ link, children, className, ariaLabel }: SmartLinkPro
 
   return (
     <Link
-      href={href}
+      href={localePath(locale, href)}
       className={className}
       aria-label={ariaLabel}
       target={link?.target || undefined}

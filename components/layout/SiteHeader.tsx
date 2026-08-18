@@ -2,33 +2,33 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Container } from "@/components/ui/Container";
-import { resolveHref, SmartLink } from "@/components/ui/SmartLink";
-import type { ConfigBlok } from "@/lib/types";
+import { localePath, splitLocale, type Locale } from "@/lib/i18n";
 
 import { Logo } from "./Logo";
 
 /**
- * Fixed header with two appearances: transparent white type over a dark hero, and
- * solid white with brand type once past it.
+ * Fixed header: the lockup on the left, the language picker on the right.
  *
- * Which one applies is decided by measuring the `[data-hero]` element that `Hero`
- * and `PageHero` mark — no prop threading from the page, and pages without a dark
- * hero simply start solid. Scroll work is throttled to one measurement per frame.
+ * There are no nav links by design — the hero's numbered cards carry navigation,
+ * so the bar stays out of the way of the photography.
+ *
+ * Two appearances: transparent with white type over a dark hero, solid white with
+ * brand type once past it. Which one applies is decided by measuring the
+ * `[data-hero]` element that `Hero` and `PageHero` mark, so no prop threading from
+ * the page and pages without a dark hero simply start solid.
  */
-export function SiteHeader({ config }: { config: ConfigBlok }) {
+export function SiteHeader({
+  locales,
+  locale,
+}: {
+  locales: Locale[];
+  locale: string;
+}) {
   const [overlay, setOverlay] = useState(false);
   const pathname = usePathname();
-
-  /*
-   * The mobile panel records *which* route it was opened on rather than a plain
-   * boolean, so navigating away closes it as a consequence of the route change
-   * instead of needing an effect to reset it.
-   */
-  const [openPath, setOpenPath] = useState<string | null>(null);
-  const menuOpen = openPath === pathname;
 
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>("[data-hero]");
@@ -61,95 +61,163 @@ export function SiteHeader({ config }: { config: ConfigBlok }) {
     };
   }, [pathname]);
 
-  const transparent = overlay && !menuOpen;
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        transparent ? "text-white" : "border-b border-hairline bg-white/95 text-brand backdrop-blur"
+        overlay ? "text-white" : "border-b border-hairline bg-white/95 text-brand backdrop-blur"
       }`}
     >
       <Container className="flex h-16 items-center justify-between gap-6 md:h-20">
         <Link
-          href="/"
+          href={localePath(locale, "")}
           className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
           aria-label="VEOCEL — home"
         >
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
-          {(config.main_nav ?? []).map((item) => (
-            <NavLink key={item._uid} href={resolveHref(item.link)} label={item.label} />
-          ))}
-
-          {(config.utility_nav ?? []).length > 0 ? (
-            <span className="ml-1 flex items-center gap-5 border-l border-current/25 pl-6 text-xs opacity-80">
-              {(config.utility_nav ?? []).map((item) => (
-                <SmartLink
-                  key={item._uid}
-                  link={item.link}
-                  className="transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
-                >
-                  {item.label}
-                </SmartLink>
-              ))}
-            </span>
-          ) : null}
-        </nav>
-
-        <button
-          type="button"
-          onClick={() => setOpenPath(menuOpen ? null : pathname)}
-          aria-expanded={menuOpen}
-          aria-controls="site-menu"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          className="-mr-2 flex h-10 w-10 items-center justify-center rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current md:hidden"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.6}
-            strokeLinecap="round"
-            className="h-6 w-6"
-            aria-hidden
-          >
-            {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 8h16M4 16h16" />}
-          </svg>
-        </button>
+        <LanguagePicker locales={locales} current={locale} overlay={overlay} />
       </Container>
-
-      <div
-        id="site-menu"
-        hidden={!menuOpen}
-        className="border-t border-hairline bg-white text-brand md:hidden"
-      >
-        <Container className="flex flex-col gap-1 py-4">
-          {[...(config.main_nav ?? []), ...(config.utility_nav ?? [])].map((item) => (
-            <SmartLink
-              key={item._uid}
-              link={item.link}
-              className="rounded px-1 py-2.5 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            >
-              {item.label}
-            </SmartLink>
-          ))}
-        </Container>
-      </div>
     </header>
   );
 }
 
-function NavLink({ href, label }: { href: string | null; label: string }) {
-  const className =
-    "text-xs font-semibold transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current";
+/**
+ * Language menu.
+ *
+ * A disclosure button over a list of links, not a `<select>`: each language is a
+ * real URL, so it can be opened in a new tab, bookmarked and crawled. Closes on
+ * Escape and on outside click, returning focus to the button when dismissed by
+ * keyboard.
+ */
+function LanguagePicker({
+  locales,
+  current,
+  overlay,
+}: {
+  locales: Locale[];
+  current: string;
+  overlay: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname() ?? "/";
 
-  if (!href) return <span className={className}>{label}</span>;
+  // The path without its language prefix, so switching keeps you on the same page.
+  const { path } = splitLocale(
+    pathname,
+    locales.map((entry) => entry.code),
+  );
+
+  const active = locales.find((entry) => entry.code === current) ?? locales[0];
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!containerRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      buttonRef.current?.focus();
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  if (locales.length === 0) return null;
 
   return (
-    <Link href={href} className={className}>
-      {label}
-    </Link>
+    <div ref={containerRef} className="relative">
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-controls="language-menu"
+        // A single language still shows the control, so the bar never looks like
+        // it lost something — but there is nothing to choose.
+        disabled={locales.length < 2}
+        className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current disabled:cursor-default ${
+          overlay
+            ? "bg-white/95 text-brand hover:bg-white"
+            : "border border-hairline bg-white text-brand hover:border-brand/40"
+        }`}
+      >
+        <GlobeIcon />
+        <span>{active?.label}</span>
+        {locales.length > 1 ? <ChevronIcon open={open} /> : null}
+      </button>
+
+      <ul
+        id="language-menu"
+        role="menu"
+        hidden={!open}
+        className="absolute right-0 z-10 mt-2 min-w-[10rem] overflow-hidden rounded-xl border border-hairline bg-white py-1 text-brand shadow-lg"
+      >
+        {locales.map((entry) => {
+          const isCurrent = entry.code === current;
+          return (
+            <li key={entry.code} role="none">
+              <Link
+                role="menuitem"
+                href={localePath(entry.code, path)}
+                hrefLang={entry.code}
+                aria-current={isCurrent ? "true" : undefined}
+                onClick={() => setOpen(false)}
+                className={`block px-4 py-2 text-sm transition-colors hover:bg-brand-50 focus-visible:bg-brand-50 focus-visible:outline-none ${
+                  isCurrent ? "font-semibold" : ""
+                }`}
+              >
+                {entry.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function GlobeIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      className="h-4 w-4"
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`h-3.5 w-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+      aria-hidden
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
   );
 }

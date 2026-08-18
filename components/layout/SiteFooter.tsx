@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container } from "@/components/ui/Container";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
 import type { ConfigBlok } from "@/lib/types";
 
 import { Logo } from "./Logo";
@@ -17,7 +18,13 @@ import { Logo } from "./Logo";
  * `footer_columns` still renders when the config story provides them; the current
  * design simply has none.
  */
-export function SiteFooter({ config }: { config: ConfigBlok }) {
+export function SiteFooter({
+  config,
+  locale = DEFAULT_LOCALE,
+}: {
+  config: ConfigBlok;
+  locale?: string;
+}) {
   const columns = config.footer_columns ?? [];
   const legal = config.legal_links ?? [];
 
@@ -26,14 +33,19 @@ export function SiteFooter({ config }: { config: ConfigBlok }) {
       <Container>
         <div className="flex flex-col gap-8 py-12 md:flex-row md:items-center md:justify-between">
           <Link
-            href="/"
+            href={localePath(locale, "")}
             className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
             aria-label="VEOCEL — home"
           >
             <Logo />
           </Link>
 
-          <form action="/search" method="get" role="search" className="flex items-center gap-3">
+          <form
+            action={localePath(locale, "search")}
+            method="get"
+            role="search"
+            className="flex items-center gap-3"
+          >
             <label htmlFor="site-search" className="sr-only">
               Search this site
             </label>

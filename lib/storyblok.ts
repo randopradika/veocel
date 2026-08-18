@@ -1,5 +1,6 @@
 import { draftMode } from "next/headers";
 
+import { DEFAULT_LOCALE, storyblokLanguage } from "./i18n";
 import { mockConfig } from "./mock/config";
 import { mockStories } from "./mock/pages";
 import type { ConfigBlok, PageBlok, SbStory } from "./types";
@@ -85,17 +86,22 @@ async function cdnGet<T>(
  * Fetches a single story by slug. `"home"` for the root page.
  * Returns `null` when the story genuinely does not exist.
  */
-export async function getStory(slug: string): Promise<SbStory<PageBlok> | null> {
+export async function getStory(
+  slug: string,
+  locale: string = DEFAULT_LOCALE,
+): Promise<SbStory<PageBlok> | null> {
   const normalised = slug.replace(/^\/+|\/+$/g, "") || "home";
 
   if (!isStoryblokConfigured()) {
+    // The mock has no translations; every locale sees the same content.
     return mockStories[normalised] ?? null;
   }
 
+  const language = storyblokLanguage(locale);
   const draft = await isDraft();
   const result = await cdnGet<{ story: SbStory<PageBlok> }>(
     `stories/${normalised}`,
-    { resolve_links: "url" },
+    { resolve_links: "url", ...(language ? { language } : {}) },
     draft,
   );
 
@@ -113,7 +119,10 @@ export async function getStory(slug: string): Promise<SbStory<PageBlok> | null> 
  * Storyblok does the matching server-side via `search_term`. Without a token the
  * local mock is scanned instead, so search still works offline.
  */
-export async function searchStories(term: string): Promise<SbStory<PageBlok>[]> {
+export async function searchStories(
+  term: string,
+  locale: string = DEFAULT_LOCALE,
+): Promise<SbStory<PageBlok>[]> {
   const query = term.trim();
   if (!query) return [];
 
@@ -124,10 +133,16 @@ export async function searchStories(term: string): Promise<SbStory<PageBlok>[]> 
     );
   }
 
+  const language = storyblokLanguage(locale);
   const draft = await isDraft();
   const result = await cdnGet<{ stories: SbStory<PageBlok>[] }>(
     "stories",
-    { search_term: query, per_page: "25", content_type: "page" },
+    {
+      search_term: query,
+      per_page: "25",
+      content_type: "page",
+      ...(language ? { language } : {}),
+    },
     draft,
   );
 
@@ -162,14 +177,15 @@ export async function getAllPageSlugs(): Promise<string[]> {
  * Site-wide chrome (navigation, footer, newsletter). Always resolves —
  * a failure here degrades to the local mock rather than breaking every page.
  */
-export async function getConfig(): Promise<ConfigBlok> {
+export async function getConfig(locale: string = DEFAULT_LOCALE): Promise<ConfigBlok> {
   if (!isStoryblokConfigured()) return mockConfig;
 
   try {
+    const language = storyblokLanguage(locale);
     const draft = await isDraft();
     const result = await cdnGet<{ story: SbStory<ConfigBlok> }>(
       `stories/${CONFIG_SLUG}`,
-      {},
+      language ? { language } : {},
       draft,
     );
     if (result.ok) return result.data.story.content;
