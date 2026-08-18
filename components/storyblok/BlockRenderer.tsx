@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import type { SbBlock } from "@/lib/types";
 
+import { BrandDirectory } from "./BrandDirectory";
 import { BrandStrip } from "./BrandStrip";
 import { CategoryGrid } from "./CategoryGrid";
 import { CertificationGrid } from "./CertificationGrid";
@@ -63,6 +64,9 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
   certification_grid: block(CertificationGrid),
   process_diagram: block(ProcessDiagram),
   fiber_portfolio: block(FiberPortfolio),
+
+  // Where to buy
+  brand_directory: block(BrandDirectory),
 };
 
 /** Renders a story's `body` field in order. */

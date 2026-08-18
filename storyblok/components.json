@@ -25,7 +25,8 @@
           "fiber_type_grid",
           "certification_grid",
           "process_diagram",
-          "fiber_portfolio"
+          "fiber_portfolio",
+          "brand_directory"
         ]
       },
       "seo_title": {
@@ -974,6 +975,85 @@
           "portfolio_column"
         ],
         "maximum": 6
+      }
+    }
+  },
+  {
+    "name": "brand_directory",
+    "display_name": "Brand directory",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "\"where to buy\" — brand logos, filterable by category and first letter. The counts on the category buttons are calculated from the brands, not entered.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "intro": {
+        "type": "textarea"
+      },
+      "categories": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "brand_category"
+        ],
+        "description": "An \"all\" button is always shown first; do not add one."
+      },
+      "brands": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "brand_item"
+        ],
+        "maximum": 400
+      }
+    }
+  },
+  {
+    "name": "brand_category",
+    "display_name": "Brand category",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "label": {
+        "type": "text",
+        "required": true,
+        "description": "Shown under the icon. Each brand's Category must match this exactly to be filtered by it."
+      },
+      "icon": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Square line icon, transparent. Falls back to a generic mark when empty."
+      }
+    }
+  },
+  {
+    "name": "brand_item",
+    "display_name": "Brand",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "name": {
+        "type": "text",
+        "required": true,
+        "description": "Also the logo's alt text, and what the A-Z filter groups on. Names not starting with a Latin letter group under #."
+      },
+      "logo": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Transparent PNG or SVG; it sits on white. With no logo the name is shown as text instead."
+      },
+      "category": {
+        "type": "text",
+        "description": "Must match a category's Label exactly. Leave empty and the brand appears only under \"all\"."
+      },
+      "link": {
+        "type": "multilink",
+        "description": "Where to buy. Usually an external URL."
       }
     }
   },

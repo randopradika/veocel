@@ -377,6 +377,35 @@ export type FiberPortfolioBlok = SbBlock & {
   columns?: PortfolioColumnBlok[];
 };
 
+/* ------------------------------------------------------------------ *
+ * Where to buy
+ * ------------------------------------------------------------------ */
+
+export type BrandCategoryBlok = SbBlock & {
+  component: "brand_category";
+  /** Shown under the icon, and matched against each brand's `category`. */
+  label: string;
+  icon?: StoryblokAsset;
+};
+
+export type BrandItemBlok = SbBlock & {
+  component: "brand_item";
+  /** Drives both the alphabet grouping and the logo's alt text. */
+  name: string;
+  logo?: StoryblokAsset;
+  /** Must match a category's `label` to be filterable. Blank shows under "all" only. */
+  category?: string;
+  link?: StoryblokLink;
+};
+
+export type BrandDirectoryBlok = SbBlock & {
+  component: "brand_directory";
+  heading?: string;
+  intro?: string;
+  categories?: BrandCategoryBlok[];
+  brands?: BrandItemBlok[];
+};
+
 /** Every block that can sit directly in a page body. Keep in step with the registry. */
 export type AnyBlok =
   | HeroBlok
@@ -395,4 +424,5 @@ export type AnyBlok =
   | FiberTypeGridBlok
   | CertificationGridBlok
   | ProcessDiagramBlok
-  | FiberPortfolioBlok;
+  | FiberPortfolioBlok
+  | BrandDirectoryBlok;

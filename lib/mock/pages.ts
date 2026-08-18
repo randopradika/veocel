@@ -745,10 +745,96 @@ const beauty: PageBlok = {
   ],
 };
 
+/*
+ * The "where to buy" page — Figma "Desktop [Rev]" frame 492:81. Tab 6, whose
+ * label is "daily care products with VEOCEL™ fibers"; the page itself is the
+ * brand directory.
+ *
+ * TWO THINGS HERE ARE SCAFFOLDING, NOT DATA:
+ *
+ * The brand list is partial. The frame shows 47 logos; the names below are the
+ * ones legible in a 1920-wide render, and several were unreadable. Replace the
+ * whole list with the real one — these are third-party brands and the list is a
+ * public statement about who uses VEOCEL™ fibers.
+ *
+ * The category on each brand is a GUESS. The frame shows category filters but
+ * not which brand sits in which, so the assignments below were made to exercise
+ * the filter, not from any source. They are very likely wrong in places.
+ */
+const dailyCare: PageBlok = {
+  _uid: "mock-daily-care",
+  component: "page",
+  seo_title: "where to buy | VEOCEL™",
+  seo_description:
+    "Brands making everyday care products with VEOCEL™ branded fibers — filter by product category or browse A to Z.",
+  body: [
+    {
+      _uid: "dc-hero",
+      component: "hero",
+      headline: "daily care products with VEOCEL™ fibers",
+      headline_size: "title",
+      nav_cards: heroTabs("dc"),
+    },
+    {
+      _uid: "dc-directory",
+      component: "brand_directory",
+      heading: "where to buy",
+      intro:
+        "click on the brand below to buy products that are made from VEOCEL™ branded " +
+        "fibers.",
+      categories: [
+        { _uid: "dc-cat-1", component: "brand_category", label: "surface" },
+        { _uid: "dc-cat-2", component: "brand_category", label: "intimate" },
+        { _uid: "dc-cat-3", component: "brand_category", label: "body" },
+        { _uid: "dc-cat-4", component: "brand_category", label: "beauty" },
+      ],
+      brands: [
+        { _uid: "dc-b-1", component: "brand_item", name: "Adventure Ready", category: "body" },
+        { _uid: "dc-b-2", component: "brand_item", name: "BIANCO", category: "beauty" },
+        { _uid: "dc-b-3", component: "brand_item", name: "BIO-RAL", category: "body" },
+        { _uid: "dc-b-4", component: "brand_item", name: "BRIDGE", category: "surface" },
+        { _uid: "dc-b-5", component: "brand_item", name: "Carefree", category: "intimate" },
+        { _uid: "dc-b-6", component: "brand_item", name: "cettua", category: "beauty" },
+        { _uid: "dc-b-7", component: "brand_item", name: "CHIARA AMBRA", category: "beauty" },
+        { _uid: "dc-b-8", component: "brand_item", name: "COSDAN", category: "beauty" },
+        { _uid: "dc-b-9", component: "brand_item", name: "coterie", category: "body" },
+        { _uid: "dc-b-10", component: "brand_item", name: "DeepFresh", category: "surface" },
+        { _uid: "dc-b-11", component: "brand_item", name: "evne", category: "beauty" },
+        { _uid: "dc-b-12", component: "brand_item", name: "FRISS", category: "surface" },
+        { _uid: "dc-b-13", component: "brand_item", name: "goop", category: "beauty" },
+        { _uid: "dc-b-14", component: "brand_item", name: "HARTMANN", category: "body" },
+        { _uid: "dc-b-15", component: "brand_item", name: "Hogara", category: "beauty" },
+        { _uid: "dc-b-16", component: "brand_item", name: "IMCLEAN", category: "surface" },
+        { _uid: "dc-b-17", component: "brand_item", name: "kindoh", category: "body" },
+        { _uid: "dc-b-18", component: "brand_item", name: "KUDOS", category: "body" },
+        { _uid: "dc-b-19", component: "brand_item", name: "Lab. Smart", category: "surface" },
+        { _uid: "dc-b-20", component: "brand_item", name: "mytowel", category: "body" },
+        { _uid: "dc-b-21", component: "brand_item", name: "neomamaism", category: "intimate" },
+        { _uid: "dc-b-22", component: "brand_item", name: "Neroli", category: "beauty" },
+        { _uid: "dc-b-23", component: "brand_item", name: "Norafin", category: "surface" },
+        { _uid: "dc-b-24", component: "brand_item", name: "PAEDIPROTECT", category: "body" },
+        { _uid: "dc-b-25", component: "brand_item", name: "popotine", category: "intimate" },
+        { _uid: "dc-b-26", component: "brand_item", name: "RICO", category: "body" },
+        {
+          _uid: "dc-b-27",
+          component: "brand_item",
+          name: "Sensatia Botanicals",
+          category: "beauty",
+        },
+        { _uid: "dc-b-28", component: "brand_item", name: "watsons", category: "beauty" },
+        { _uid: "dc-b-29", component: "brand_item", name: "Welkeeps", category: "intimate" },
+        { _uid: "dc-b-30", component: "brand_item", name: "wellros", category: "body" },
+        { _uid: "dc-b-31", component: "brand_item", name: "29 Days", category: "intimate" },
+      ],
+    },
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
   wipes: story("wipes", "VEOCEL™ fibers for wipes", wipes),
   hygiene: story("hygiene", "VEOCEL™ fibers for hygiene", hygiene),
   beauty: story("beauty", "VEOCEL™ fibers for beauty", beauty),
+  "daily-care": story("daily-care", "where to buy", dailyCare),
 };
