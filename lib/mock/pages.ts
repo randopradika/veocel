@@ -1,4 +1,9 @@
-import type { PageBlok, SbStory } from "../types";
+import type {
+  FeatureAccordionBlok,
+  HeroNavCardBlok,
+  PageBlok,
+  SbStory,
+} from "../types";
 
 /**
  * Local stand-ins for the `home` and `fiber-types` stories, so both designs
@@ -9,6 +14,79 @@ import type { PageBlok, SbStory } from "../types";
  * `BlockImage` renders a tinted placeholder for any empty asset, so the layout is
  * reviewable without shipping binaries. Add real assets in Storyblok.
  */
+
+/**
+ * The hero tab strip, repeated verbatim on every page in the fibers section.
+ *
+ * Shared rather than transcribed per page because it is the same six entries
+ * each time, and a slug change would otherwise have to be chased across every
+ * story. The card matching the current URL marks itself at render time — see
+ * `HeroNavCards` — so nothing here says which page is current.
+ *
+ * The design draws seven tabs; the beauty one is absent until that page exists.
+ */
+const HERO_TABS: Array<{ label: string; slug: string }> = [
+  { label: "explore VEOCEL™ fibers", slug: "fiber-types" },
+  { label: "VEOCEL™ fibers for wipes", slug: "wipes" },
+  { label: "VEOCEL™ fibers for hygiene", slug: "hygiene" },
+  { label: "sustainability", slug: "sustainability" },
+  { label: "daily care products with VEOCEL™ fibers", slug: "daily-care" },
+  { label: "how to become a VEOCEL™ partner", slug: "partners" },
+];
+
+/** `prefix` keeps block uids unique across stories. */
+function heroTabs(prefix: string): HeroNavCardBlok[] {
+  return HERO_TABS.map((tab, index) => ({
+    _uid: `${prefix}-nav-${index + 1}`,
+    component: "hero_nav_card",
+    label: tab.label,
+    link: { cached_url: tab.slug, linktype: "story" },
+  }));
+}
+
+/**
+ * The two fiber write-ups that close every application page. The copy is
+ * identical frame to frame in the design, so it lives here once.
+ *
+ * The Lyocell text is transcribed from the design, including its European Award
+ * for the Environment claim — unverified, see HANDOFF.md. The Viscose text is a
+ * reconstruction: that row is drawn collapsed in every frame.
+ */
+function fiberRows(prefix: string): FeatureAccordionBlok {
+  return {
+    _uid: `${prefix}-fibers`,
+    component: "feature_accordion",
+    layout: "rows",
+    items: [
+      {
+        _uid: `${prefix}-fiber-1`,
+        component: "accordion_item",
+        title: "VEOCEL™ Viscose",
+        body:
+          "VEOCEL™ Viscose fibers are produced from wood pulp sourced from sustainably " +
+          "managed forests, in a process that recovers sodium sulfate and the other " +
+          "process chemicals for reuse.\n\n" +
+          "The fibers are absorbent and soft against skin, which makes them a common " +
+          "choice for wipes, absorbent hygiene products and industrial applications.",
+      },
+      {
+        _uid: `${prefix}-fiber-2`,
+        component: "accordion_item",
+        title: "VEOCEL™ Lyocell",
+        body:
+          "VEOCEL™ Lyocell fibers have gained a commendable reputation for their " +
+          "environmentally responsible, closed loop production process, which " +
+          "transforms wood pulp into cellulosic fibers using a highly resource-efficient " +
+          "process with low ecological impact. Within this solvent-spinning process, the " +
+          "process water is recycled, and the solvent is recovered at a rate of more " +
+          "than 99%.\n\n" +
+          "The production process for VEOCEL™ Lyocell fibers received the European Award " +
+          "for the Environment from the European Commission in the category “The " +
+          "Technology Award for Sustainable Development” (2000).",
+      },
+    ],
+  };
+}
 
 function story(slug: string, name: string, content: PageBlok): SbStory<PageBlok> {
   return {
@@ -477,44 +555,7 @@ const wipes: PageBlok = {
       component: "hero",
       headline: "VEOCEL™ fibers for wipes",
       headline_size: "title",
-      nav_cards: [
-        {
-          _uid: "w-nav-1",
-          component: "hero_nav_card",
-          label: "explore VEOCEL™ fibers",
-          link: { cached_url: "fiber-types", linktype: "story" },
-        },
-        {
-          _uid: "w-nav-2",
-          component: "hero_nav_card",
-          label: "VEOCEL™ fibers for wipes",
-          link: { cached_url: "wipes", linktype: "story" },
-        },
-        {
-          _uid: "w-nav-3",
-          component: "hero_nav_card",
-          label: "VEOCEL™ fibers for hygiene",
-          link: { cached_url: "hygiene", linktype: "story" },
-        },
-        {
-          _uid: "w-nav-4",
-          component: "hero_nav_card",
-          label: "sustainability",
-          link: { cached_url: "sustainability", linktype: "story" },
-        },
-        {
-          _uid: "w-nav-5",
-          component: "hero_nav_card",
-          label: "daily care products with VEOCEL™ fibers",
-          link: { cached_url: "daily-care", linktype: "story" },
-        },
-        {
-          _uid: "w-nav-6",
-          component: "hero_nav_card",
-          label: "how to become a VEOCEL™ partner",
-          link: { cached_url: "partners", linktype: "story" },
-        },
-      ],
+      nav_cards: heroTabs("w"),
     },
     {
       _uid: "w-intro",
@@ -574,39 +615,94 @@ const wipes: PageBlok = {
         },
       ],
     },
+    fiberRows("w"),
+  ],
+};
+
+/*
+ * The hygiene page — Figma "Desktop [Rev]" frame 492:1326.
+ *
+ * The same shape as wipes: intro, four application cards, then the shared fiber
+ * rows. The intro and the pads description are transcribed from the frame; the
+ * other three cards are drawn collapsed there, so that copy is written to match
+ * and is a reconstruction.
+ */
+const hygiene: PageBlok = {
+  _uid: "mock-hygiene",
+  component: "page",
+  seo_title: "VEOCEL™ fibers for hygiene",
+  seo_description:
+    "Wood-based VEOCEL™ fibers for pads, baby diapers, adult incontinence products and tampons — softness, absorbency and fluid management.",
+  body: [
     {
-      _uid: "w-fibers",
+      _uid: "hy-hero",
+      component: "hero",
+      headline: "VEOCEL™ fibers for hygiene",
+      headline_size: "title",
+      nav_cards: heroTabs("hy"),
+    },
+    {
+      _uid: "hy-intro",
+      component: "text_columns",
+      align: "split",
+      heading: "VEOCEL™ fibers for hygiene",
+      body:
+        "the hygiene industry is evolving as consumers increasingly seek products that " +
+        "combine high performance with softness, skin-friendliness and responsible " +
+        "material choices. from softness and skin-friendliness to absorbency and fluid " +
+        "management, today's hygiene products are expected to deliver comfort without " +
+        "compromising performance. 100% wood-based VEOCEL™ fibers enable manufacturers " +
+        "to create high-performing hygiene products with cellulosic fiber solutions " +
+        "across multiple product layers, supporting innovation in baby care, feminine " +
+        "care and adult care applications.",
+    },
+    {
+      _uid: "hy-applications",
       component: "feature_accordion",
-      layout: "rows",
+      layout: "cards",
       items: [
         {
-          _uid: "w-fiber-1",
+          _uid: "hy-app-1",
           component: "accordion_item",
-          title: "VEOCEL™ Viscose",
+          title: "pads",
           body:
-            "VEOCEL™ Viscose fibers are produced from wood pulp sourced from sustainably " +
-            "managed forests, in a process that recovers sodium sulfate and the other " +
-            "process chemicals for reuse.\n\n" +
-            "The fibers are absorbent and soft against skin, which makes them a common " +
-            "choice for wipes, absorbent hygiene products and industrial applications.",
+            "designed to provide reliable protection and everyday comfort, sanitary pads " +
+            "require efficient fluid acquisition, distribution and skin comfort. in " +
+            "different product layers, they can be made with VEOCEL™ Lyocell, VEOCEL™ " +
+            "Lyocell Dry, VEOCEL™ Viscostar and VEOCEL™ Viscose fibers, delivering " +
+            "softness, skin-friendliness, absorbency and fluid management for feminine " +
+            "hygiene applications.",
         },
         {
-          _uid: "w-fiber-2",
+          _uid: "hy-app-2",
           component: "accordion_item",
-          title: "VEOCEL™ Lyocell",
+          title: "baby diapers",
           body:
-            "VEOCEL™ Lyocell fibers have gained a commendable reputation for their " +
-            "environmentally responsible, closed loop production process, which " +
-            "transforms wood pulp into cellulosic fibers using a highly resource-efficient " +
-            "process with low ecological impact. Within this solvent-spinning process, the " +
-            "process water is recycled, and the solvent is recovered at a rate of more " +
-            "than 99%.\n\n" +
-            "The production process for VEOCEL™ Lyocell fibers received the European Award " +
-            "for the Environment from the European Commission in the category “The " +
-            "Technology Award for Sustainable Development” (2000).",
+            "a diaper sits against the most delicate skin there is, for hours at a time. " +
+            "wood-based fibers in the topsheet and acquisition layers move fluid away " +
+            "from the surface and keep it dry, so comfort holds up over a full wear.",
+        },
+        {
+          _uid: "hy-app-3",
+          component: "accordion_item",
+          title: "adult incontinence",
+          body:
+            "adult care products are asked to manage larger volumes discreetly, without " +
+            "the bulk or the rustle that gives them away. cellulosic fibers bring " +
+            "absorbency and a soft, textile-like surface to products worn all day.",
+        },
+        {
+          _uid: "hy-app-4",
+          component: "accordion_item",
+          title: "tampon",
+          body:
+            "tampons ask for high absorbency from a small amount of material, and for " +
+            "nothing left behind. VEOCEL™ Viscostar fibers are trilobal and bright, made " +
+            "for absorbency and liquid spread in exactly this application.",
         },
       ],
     },
+    fiberRows("hy"),
   ],
 };
 
@@ -614,4 +710,5 @@ export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
   wipes: story("wipes", "VEOCEL™ fibers for wipes", wipes),
+  hygiene: story("hygiene", "VEOCEL™ fibers for hygiene", hygiene),
 };
