@@ -1,12 +1,12 @@
 # VEOCEL™ website
 
-Next.js (App Router) + Storyblok implementation of the VEOCEL design: the home page
-and the `beauty + skincare` category page.
+Next.js (App Router) + Storyblok implementation of the VEOCEL design: the home
+page, `VEOCEL™ fibers` and `VEOCEL™ fibers for wipes`.
 
 - **Next.js 16** with React Server Components; one client component in the block
   library (`FeatureAccordion`) and one in the chrome (`SiteHeader`)
 - **Tailwind CSS v4**, themed entirely from tokens in `app/globals.css`
-- **Storyblok** as the CMS, with a 13-block library, Visual Editor live preview and
+- **Storyblok** as the CMS, with a 17-block library, Visual Editor live preview and
   webhook-driven cache invalidation
 
 ## Getting started
@@ -60,8 +60,8 @@ placeholder in the right aspect ratio.
 
 4. Create the stories:
    - `home` — content type **Page**
-   - `beauty-skincare` — content type **Page**
    - `fiber-types` — content type **Page**
+   - `wipes` — content type **Page**
    - `config` — content type **Site configuration** (header, footer, newsletter).
      The slug must be exactly `config`.
 
