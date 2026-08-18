@@ -1,19 +1,24 @@
 #!/usr/bin/env node
 /**
- * Seeds the `home`, `beauty-skincare` and `config` stories into a Storyblok space
- * using the local mock content as the source.
+ * Seeds every page in `lib/mock/pages.ts`, plus the `config` story, into a
+ * Storyblok space using the local mock content as the source.
  *
- *   npm run storyblok:seed -- <spaceId>
+ *   npm run storyblok:seed -- <spaceId> [slug…]
  *
  * Without this, the same ~60 fields — including 20 nested bloks on the home page
  * alone — have to be typed into the Visual Editor by hand.
+ *
+ * Name one or more slugs to seed only those. Do that once editors have started
+ * working in Storyblok: an upsert replaces the whole story, so seeding a page
+ * that has since had assets attached in the editor discards them. Seeding only
+ * the new page leaves the rest alone.
  *
  * Auth reuses the session `storyblok login` already stored in
  * `~/.storyblok/credentials.json`. The token is read at run time and sent only to
  * the Storyblok Management API; it is never logged or copied elsewhere.
  *
- * Idempotent: a story that already exists at the same slug is updated rather than
- * duplicated, so re-running is safe.
+ * Idempotent in the sense that a story at the same slug is updated rather than
+ * duplicated — but the update overwrites, it does not merge.
  *
  * Stories are created as DRAFTS. Nothing is published — review in the Visual
  * Editor first. Note that the public site will 404 until a story is published,
@@ -38,6 +43,9 @@ if (!spaceId || !/^\d+$/.test(spaceId)) {
   console.error("Missing space id.\n\n  npm run storyblok:seed -- 123456\n");
   process.exit(1);
 }
+
+/** Slugs named on the command line. Empty means every story. */
+const only = process.argv.slice(3).filter(Boolean);
 
 /* ------------------------------------------------------------------ *
  * Credentials
@@ -97,15 +105,22 @@ async function api(path, init = {}) {
 const { mockStories } = await import("../lib/mock/pages.ts");
 const { mockConfig } = await import("../lib/mock/config.ts");
 
-const stories = [
-  { slug: "home", name: "Home", content: mockStories.home.content },
-  {
-    slug: "beauty-skincare",
-    name: "beauty + skincare",
-    content: mockStories["beauty-skincare"].content,
-  },
+// Every mock page, so adding one to `lib/mock/pages.ts` is enough to seed it.
+const everything = [
+  ...Object.values(mockStories).map(({ slug, name, content }) => ({ slug, name, content })),
   { slug: "config", name: "Site configuration", content: mockConfig },
 ];
+
+const stories = only.length === 0 ? everything : everything.filter((s) => only.includes(s.slug));
+
+if (stories.length === 0) {
+  console.error(
+    `No mock story matches ${only.join(", ")}.\n\nAvailable: ${everything
+      .map((s) => s.slug)
+      .join(", ")}\n`,
+  );
+  process.exit(1);
+}
 
 /* ------------------------------------------------------------------ *
  * Upsert

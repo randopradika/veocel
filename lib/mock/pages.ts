@@ -347,7 +347,261 @@ const beautySkincare: PageBlok = {
   ],
 };
 
+/*
+ * The fiber types page.
+ *
+ * Certification names and certificate numbers below are read off a
+ * low-resolution mockup and are NOT verified against the certificates
+ * themselves. Check every one against the issuing body before this page is
+ * published — a wrong certificate number is a compliance claim, not a typo.
+ */
+const fiberTypes: PageBlok = {
+  _uid: "mock-fiber-types",
+  component: "page",
+  seo_title: "VEOCEL™ fibers — lyocell and viscose fiber types",
+  seo_description:
+    "The VEOCEL™ fiber portfolio: lyocell, viscose and viscostar fibers, how they are produced, what they are certified against and which nonwoven applications each one suits.",
+  body: [
+    {
+      _uid: "f-hero",
+      component: "hero",
+      headline: "VEOCEL™ fibers",
+      headline_size: "title",
+      nav_cards: [
+        {
+          _uid: "f-nav-1",
+          component: "hero_nav_card",
+          label: "explore VEOCEL™ fibers",
+          // Points at this page, so the strip marks where the reader is.
+          link: { cached_url: "fiber-types", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-2",
+          component: "hero_nav_card",
+          label: "VEOCEL™ fibers for wipes",
+          link: { cached_url: "household-surface-care", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-3",
+          component: "hero_nav_card",
+          label: "VEOCEL™ fibers for hygiene",
+          link: { cached_url: "intimate-hygiene-care", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-4",
+          component: "hero_nav_card",
+          label: "VEOCEL™ fibers for beauty",
+          link: { cached_url: "beauty-skincare", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-5",
+          component: "hero_nav_card",
+          label: "sustainability",
+          link: { cached_url: "sustainability", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-6",
+          component: "hero_nav_card",
+          label: "daily care products with VEOCEL™ fibers",
+          link: { cached_url: "personal-body-care", linktype: "story" },
+        },
+        {
+          _uid: "f-nav-7",
+          component: "hero_nav_card",
+          label: "how to become a VEOCEL™ partner",
+          link: { cached_url: "partners", linktype: "story" },
+        },
+      ],
+    },
+    {
+      _uid: "f-types",
+      component: "fiber_type_grid",
+      items: [
+        {
+          _uid: "f-type-1",
+          component: "fiber_type_card",
+          title: "VEOCEL™ Lyocell",
+          link_label: "explore",
+          link: { cached_url: "fiber-types/lyocell", linktype: "story" },
+        },
+        {
+          _uid: "f-type-2",
+          component: "fiber_type_card",
+          title: "VEOCEL™ Viscose",
+          link_label: "explore",
+          link: { cached_url: "fiber-types/viscose", linktype: "story" },
+        },
+        {
+          _uid: "f-type-3",
+          component: "fiber_type_card",
+          title: "VEOCEL™ Viscostar",
+          subtitle: "VEOCEL™ Viscostar - Hygiene*",
+          link_label: "explore",
+          link: { cached_url: "fiber-types/viscostar", linktype: "story" },
+        },
+      ],
+    },
+    {
+      _uid: "f-certs",
+      component: "certification_grid",
+      items: [
+        {
+          _uid: "f-cert-1",
+          component: "certification_item",
+          label: "FSC (Chain of Custody)",
+        },
+        {
+          _uid: "f-cert-2",
+          component: "certification_item",
+          label: "PEFC (Chain of Custody)",
+        },
+        {
+          _uid: "f-cert-3",
+          component: "certification_item",
+          label: "The EU Ecolabel (Chain of Custody)",
+        },
+        {
+          _uid: "f-cert-4",
+          component: "certification_item",
+          label: "USDA Certified Biobased Product",
+        },
+        {
+          _uid: "f-cert-5",
+          component: "certification_item",
+          label: "OK biodegradable SOIL",
+        },
+        {
+          _uid: "f-cert-6",
+          component: "certification_item",
+          label: "OK biodegradable WATER",
+        },
+        {
+          _uid: "f-cert-7",
+          component: "certification_item",
+          label: "OK biodegradable MARINE",
+        },
+        {
+          _uid: "f-cert-8",
+          component: "certification_item",
+          label: "OK biodegradable INDUSTRIAL",
+        },
+        {
+          _uid: "f-cert-9",
+          component: "certification_item",
+          label: "OK biodegradable HOME",
+        },
+        {
+          _uid: "f-cert-10",
+          component: "certification_item",
+          label: "ISEGA (No. 66964)",
+          note: "(applying to LENZING™ Lyocell fibers)",
+        },
+        {
+          _uid: "f-cert-11",
+          component: "certification_item",
+          label: "ISEGA (No. 89068)",
+          note: "(applying to LENZING™ Viscose fibers)",
+        },
+        {
+          _uid: "f-cert-12",
+          component: "certification_item",
+          label: "STANDARD 100 by OEKO-TEX®",
+          note: "(annex 6, product class I)",
+        },
+        {
+          _uid: "f-cert-13",
+          component: "certification_item",
+          label: "Medically Tested — Tested for Toxins",
+        },
+      ],
+    },
+    {
+      _uid: "f-diagram-lyocell",
+      component: "process_diagram",
+      heading: "VEOCEL™ Lyocell production process",
+      caption:
+        "Wood is processed into pulp, dissolved in an organic solvent and spun into " +
+        "VEOCEL™ Lyocell fibers. More than 99% of the solvent is recovered from the " +
+        "process water and used again.",
+    },
+    {
+      _uid: "f-diagram-viscose",
+      component: "process_diagram",
+      heading: "VEOCEL™ Viscose production process",
+      caption:
+        "Wood is processed into pulp and spun into VEOCEL™ Viscose fibers. Sodium " +
+        "sulfate and the other process chemicals are recovered and returned to the " +
+        "production loop.",
+    },
+    {
+      _uid: "f-portfolio-lyocell",
+      component: "fiber_portfolio",
+      heading: "VEOCEL™ Lyocell Fibers Nonwoven Portfolio",
+      intro:
+        "Lenzing provides a wide range of Lyocell fibers designed for use in various " +
+        "applications.",
+      row_labels: "Fiber Diameter\nKey Applications\nFiber Features",
+      columns: [
+        {
+          _uid: "f-lyo-1",
+          component: "portfolio_column",
+          title: "Lyocell Nonwoven",
+          values: "Standard, Fine, Coarse\nWipes, Industrial\nCrimp, TCF, EC",
+        },
+        {
+          _uid: "f-lyo-2",
+          component: "portfolio_column",
+          title: "Lyocell Dry",
+          values: "Standard, Fine, Coarse\nSanitary Pads, Wipes, Technical\nHydrophobic, TCF",
+        },
+        {
+          _uid: "f-lyo-3",
+          component: "portfolio_column",
+          title: "Lyocell Skin",
+          values: "Standard, Micro\nBeauty Sheet Masks, Patches\nTranslucency",
+        },
+        {
+          _uid: "f-lyo-4",
+          component: "portfolio_column",
+          title: "Lyocell Shortcut",
+          values: "Standard, Fine\nMTTs, Wipes\nDispersibility, Special Cut, Antistat",
+        },
+      ],
+    },
+    {
+      _uid: "f-portfolio-viscose",
+      component: "fiber_portfolio",
+      heading: "VEOCEL™ Viscose Fibers Nonwoven Portfolio",
+      intro:
+        "Lenzing provides a wide range of Viscose fibers designed for use in various " +
+        "applications.",
+      row_labels: "Fiber Diameter\nKey Applications\nFiber Features",
+      columns: [
+        {
+          _uid: "f-vis-1",
+          component: "portfolio_column",
+          title: "Viscose Nonwoven",
+          values: "Standard, Fine, Coarse\nWipes, AHP, Industrial\nTCF, Absorbency",
+        },
+        {
+          _uid: "f-vis-2",
+          component: "portfolio_column",
+          title: "Viscose Tampon, Viscostar",
+          values: "Coarse\nTampons\nTCF, Trilobal, Bright, High Absorbency",
+        },
+        {
+          _uid: "f-vis-3",
+          component: "portfolio_column",
+          title: "Viscostar Core",
+          values: "Coarse\nAHP Core\nTrilobal, Absorbency, Liquid Spread",
+        },
+      ],
+    },
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "beauty-skincare": story("beauty-skincare", "beauty + skincare", beautySkincare),
+  "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
 };

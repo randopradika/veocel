@@ -21,7 +21,11 @@
           "feature_accordion",
           "explore_tabs",
           "news_list",
-          "brand_strip"
+          "brand_strip",
+          "fiber_type_grid",
+          "certification_grid",
+          "process_diagram",
+          "fiber_portfolio"
         ]
       },
       "seo_title": {
@@ -216,6 +220,20 @@
       },
       "scroll_hint": {
         "type": "text"
+      },
+      "headline_size": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Display — a word as the poster (home page)",
+            "value": "display"
+          },
+          {
+            "name": "Title — a section name (landing pages)",
+            "value": "title"
+          }
+        ],
+        "default_value": "display"
       },
       "nav_cards": {
         "type": "bloks",
@@ -778,6 +796,183 @@
       },
       "link": {
         "type": "multilink"
+      }
+    }
+  },
+  {
+    "name": "fiber_type_grid",
+    "display_name": "Fiber type grid",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "The fiber families, three up: picture, name, and a button into the detail page.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "intro": {
+        "type": "textarea"
+      },
+      "items": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "fiber_type_card"
+        ],
+        "maximum": 6
+      }
+    }
+  },
+  {
+    "name": "fiber_type_card",
+    "display_name": "Fiber type card",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "required": true
+      },
+      "subtitle": {
+        "type": "text",
+        "description": "Smaller second line — the variant name, e.g. 'VEOCEL™ Viscostar - Hygiene*'."
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Landscape, roughly 16:9. Shown uncropped and without an overlay."
+      },
+      "link_label": {
+        "type": "text",
+        "description": "Button text. Defaults to 'explore' when empty."
+      },
+      "link": {
+        "type": "multilink"
+      }
+    }
+  },
+  {
+    "name": "certification_grid",
+    "display_name": "Certification grid",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "Wall of certification marks, each on a white plate with a caption beneath.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "intro": {
+        "type": "textarea"
+      },
+      "items": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "certification_item"
+        ]
+      }
+    }
+  },
+  {
+    "name": "certification_item",
+    "display_name": "Certification",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "logo": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "The certification mark. Transparent PNG or SVG; it sits on white."
+      },
+      "label": {
+        "type": "text",
+        "description": "The certificate's name, exactly as the issuing body writes it."
+      },
+      "note": {
+        "type": "text",
+        "description": "Qualifier on a second line — scope, certificate number or product class."
+      },
+      "link": {
+        "type": "multilink"
+      }
+    }
+  },
+  {
+    "name": "process_diagram",
+    "display_name": "Process diagram",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "A production-process illustration on a tinted panel.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "The diagram. Set its alt text — that is the only description a screen reader gets, and the caption below does not replace it."
+      },
+      "caption": {
+        "type": "textarea",
+        "description": "Shown under the panel, to everyone. State the flow in words; do not copy the alt text."
+      }
+    }
+  },
+  {
+    "name": "fiber_portfolio",
+    "display_name": "Fiber portfolio table",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "Comparison table — one column per fiber variant, one row per attribute.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "intro": {
+        "type": "textarea"
+      },
+      "row_labels": {
+        "type": "textarea",
+        "description": "One row label per line, e.g. 'Fiber Diameter'. Each column fills these rows in this order."
+      },
+      "columns": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "portfolio_column"
+        ],
+        "maximum": 6
+      }
+    }
+  },
+  {
+    "name": "portfolio_column",
+    "display_name": "Portfolio column",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "title": {
+        "type": "text",
+        "required": true
+      },
+      "subtitle": {
+        "type": "text"
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Square; shown as a circle above the column."
+      },
+      "values": {
+        "type": "textarea",
+        "description": "One value per line, matching the table's row labels line for line. Leave a line blank for an empty cell rather than skipping it."
       }
     }
   }

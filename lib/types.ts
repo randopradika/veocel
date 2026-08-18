@@ -118,6 +118,12 @@ export type HeroBlok = SbBlock & {
   subline?: string;
   background_image?: StoryblokAsset;
   scroll_hint?: string;
+  /**
+   * `display` is the home page's word-as-poster type. `title` is the smaller
+   * setting a section landing page wants, where the headline is a name rather
+   * than a statement.
+   */
+  headline_size?: "display" | "title";
   /** Numbered shortcut cards pinned along the bottom edge of the hero. */
   nav_cards?: HeroNavCardBlok[];
 };
@@ -288,6 +294,77 @@ export type BrandStripBlok = SbBlock & {
   link?: StoryblokLink;
 };
 
+/* ------------------------------------------------------------------ *
+ * Fiber types page blocks
+ * ------------------------------------------------------------------ */
+
+export type FiberTypeCardBlok = SbBlock & {
+  component: "fiber_type_card";
+  title: string;
+  /** Second line under the title — the fiber's variant name, set smaller. */
+  subtitle?: string;
+  image?: StoryblokAsset;
+  /** Button text. Falls back to "explore". */
+  link_label?: string;
+  link?: StoryblokLink;
+};
+
+export type FiberTypeGridBlok = SbBlock & {
+  component: "fiber_type_grid";
+  heading?: string;
+  intro?: string;
+  items?: FiberTypeCardBlok[];
+};
+
+export type CertificationItemBlok = SbBlock & {
+  component: "certification_item";
+  logo?: StoryblokAsset;
+  label?: string;
+  /** Qualifier under the label — scope, certificate number, product class. */
+  note?: string;
+  link?: StoryblokLink;
+};
+
+export type CertificationGridBlok = SbBlock & {
+  component: "certification_grid";
+  heading?: string;
+  intro?: string;
+  items?: CertificationItemBlok[];
+};
+
+export type ProcessDiagramBlok = SbBlock & {
+  component: "process_diagram";
+  heading?: string;
+  /**
+   * The diagram itself, as artwork. Its own alt text is what screen readers get,
+   * so it must be set in Storyblok — `caption` is shown to everyone and is not a
+   * substitute.
+   */
+  image?: StoryblokAsset;
+  caption?: string;
+};
+
+export type PortfolioColumnBlok = SbBlock & {
+  component: "portfolio_column";
+  title: string;
+  subtitle?: string;
+  image?: StoryblokAsset;
+  /**
+   * One line per row, in the same order as the table's `row_labels`. Blank lines
+   * count, so an empty cell is an empty line.
+   */
+  values?: string;
+};
+
+export type FiberPortfolioBlok = SbBlock & {
+  component: "fiber_portfolio";
+  heading?: string;
+  intro?: string;
+  /** One row label per line. Each column supplies its values in this order. */
+  row_labels?: string;
+  columns?: PortfolioColumnBlok[];
+};
+
 /** Every block that can sit directly in a page body. Keep in step with the registry. */
 export type AnyBlok =
   | HeroBlok
@@ -302,4 +379,8 @@ export type AnyBlok =
   | ProductGridBlok
   | FeatureSplitBlok
   | FeatureAccordionBlok
-  | BrandStripBlok;
+  | BrandStripBlok
+  | FiberTypeGridBlok
+  | CertificationGridBlok
+  | ProcessDiagramBlok
+  | FiberPortfolioBlok;

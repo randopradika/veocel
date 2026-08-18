@@ -1,9 +1,9 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container } from "@/components/ui/Container";
-import { SmartLink } from "@/components/ui/SmartLink";
 import type { HeroBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { HeroNavCards } from "./HeroNavCards";
 
 /**
  * Full-bleed opening hero: photography, a very large lowercase headline, and a row
@@ -12,7 +12,17 @@ import { editable } from "./editable";
  * The cards sit inside the hero rather than below it, so the photograph reads as a
  * single band down to the fold. They are the primary navigation into the site, so
  * they are ordinary links — numbered for scanning, not for sequence.
+ *
+ * `headline_size` picks the type: `display` for the home page, where one word is
+ * the poster, and `title` for a section landing page, where the headline is the
+ * section's name and the fluid display size would swamp it.
  */
+
+const HEADLINE_SIZE = {
+  display: "text-display-fluid",
+  title: "text-h1 md:text-[4.5rem] md:leading-[1.05]",
+} as const;
+
 export function Hero({ blok }: { blok: HeroBlok }) {
   const cards = blok.nav_cards ?? [];
 
@@ -40,7 +50,11 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
         ) : null}
 
-        <h1 className="text-display-fluid font-bold drop-shadow-[0_2px_18px_rgba(0,0,0,0.25)]">
+        <h1
+          className={`font-bold drop-shadow-[0_2px_18px_rgba(0,0,0,0.25)] ${
+            HEADLINE_SIZE[blok.headline_size ?? "display"]
+          }`}
+        >
           {blok.headline}
         </h1>
 
@@ -53,30 +67,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
 
       {cards.length > 0 ? (
         <Container width="wide" className="pb-8">
-          {/*
-            Scrolls sideways on narrow screens rather than wrapping into a tall
-            stack that would push the headline off the fold.
-          */}
-          <ul className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 lg:grid lg:grid-cols-7 lg:overflow-visible">
-            {cards.map((card, index) => (
-              <li key={card._uid} className="w-52 shrink-0 snap-start lg:w-auto">
-                <SmartLink
-                  link={card.link}
-                  className="group flex h-full rounded-[0.9rem] border border-white/45 px-4 py-3.5 text-white transition-colors duration-200 hover:border-white hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                >
-                  <span {...editable(card)} className="flex flex-1 flex-col justify-between gap-6">
-                    <span
-                      className="flex h-5 w-5 items-center justify-center rounded-full border border-white/55 text-[0.6rem] leading-none"
-                      aria-hidden
-                    >
-                      {index + 1}
-                    </span>
-                    <span className="text-[0.82rem] leading-snug font-medium">{card.label}</span>
-                  </span>
-                </SmartLink>
-              </li>
-            ))}
-          </ul>
+          <HeroNavCards cards={cards} />
         </Container>
       ) : null}
     </section>

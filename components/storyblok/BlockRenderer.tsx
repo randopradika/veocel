@@ -4,14 +4,18 @@ import type { SbBlock } from "@/lib/types";
 
 import { BrandStrip } from "./BrandStrip";
 import { CategoryGrid } from "./CategoryGrid";
+import { CertificationGrid } from "./CertificationGrid";
 import { ExploreTabs } from "./ExploreTabs";
 import { FeatureAccordion } from "./FeatureAccordion";
 import { FeatureSplit } from "./FeatureSplit";
+import { FiberPortfolio } from "./FiberPortfolio";
+import { FiberTypeGrid } from "./FiberTypeGrid";
 import { Hero } from "./Hero";
 import { ImageBanner } from "./ImageBanner";
 import { IntroSection } from "./IntroSection";
 import { NewsList } from "./NewsList";
 import { PageHero } from "./PageHero";
+import { ProcessDiagram } from "./ProcessDiagram";
 import { ProcessRow } from "./ProcessRow";
 import { ProductGrid } from "./ProductGrid";
 import { TextColumns } from "./TextColumns";
@@ -53,6 +57,12 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
   feature_split: block(FeatureSplit),
   feature_accordion: block(FeatureAccordion),
   brand_strip: block(BrandStrip),
+
+  // Fiber types
+  fiber_type_grid: block(FiberTypeGrid),
+  certification_grid: block(CertificationGrid),
+  process_diagram: block(ProcessDiagram),
+  fiber_portfolio: block(FiberPortfolio),
 };
 
 /** Renders a story's `body` field in order. */

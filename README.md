@@ -20,8 +20,8 @@ npm run dev
 ```
 
 Then open http://localhost:3000. **No Storyblok account is needed to see the
-designs** — with `STORYBLOK_ACCESS_TOKEN` unset, both pages render from the local
-mock content in `lib/mock/`. Images are absent there, so each one shows a tinted
+designs** — with `STORYBLOK_ACCESS_TOKEN` unset, all three pages render from the
+local mock content in `lib/mock/`. Images are absent there, so each one shows a tinted
 placeholder in the right aspect ratio.
 
 ## Connecting Storyblok
@@ -38,7 +38,7 @@ placeholder in the right aspect ratio.
    npm run storyblok:login
    ```
 
-3. Push the component library into your space — this creates all 24 components with
+3. Push the component library into your space — this creates all 32 components with
    their fields, whitelists and dropdowns. Space id is under Settings › General:
 
    ```bash
@@ -61,11 +61,20 @@ placeholder in the right aspect ratio.
 4. Create the stories:
    - `home` — content type **Page**
    - `beauty-skincare` — content type **Page**
+   - `fiber-types` — content type **Page**
    - `config` — content type **Site configuration** (header, footer, newsletter).
      The slug must be exactly `config`.
 
    `lib/mock/pages.ts` and `lib/mock/config.ts` are the reference for what to put in
-   each field.
+   each field — or seed them from it directly:
+
+   ```bash
+   npm run storyblok:seed -- YOUR_SPACE_ID
+   ```
+
+   That upserts by slug and **replaces** a story it finds, so name the slugs you want
+   (`npm run storyblok:seed -- YOUR_SPACE_ID fiber-types`) once anyone has edited
+   content in Storyblok.
 
 5. Point the space's preview URL at the draft route so the Visual Editor works:
 
@@ -107,6 +116,8 @@ Four places, always in step:
 3. `components/storyblok/BlockRenderer.tsx` — one line in the registry
 4. `storyblok/components.json` — the schema, plus the name in `page.body`'s
    `component_whitelist`
+
+Then `npm run storyblok:push` so the space knows about it.
 
 A block present in Storyblok but missing from the registry renders a visible notice
 in development and nothing in production.

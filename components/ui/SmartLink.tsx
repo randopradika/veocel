@@ -44,7 +44,7 @@ function isExternal(href: string): boolean {
  * need the locale threaded through it. This is the only reason the component runs
  * on the client, and it renders nothing but an anchor.
  */
-function useLocale(): string {
+export function useLocale(): string {
   const pathname = usePathname() ?? "/";
   const [, first = ""] = pathname.split("/");
   // Two-letter segment, optionally with a region ("de", "pt-br").
@@ -57,18 +57,25 @@ type SmartLinkProps = {
   className?: string;
   /** Announced to screen readers when the visible label is decorative. */
   ariaLabel?: string;
+  /** This link points at the page being viewed. Emits `aria-current="page"`. */
+  current?: boolean;
 };
 
 /**
  * Renders a link when the Storyblok field has a target, and a plain `<span>`
  * when it doesn't — cards stay visually identical either way.
  */
-export function SmartLink({ link, children, className, ariaLabel }: SmartLinkProps) {
+export function SmartLink({ link, children, className, ariaLabel, current }: SmartLinkProps) {
   const locale = useLocale();
   const href = resolveHref(link);
+  const ariaCurrent = current ? ("page" as const) : undefined;
 
   if (!href) {
-    return <span className={className}>{children}</span>;
+    return (
+      <span className={className} aria-current={ariaCurrent}>
+        {children}
+      </span>
+    );
   }
 
   if (isExternal(href)) {
@@ -77,6 +84,7 @@ export function SmartLink({ link, children, className, ariaLabel }: SmartLinkPro
         href={href}
         className={className}
         aria-label={ariaLabel}
+        aria-current={ariaCurrent}
         target={link?.target || "_blank"}
         rel="noopener noreferrer"
       >
@@ -90,6 +98,7 @@ export function SmartLink({ link, children, className, ariaLabel }: SmartLinkPro
       href={localePath(locale, href)}
       className={className}
       aria-label={ariaLabel}
+      aria-current={ariaCurrent}
       target={link?.target || undefined}
     >
       {children}
