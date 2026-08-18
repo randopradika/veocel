@@ -6,7 +6,7 @@ page, `VEOCEL™ fibers` and `VEOCEL™ fibers for wipes`.
 - **Next.js 16** with React Server Components; one client component in the block
   library (`FeatureAccordion`) and one in the chrome (`SiteHeader`)
 - **Tailwind CSS v4**, themed entirely from tokens in `app/globals.css`
-- **Storyblok** as the CMS, with a 17-block library, Visual Editor live preview and
+- **Storyblok** as the CMS, with an 18-block library, Visual Editor live preview and
   webhook-driven cache invalidation
 
 ## Getting started
@@ -20,7 +20,7 @@ npm run dev
 ```
 
 Then open http://localhost:3000. **No Storyblok account is needed to see the
-designs** — with `STORYBLOK_ACCESS_TOKEN` unset, all three pages render from the
+designs** — with `STORYBLOK_ACCESS_TOKEN` unset, every page renders from the
 local mock content in `lib/mock/`. Images are absent there, so each one shows a tinted
 placeholder in the right aspect ratio.
 
@@ -38,7 +38,7 @@ placeholder in the right aspect ratio.
    npm run storyblok:login
    ```
 
-3. Push the component library into your space — this creates all 32 components with
+3. Push the component library into your space — this creates all 35 components with
    their fields, whitelists and dropdowns. Space id is under Settings › General:
 
    ```bash
@@ -59,9 +59,8 @@ placeholder in the right aspect ratio.
    ```
 
 4. Create the stories:
-   - `home` — content type **Page**
-   - `fiber-types` — content type **Page**
-   - `wipes` — content type **Page**
+   - `home`, `fiber-types`, `wipes`, `hygiene`, `beauty`, `daily-care` — content
+     type **Page**
    - `config` — content type **Site configuration** (header, footer, newsletter).
      The slug must be exactly `config`.
 
