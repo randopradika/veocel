@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { Container } from "@/components/ui/Container";
 import { localePath, splitLocale, type Locale } from "@/lib/i18n";
@@ -20,46 +20,54 @@ import { Logo } from "./Logo";
  * `[data-hero]` element that `Hero` and `PageHero` mark, so no prop threading from
  * the page and pages without a dark hero simply start solid.
  */
-export function SiteHeader({
-  locales,
-  locale,
-}: {
-  locales: Locale[];
-  locale: string;
-}) {
-  const [overlay, setOverlay] = useState(false);
-  const pathname = usePathname();
+/** Switch a little before the hero fully leaves, so type never sits on the seam. */
+const HERO_EXIT_OFFSET = 96;
 
-  useEffect(() => {
-    const hero = document.querySelector<HTMLElement>("[data-hero]");
+/**
+ * Whether the header is currently over a dark hero.
+ *
+ * Read during render rather than written from an effect. An effect that measured
+ * inside `requestAnimationFrame` looked equivalent but was not: rAF is suspended in
+ * a backgrounded tab, so a page opened in one kept a white bar over its hero until
+ * the tab was focused and scrolled. Reading synchronously also removes the flash of
+ * solid header on every load.
+ */
+function readOverlay(): boolean {
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  return hero ? window.scrollY < hero.offsetHeight - HERO_EXIT_OFFSET : false;
+}
 
-    let frame = 0;
-    const measure = () => {
+function subscribeToScroll(onChange: () => void): () => void {
+  let frame = 0;
+
+  // rAF here only throttles change notifications; the value itself is read
+  // synchronously above, so a suspended frame loop cannot leave state stale.
+  const schedule = () => {
+    if (frame) return;
+    frame = window.requestAnimationFrame(() => {
       frame = 0;
-      // Switch a little before the hero fully leaves, so type never sits on the seam.
-      setOverlay(hero ? window.scrollY < hero.offsetHeight - 96 : false);
-    };
+      onChange();
+    });
+  };
 
-    // Measured in a frame callback, never synchronously in the effect body —
-    // a direct setState here would cascade an extra render on every navigation.
-    const schedule = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(measure);
-    };
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
+  // The hero can change height while the tab is hidden — images finishing load, a
+  // font swapping — so re-measure when it comes back rather than trusting the last
+  // value computed before it went away.
+  document.addEventListener("visibilitychange", schedule);
 
-    schedule();
+  return () => {
+    if (frame) window.cancelAnimationFrame(frame);
+    window.removeEventListener("scroll", schedule);
+    window.removeEventListener("resize", schedule);
+    document.removeEventListener("visibilitychange", schedule);
+  };
+}
 
-    if (!hero) return () => window.cancelAnimationFrame(frame);
-
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-    };
-  }, [pathname]);
+export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: string }) {
+  // The server has no scroll position and no DOM, so it renders the solid state.
+  const overlay = useSyncExternalStore(subscribeToScroll, readOverlay, () => false);
 
   return (
     <header
