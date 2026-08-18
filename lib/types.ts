@@ -276,14 +276,26 @@ export type FeatureSplitBlok = SbBlock & {
 export type AccordionItemBlok = SbBlock & {
   component: "accordion_item";
   title: string;
+  /** Blank lines start a new paragraph. */
   body?: string;
+  /** Small mark, used by the `tiles` layout. */
   icon?: StoryblokAsset;
+  /** Photograph, used by the `cards` layout. Ignored by the other two. */
+  image?: StoryblokAsset;
 };
 
 export type FeatureAccordionBlok = SbBlock & {
   component: "feature_accordion";
   heading?: string;
   items?: AccordionItemBlok[];
+  /**
+   * One open at a time in every arrangement; only the presentation differs.
+   *
+   *   tiles — compact three-up tiles led by an icon
+   *   cards — two-up cards led by a photograph, for product applications
+   *   rows  — full-width rows under a large heading, for long-form copy
+   */
+  layout?: "tiles" | "cards" | "rows";
 };
 
 export type BrandStripBlok = SbBlock & {

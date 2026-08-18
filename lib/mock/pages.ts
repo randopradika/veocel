@@ -238,7 +238,7 @@ const fiberTypes: PageBlok = {
           _uid: "f-nav-2",
           component: "hero_nav_card",
           label: "VEOCEL™ fibers for wipes",
-          link: { cached_url: "household-surface-care", linktype: "story" },
+          link: { cached_url: "wipes", linktype: "story" },
         },
         {
           _uid: "f-nav-3",
@@ -453,7 +453,165 @@ const fiberTypes: PageBlok = {
   ],
 };
 
+/*
+ * The wipes page — Figma "Desktop [Rev]" frame 492:1468.
+ *
+ * Second of the seven tabs in the hero strip, so its own card points back here
+ * and the strip marks it as the current page.
+ *
+ * The intro and the baby-wipes and Lyocell copy are transcribed from the frame.
+ * The other three application descriptions are not in the design — those cards
+ * are drawn collapsed — so the copy below is written to match the tone and is a
+ * reconstruction, not supplied text. The European Award for the Environment
+ * claim comes from the design and needs checking before it is relied on.
+ */
+const wipes: PageBlok = {
+  _uid: "mock-wipes",
+  component: "page",
+  seo_title: "VEOCEL™ fibers for wipes",
+  seo_description:
+    "Wood-based VEOCEL™ Lyocell and Viscose fibers for baby wipes, body wipes, moist toilet tissue and surface cleaning wipes.",
+  body: [
+    {
+      _uid: "w-hero",
+      component: "hero",
+      headline: "VEOCEL™ fibers for wipes",
+      headline_size: "title",
+      nav_cards: [
+        {
+          _uid: "w-nav-1",
+          component: "hero_nav_card",
+          label: "explore VEOCEL™ fibers",
+          link: { cached_url: "fiber-types", linktype: "story" },
+        },
+        {
+          _uid: "w-nav-2",
+          component: "hero_nav_card",
+          label: "VEOCEL™ fibers for wipes",
+          link: { cached_url: "wipes", linktype: "story" },
+        },
+        {
+          _uid: "w-nav-3",
+          component: "hero_nav_card",
+          label: "VEOCEL™ fibers for hygiene",
+          link: { cached_url: "hygiene", linktype: "story" },
+        },
+        {
+          _uid: "w-nav-4",
+          component: "hero_nav_card",
+          label: "sustainability",
+          link: { cached_url: "sustainability", linktype: "story" },
+        },
+        {
+          _uid: "w-nav-5",
+          component: "hero_nav_card",
+          label: "daily care products with VEOCEL™ fibers",
+          link: { cached_url: "daily-care", linktype: "story" },
+        },
+        {
+          _uid: "w-nav-6",
+          component: "hero_nav_card",
+          label: "how to become a VEOCEL™ partner",
+          link: { cached_url: "partners", linktype: "story" },
+        },
+      ],
+    },
+    {
+      _uid: "w-intro",
+      component: "text_columns",
+      align: "split",
+      heading: "VEOCEL™ fibers for wipes",
+      body:
+        "wipes continue to evolve as consumer expectations and regulatory requirements " +
+        "shape the future of the industry. with the implementation of the Single-Use " +
+        "Plastics Directive (SUPD) in Europe and a growing demand for more responsible " +
+        "materials, 100% wood-based VEOCEL™ fibers provide an effective solution for a " +
+        "wide range of wipe applications.",
+    },
+    {
+      _uid: "w-applications",
+      component: "feature_accordion",
+      layout: "cards",
+      items: [
+        {
+          _uid: "w-app-1",
+          component: "accordion_item",
+          title: "baby wipes",
+          body:
+            "designed for gentle cleansing of delicate skin, baby wipes help provide " +
+            "effective cleaning while maintaining softness and comfort during every " +
+            "diaper change. they can be made with VEOCEL™ Lyocell and VEOCEL™ Viscose " +
+            "fibers, offering a soft, absorbent and reliable foundation for high-quality " +
+            "baby care wipes.",
+        },
+        {
+          _uid: "w-app-2",
+          component: "accordion_item",
+          title: "body wipes",
+          body:
+            "for refreshing on the move, body wipes ask a lot of the material: enough " +
+            "strength to hold up when wet, and a surface soft enough for repeated contact " +
+            "with skin. wood-based VEOCEL™ fibers carry lotion well and stay intact " +
+            "through use.",
+        },
+        {
+          _uid: "w-app-3",
+          component: "accordion_item",
+          title: "moist toilet tissue",
+          body:
+            "moist toilet tissue has to be gentle in use and short-lived afterwards. " +
+            "VEOCEL™ Lyocell shortcut fibers are made to disperse, so the wipe holds " +
+            "together in the hand and breaks apart once it leaves it.",
+        },
+        {
+          _uid: "w-app-4",
+          component: "accordion_item",
+          title: "surface cleaning wipes",
+          body:
+            "household and industrial wipes work against grease, dust and spills, often " +
+            "with cleaning agents in the mix. VEOCEL™ fibers absorb well and keep their " +
+            "structure when saturated, without adding plastic to a single-use product.",
+        },
+      ],
+    },
+    {
+      _uid: "w-fibers",
+      component: "feature_accordion",
+      layout: "rows",
+      items: [
+        {
+          _uid: "w-fiber-1",
+          component: "accordion_item",
+          title: "VEOCEL™ Viscose",
+          body:
+            "VEOCEL™ Viscose fibers are produced from wood pulp sourced from sustainably " +
+            "managed forests, in a process that recovers sodium sulfate and the other " +
+            "process chemicals for reuse.\n\n" +
+            "The fibers are absorbent and soft against skin, which makes them a common " +
+            "choice for wipes, absorbent hygiene products and industrial applications.",
+        },
+        {
+          _uid: "w-fiber-2",
+          component: "accordion_item",
+          title: "VEOCEL™ Lyocell",
+          body:
+            "VEOCEL™ Lyocell fibers have gained a commendable reputation for their " +
+            "environmentally responsible, closed loop production process, which " +
+            "transforms wood pulp into cellulosic fibers using a highly resource-efficient " +
+            "process with low ecological impact. Within this solvent-spinning process, the " +
+            "process water is recycled, and the solvent is recovered at a rate of more " +
+            "than 99%.\n\n" +
+            "The production process for VEOCEL™ Lyocell fibers received the European Award " +
+            "for the Environment from the European Commission in the category “The " +
+            "Technology Award for Sustainable Development” (2000).",
+        },
+      ],
+    },
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
+  wipes: story("wipes", "VEOCEL™ fibers for wipes", wipes),
 };

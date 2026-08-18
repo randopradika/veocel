@@ -740,10 +740,28 @@
     "display_name": "Feature accordion",
     "is_root": false,
     "is_nestable": true,
-    "description": "Grid of expandable feature tiles. The first tile opens by default.",
+    "description": "Expandable items, one open at a time. The first opens by default.",
     "schema": {
       "heading": {
         "type": "text"
+      },
+      "layout": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Tiles — three up, led by an icon",
+            "value": "tiles"
+          },
+          {
+            "name": "Cards — two up, led by a photograph",
+            "value": "cards"
+          },
+          {
+            "name": "Rows — full width, for long-form copy",
+            "value": "rows"
+          }
+        ],
+        "default_value": "tiles"
       },
       "items": {
         "type": "bloks",
@@ -765,13 +783,22 @@
         "required": true
       },
       "body": {
-        "type": "textarea"
+        "type": "textarea",
+        "description": "Shown when the item is open. Leave a blank line to start a new paragraph."
       },
       "icon": {
         "type": "asset",
         "filetypes": [
           "images"
-        ]
+        ],
+        "description": "Small mark. Used by the Tiles layout only."
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Photograph, roughly 12:5 landscape. Used by the Cards layout only."
       }
     }
   },
