@@ -23,12 +23,14 @@ import type {
  * story. The card matching the current URL marks itself at render time — see
  * `HeroNavCards` — so nothing here says which page is current.
  *
- * The design draws seven tabs; the beauty one is absent until that page exists.
+ * All seven tabs the design draws. `beauty` is the new fiber-application page,
+ * not the old `beauty-skincare` category page that was deleted.
  */
 const HERO_TABS: Array<{ label: string; slug: string }> = [
   { label: "explore VEOCEL™ fibers", slug: "fiber-types" },
   { label: "VEOCEL™ fibers for wipes", slug: "wipes" },
   { label: "VEOCEL™ fibers for hygiene", slug: "hygiene" },
+  { label: "VEOCEL™ fibers for beauty", slug: "beauty" },
   { label: "sustainability", slug: "sustainability" },
   { label: "daily care products with VEOCEL™ fibers", slug: "daily-care" },
   { label: "how to become a VEOCEL™ partner", slug: "partners" },
@@ -304,45 +306,8 @@ const fiberTypes: PageBlok = {
       component: "hero",
       headline: "VEOCEL™ fibers",
       headline_size: "title",
-      nav_cards: [
-        {
-          _uid: "f-nav-1",
-          component: "hero_nav_card",
-          label: "explore VEOCEL™ fibers",
-          // Points at this page, so the strip marks where the reader is.
-          link: { cached_url: "fiber-types", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-2",
-          component: "hero_nav_card",
-          label: "VEOCEL™ fibers for wipes",
-          link: { cached_url: "wipes", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-3",
-          component: "hero_nav_card",
-          label: "VEOCEL™ fibers for hygiene",
-          link: { cached_url: "intimate-hygiene-care", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-5",
-          component: "hero_nav_card",
-          label: "sustainability",
-          link: { cached_url: "sustainability", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-6",
-          component: "hero_nav_card",
-          label: "daily care products with VEOCEL™ fibers",
-          link: { cached_url: "personal-body-care", linktype: "story" },
-        },
-        {
-          _uid: "f-nav-7",
-          component: "hero_nav_card",
-          label: "how to become a VEOCEL™ partner",
-          link: { cached_url: "partners", linktype: "story" },
-        },
-      ],
+      // The first card points at this page, so the strip marks where the reader is.
+      nav_cards: heroTabs("f"),
     },
     {
       _uid: "f-types",
@@ -706,9 +671,84 @@ const hygiene: PageBlok = {
   ],
 };
 
+/*
+ * The beauty page — Figma "Desktop [Rev]" frame 492:1198.
+ *
+ * The fourth tab, and the page that completes the strip. This is a fiber
+ * application page; it does not restore the deleted `beauty-skincare` category
+ * page, which had a different shape entirely.
+ *
+ * Only two application cards here, not four.
+ *
+ * NOTE ON THE INTRO: the frame's intro paragraph is the hygiene page's text,
+ * unchanged — it argues about hygiene products, baby care, feminine care and
+ * adult care on a beauty page, which reads as a copy-paste the designer has not
+ * come back to. Shipping it verbatim would put visibly wrong copy on the page,
+ * so the intro below is written for beauty in the same shape and register. Swap
+ * it for the real text once the design is finished.
+ */
+const beauty: PageBlok = {
+  _uid: "mock-beauty",
+  component: "page",
+  seo_title: "VEOCEL™ fibers for beauty",
+  seo_description:
+    "Wood-based VEOCEL™ fibers for facial wipes and sheet masks — softness, absorbency and a pleasant feel against facial skin.",
+  body: [
+    {
+      _uid: "be-hero",
+      component: "hero",
+      headline: "VEOCEL™ fibers for beauty",
+      headline_size: "title",
+      nav_cards: heroTabs("be"),
+    },
+    {
+      _uid: "be-intro",
+      component: "text_columns",
+      align: "split",
+      heading: "VEOCEL™ fibers for beauty",
+      body:
+        "beauty routines are judged on how they feel as much as on what they do. a " +
+        "facial wipe or sheet mask spends its whole working life against the most " +
+        "sensitive skin on the body, so surface smoothness, moisture retention and a " +
+        "clean skin feel matter as much as strength. 100% wood-based VEOCEL™ fibers " +
+        "give formulators a botanic base for facial care products, carrying serum and " +
+        "lotion well and leaving nothing behind but the treatment.",
+    },
+    {
+      _uid: "be-applications",
+      component: "feature_accordion",
+      layout: "cards",
+      items: [
+        {
+          _uid: "be-app-1",
+          component: "accordion_item",
+          title: "facial wipes",
+          body:
+            "facial wipes offer a convenient solution for cleansing, makeup removal and " +
+            "everyday skincare on the go. they can be made with VEOCEL™ Lyocell and " +
+            "VEOCEL™ Viscose fibers, delivering softness, absorbency and a pleasant skin " +
+            "feel for a premium cleansing experience.",
+        },
+        {
+          _uid: "be-app-2",
+          component: "accordion_item",
+          title: "facial sheet mask",
+          body:
+            "a sheet mask has to hold a large dose of serum, cling to the contours of the " +
+            "face and stay put while it works. VEOCEL™ Lyocell Skin fibers are made for " +
+            "this: micro diameters for drape, and a translucency that lets the mask all " +
+            "but disappear on the skin.",
+        },
+      ],
+    },
+    fiberRows("be"),
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
   wipes: story("wipes", "VEOCEL™ fibers for wipes", wipes),
   hygiene: story("hygiene", "VEOCEL™ fibers for hygiene", hygiene),
+  beauty: story("beauty", "VEOCEL™ fibers for beauty", beauty),
 };
