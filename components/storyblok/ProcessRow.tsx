@@ -55,12 +55,57 @@ export function ProcessRow({ blok }: { blok: ProcessRowBlok }) {
 /** Distance from the centre to each step, as a percentage of the diagram's width. */
 const RING_RADIUS = 37;
 
+/**
+ * Where each step's title sits over the segmented-wheel artwork, as percentages
+ * of the square — measured from the design frame, in the order the wedges run
+ * clockwise from the top. The artwork's five wedges are unevenly sized, so the
+ * positions are transcribed rather than computed.
+ */
+const WHEEL_LABELS: ReadonlyArray<readonly [number, number]> = [
+  [50, 30], // forest — top
+  [81.5, 53], // wood — right
+  [68, 84], // pulp — lower right
+  [33, 84], // fibers — lower left
+  [16, 53], // biodegradability — left
+];
+
 function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStepBlok[] }) {
+  // The wheel artwork has exactly five wedges; with any other step count the
+  // titles would land on the wrong photograph, so fall back to the circles.
+  const wheel = Boolean(blok.diagram_image?.filename) && steps.length === WHEEL_LABELS.length;
+
   return (
     <Section {...editable(blok)} spacing="default">
       <Container>
         <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
-          {steps.length > 0 ? (
+          {wheel ? (
+            <figure className="relative mx-auto w-full max-w-[570px]">
+              <BlockImage
+                asset={blok.diagram_image}
+                alt=""
+                sizes="(min-width: 1024px) 570px, 100vw"
+                className="relative aspect-square w-full"
+                imageClassName="object-contain"
+              />
+              <ol className="absolute inset-0">
+                {steps.map((step, index) => (
+                  <li
+                    key={step._uid}
+                    {...editable(step)}
+                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-semibold whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-xl lg:text-2xl"
+                    style={{
+                      left: `${WHEEL_LABELS[index][0]}%`,
+                      top: `${WHEEL_LABELS[index][1]}%`,
+                    }}
+                  >
+                    {step.title}
+                  </li>
+                ))}
+              </ol>
+            </figure>
+          ) : null}
+
+          {!wheel && steps.length > 0 ? (
             <>
               {/*
                 Below `lg` the ring becomes a plain grid: at narrow widths the

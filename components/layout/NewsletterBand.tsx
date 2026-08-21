@@ -3,9 +3,10 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
 
 /**
- * Band above the footer, split into two tinted halves: newsletter signup on the
- * left, social links on the right. Each half centres its own content, and the
- * tints run edge to edge rather than sitting inside the page gutters.
+ * Band above the footer, split into tinted panels: newsletter signup, social
+ * links, and — when `config.responsibility_label` is set — the social
+ * responsibility platform. Each panel centres its own content, and the tints run
+ * edge to edge rather than sitting inside the page gutters.
  *
  * The form posts directly to the email provider's own endpoint
  * (`config.newsletter_action_url`). There is no local API route and no subscriber
@@ -14,9 +15,13 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  */
 export function NewsletterBand({ config }: { config: ConfigBlok }) {
   const action = config.newsletter_action_url?.trim();
+  const responsibility = config.responsibility_label?.trim();
 
   return (
-    <section className="grid text-brand-800 md:grid-cols-2" aria-labelledby="newsletter-heading">
+    <section
+      className={`grid text-brand-800 ${responsibility ? "md:grid-cols-3" : "md:grid-cols-2"}`}
+      aria-labelledby="newsletter-heading"
+    >
       <div className="flex flex-col items-center bg-brand-100 px-6 py-12">
         <h2 id="newsletter-heading" className="text-sm font-semibold">
           {config.newsletter_heading ?? "newsletter subscriptions"}
@@ -75,6 +80,21 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
           ))}
         </ul>
       </div>
+
+      {responsibility ? (
+        <div className="flex flex-col items-center bg-brand-100 px-6 py-12">
+          <h2 className="text-sm font-semibold">
+            {config.responsibility_heading ?? "social responsibility platform"}
+          </h2>
+
+          <SmartLink
+            link={config.responsibility_link}
+            className="mt-3 text-2xl font-bold italic md:text-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+          >
+            {responsibility}
+          </SmartLink>
+        </div>
+      ) : null}
     </section>
   );
 }

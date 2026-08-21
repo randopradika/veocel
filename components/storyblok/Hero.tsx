@@ -16,6 +16,10 @@ import { HeroNavCards } from "./HeroNavCards";
  * `headline_size` picks the type: `display` for the home page, where one word is
  * the poster, and `title` for a section landing page, where the headline is the
  * section's name and the fluid display size would swamp it.
+ *
+ * `align: left` starts the type at the column edge instead of centring it — the
+ * home revision's arrangement, where the right half of the photograph carries
+ * the magnifier motif and the type stays clear of it.
  */
 
 const HEADLINE_SIZE = {
@@ -25,6 +29,7 @@ const HEADLINE_SIZE = {
 
 export function Hero({ blok }: { blok: HeroBlok }) {
   const cards = blok.nav_cards ?? [];
+  const left = blok.align === "left";
 
   return (
     <section
@@ -45,7 +50,11 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       {/* Keeps the white type legible over whatever photograph is used. */}
       <div className="absolute inset-0 -z-10 bg-black/25" aria-hidden />
 
-      <Container className="flex flex-1 flex-col justify-center pt-32 pb-10 text-center text-white md:pt-40">
+      <Container
+        className={`flex flex-1 flex-col justify-center pt-32 pb-10 text-white md:pt-40 ${
+          left ? "text-left" : "text-center"
+        }`}
+      >
         {blok.eyebrow ? (
           <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
         ) : null}
@@ -59,7 +68,13 @@ export function Hero({ blok }: { blok: HeroBlok }) {
         </h1>
 
         {blok.subline ? (
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl">
+          // The narrower measure on the left arrangement makes the subline break
+          // at its commas instead of mid-phrase, as the design draws it.
+          <p
+            className={`mt-6 text-lg leading-snug font-medium text-white/95 md:text-2xl ${
+              left ? "max-w-sm" : "mx-auto max-w-xl"
+            }`}
+          >
             {blok.subline}
           </p>
         ) : null}

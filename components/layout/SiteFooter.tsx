@@ -32,13 +32,27 @@ export function SiteFooter({
     <footer className="bg-brand-50 text-brand-800">
       <Container>
         <div className="flex flex-col gap-8 py-12 md:flex-row md:items-center md:justify-between">
-          <Link
-            href={localePath(locale, "")}
-            className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-            aria-label="VEOCEL — home"
-          >
-            <Logo />
-          </Link>
+          <div className="flex flex-wrap items-center gap-8">
+            <Link
+              href={localePath(locale, "")}
+              className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+              aria-label="VEOCEL — home"
+            >
+              <Logo />
+            </Link>
+
+            {config.secondary_logo?.filename ? (
+              <SmartLink link={config.secondary_logo_link} ariaLabel="#ItsInOurHands">
+                <BlockImage
+                  asset={config.secondary_logo}
+                  alt="#ItsInOurHands"
+                  sizes="120px"
+                  className="relative h-12 w-24"
+                  imageClassName="object-contain object-left"
+                />
+              </SmartLink>
+            ) : null}
+          </div>
 
           <form
             action={localePath(locale, "search")}

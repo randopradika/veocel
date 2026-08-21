@@ -86,6 +86,11 @@ export const mockConfig: ConfigBlok = {
     },
   ],
 
+  responsibility_heading: "social responsibility platform",
+  responsibility_label: "ItsInOurHands",
+  // Placeholder like the socials above — swap for the real platform URL.
+  responsibility_link: { url: "https://www.itsinourhands.com/", linktype: "url", target: "_blank" },
+
   footer_tagline: "Purely for you.",
 
   footer_columns: [

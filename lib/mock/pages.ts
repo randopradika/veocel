@@ -103,6 +103,12 @@ function story(slug: string, name: string, content: PageBlok): SbStory<PageBlok>
   };
 }
 
+/*
+ * The home page, mirroring the hand-built `home` story in Storyblok — hero and
+ * the natural-circularity ring, from the "Homepage" frame (2010:1153 in the
+ * Figma copy). The wheel artwork and hero photograph are Storyblok assets, so
+ * offline the ring falls back to placeholder circles.
+ */
 const home: PageBlok = {
   _uid: "mock-home",
   component: "page",
@@ -113,172 +119,36 @@ const home: PageBlok = {
     {
       _uid: "h-hero",
       component: "hero",
-      eyebrow: "advancing to",
-      headline: "cellulosics",
-      subline: "with VEOCEL™ fibers",
-      scroll_hint: "scroll to discover",
-    },
-    {
-      _uid: "h-intro",
-      component: "intro_section",
-      heading: "purely for you.",
-      layout: "split",
+      headline: "care begins within.",
+      subline: "with the fiber, inside the product, with choices we make.",
       align: "left",
-      body:
-        "VEOCEL™ branded fibers are made from wood, a renewable raw material, and are " +
-        "certified compostable and biodegradable. They return to nature at the end of their " +
-        "life cycle — so the products you use every day can be gentle on your skin and on " +
-        "the planet at the same time.",
-    },
-    {
-      _uid: "h-categories",
-      component: "category_grid",
-      columns: "2",
-      items: [
-        {
-          _uid: "h-cat-2",
-          component: "category_card",
-          kicker: "with VEOCEL™",
-          title: "personal + body care",
-          link: { cached_url: "personal-body-care", linktype: "story" },
-        },
-        {
-          _uid: "h-cat-3",
-          component: "category_card",
-          kicker: "with VEOCEL™",
-          title: "intimate + hygiene care",
-          link: { cached_url: "intimate-hygiene-care", linktype: "story" },
-        },
-        {
-          _uid: "h-cat-4",
-          component: "category_card",
-          kicker: "with VEOCEL™",
-          title: "household + surface care",
-          link: { cached_url: "household-surface-care", linktype: "story" },
-        },
-      ],
+      nav_cards: heroTabs("h"),
     },
     {
       _uid: "h-process",
       component: "process_row",
+      layout: "ring",
       heading: "a solution derived from nature, returning to nature.",
-      align: "right",
+      body:
+        "VEOCEL™ fibers, derived from responsibly managed wood sources, offer an " +
+        "environmentally conscious fiber solution for personal care and hygiene products. " +
+        "The fibers are produced in an environmentally responsible production process with " +
+        "low water consumption and low carbon emissions, and are biodegradable in soil, " +
+        "freshwater and marine conditions, as well as compostable in home and industrial " +
+        "conditions at the end of their use.\n\n" +
+        "VEOCEL™ fibers are derived from nature and return to nature — contributing to a " +
+        "better future for the planet. This concept of natural circularity builds a solid " +
+        "foundation for environmentally responsible applications.\n\n" +
+        "For detailed information about our claims, please visit our VEOCEL™ claims page:",
+      link_label: "veocel.com/en/claims",
+      link: { url: "https://www.veocel.com/en/claims", linktype: "url", target: "_blank" },
+      // Clockwise from the top, matching the wheel artwork's wedges.
       steps: [
-        {
-          _uid: "h-step-1",
-          component: "process_step",
-          title: "forest",
-          description: "sustainably managed and certified forests",
-        },
-        {
-          _uid: "h-step-2",
-          component: "process_step",
-          title: "wood",
-          description: "a renewable raw material, responsibly sourced",
-        },
-        {
-          _uid: "h-step-3",
-          component: "process_step",
-          title: "pulp",
-          description: "wood is processed into dissolving wood pulp",
-        },
-        {
-          _uid: "h-step-4",
-          component: "process_step",
-          title: "cellulosic fibers",
-          description: "pulp is spun into VEOCEL™ branded fibers",
-        },
-        {
-          _uid: "h-step-5",
-          component: "process_step",
-          title: "end application",
-          description: "nonwoven products for everyday care",
-        },
-        {
-          _uid: "h-step-6",
-          component: "process_step",
-          title: "biodegradability",
-          description: "fibers return to where they came from",
-        },
-      ],
-    },
-    {
-      _uid: "h-banner",
-      component: "image_banner",
-      height: "tall",
-      title: "#ItsInOurHands",
-      subtitle: "the little things add up — small everyday choices, a lasting difference.",
-      link_label: "join the movement",
-      link: { cached_url: "its-in-our-hands", linktype: "story" },
-    },
-    {
-      _uid: "h-explore",
-      component: "explore_tabs",
-      heading: "more from VEOCEL™",
-      tabs: [
-        {
-          _uid: "h-tab-1",
-          component: "explore_tab",
-          title: "explore VEOCEL™",
-          description: "what our branded fibers are and where they come from",
-          link: { cached_url: "explore", linktype: "story" },
-        },
-        {
-          _uid: "h-tab-2",
-          component: "explore_tab",
-          title: "VEOCEL™ fiber types",
-          description: "lyocell and modal fibers, and what each one is good at",
-          link: { cached_url: "fiber-types", linktype: "story" },
-        },
-        {
-          _uid: "h-tab-3",
-          component: "explore_tab",
-          title: "VEOCEL™ certifications",
-          description: "the standards our fibers are certified against",
-          link: { cached_url: "certifications", linktype: "story" },
-        },
-        {
-          _uid: "h-tab-4",
-          component: "explore_tab",
-          title: "branding services",
-          description: "co-branding support for partners and brand owners",
-          link: { cached_url: "branding-services", linktype: "story" },
-        },
-      ],
-    },
-    {
-      _uid: "h-news",
-      component: "news_list",
-      heading: "latest news",
-      intro: "Discover the latest news and stories around VEOCEL™.",
-      items: [
-        {
-          _uid: "h-news-1",
-          component: "news_item",
-          category: "press release",
-          date: "2026-06-18",
-          title:
-            "Lenzing group highlights scalable, bio-based nonwovens solutions at leading global industry fairs",
-          link: { cached_url: "news/industry-fairs", linktype: "story" },
-        },
-        {
-          _uid: "h-news-2",
-          component: "news_item",
-          category: "press release",
-          date: "2026-05-14",
-          title:
-            "award-nominated Lenzing™ dualwipe supports europe's shift to bio-based materials",
-          link: { cached_url: "news/dualwipe-award", linktype: "story" },
-        },
-        {
-          _uid: "h-news-3",
-          component: "news_item",
-          category: "press release",
-          date: "2026-04-02",
-          title:
-            "VEOCEL™ lyocell production expands to asia — launching a new chapter for nonwovens in the region",
-          link: { cached_url: "news/asia-expansion", linktype: "story" },
-        },
+        { _uid: "h-step-1", component: "process_step", title: "forest" },
+        { _uid: "h-step-2", component: "process_step", title: "wood" },
+        { _uid: "h-step-3", component: "process_step", title: "pulp" },
+        { _uid: "h-step-4", component: "process_step", title: "VEOCEL™ fibers" },
+        { _uid: "h-step-5", component: "process_step", title: "biodegradability" },
       ],
     },
   ],

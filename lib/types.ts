@@ -77,6 +77,13 @@ export type ConfigBlok = SbBlock & {
   newsletter_action_url?: string;
   social_heading?: string;
   socials?: SocialLinkBlok[];
+  /**
+   * Third panel of the band above the footer: the social-responsibility
+   * platform. The panel only renders when `responsibility_label` is set.
+   */
+  responsibility_heading?: string;
+  responsibility_label?: string;
+  responsibility_link?: StoryblokLink;
   footer_tagline?: string;
   footer_columns?: FooterColumnBlok[];
   /** Shown on the footer search field. The form posts to the /search page. */
@@ -84,6 +91,9 @@ export type ConfigBlok = SbBlock & {
   /** Parent-company mark (Lenzing) in the footer. Omitted when unset. */
   parent_logo?: StoryblokAsset;
   parent_logo_link?: StoryblokLink;
+  /** Second mark next to the footer lockup (#ItsInOurHands). Omitted when unset. */
+  secondary_logo?: StoryblokAsset;
+  secondary_logo_link?: StoryblokLink;
   copyright?: string;
   legal_links?: NavItemBlok[];
 };
@@ -124,6 +134,11 @@ export type HeroBlok = SbBlock & {
    * than a statement.
    */
   headline_size?: "display" | "title";
+  /**
+   * `left` starts the type at the column edge, clearing room for imagery on the
+   * right — the home revision's arrangement. Default is centred.
+   */
+  align?: "center" | "left";
   /** Numbered shortcut cards pinned along the bottom edge of the hero. */
   nav_cards?: HeroNavCardBlok[];
 };
@@ -174,6 +189,12 @@ export type ProcessRowBlok = SbBlock & {
    * the natural-circularity diagram. `row` is a single horizontal strip.
    */
   layout?: "row" | "ring";
+  /**
+   * The segmented-wheel artwork of the ring layout: one circular image whose
+   * wedges carry the photography, with the step titles drawn over it as live
+   * text. When empty the ring falls back to a circle of per-step images.
+   */
+  diagram_image?: StoryblokAsset;
   /** Supporting copy, shown next to the ring. Blank lines start a new paragraph. */
   body?: string;
   link_label?: string;

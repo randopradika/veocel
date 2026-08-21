@@ -81,6 +81,17 @@
           "social_link"
         ]
       },
+      "responsibility_heading": {
+        "type": "text",
+        "description": "Heading of the band's third panel (\"social responsibility platform\")."
+      },
+      "responsibility_label": {
+        "type": "text",
+        "description": "Wordmark text of the third panel (\"ItsInOurHands\"). Leave empty to hide the panel."
+      },
+      "responsibility_link": {
+        "type": "multilink"
+      },
       "footer_tagline": {
         "type": "text"
       },
@@ -104,6 +115,16 @@
         "description": "Parent-company mark (Lenzing) shown in the footer. Omitted when empty."
       },
       "parent_logo_link": {
+        "type": "multilink"
+      },
+      "secondary_logo": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Second mark next to the footer lockup (#ItsInOurHands). Omitted when empty."
+      },
+      "secondary_logo_link": {
         "type": "multilink"
       },
       "copyright": {
@@ -235,6 +256,20 @@
           }
         ],
         "default_value": "display"
+      },
+      "align": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Centred",
+            "value": "center"
+          },
+          {
+            "name": "Left — clears the right half for imagery",
+            "value": "left"
+          }
+        ],
+        "default_value": "center"
       },
       "nav_cards": {
         "type": "bloks",
@@ -416,6 +451,13 @@
           }
         ],
         "default_value": "ring"
+      },
+      "diagram_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Segmented-wheel artwork for the ring layout. Five wedges, matched to five steps in clockwise order from the top — the step titles are drawn over it as text. Leave empty to fall back to a circle of per-step images."
       },
       "body": {
         "type": "textarea",
