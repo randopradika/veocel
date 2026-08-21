@@ -1,5 +1,4 @@
 import type {
-  FeatureAccordionBlok,
   FiberProductCardBlok,
   HeroNavCardBlok,
   PageBlok,
@@ -45,50 +44,6 @@ function heroTabs(prefix: string): HeroNavCardBlok[] {
     label: tab.label,
     link: { cached_url: tab.slug, linktype: "story" },
   }));
-}
-
-/**
- * The two fiber write-ups that close every application page. The copy is
- * identical frame to frame in the design, so it lives here once.
- *
- * The Lyocell text is transcribed from the design, including its European Award
- * for the Environment claim — unverified, see HANDOFF.md. The Viscose text is a
- * reconstruction: that row is drawn collapsed in every frame.
- */
-function fiberRows(prefix: string): FeatureAccordionBlok {
-  return {
-    _uid: `${prefix}-fibers`,
-    component: "feature_accordion",
-    layout: "rows",
-    items: [
-      {
-        _uid: `${prefix}-fiber-1`,
-        component: "accordion_item",
-        title: "VEOCEL™ Viscose",
-        body:
-          "VEOCEL™ Viscose fibers are produced from wood pulp sourced from sustainably " +
-          "managed forests, in a process that recovers sodium sulfate and the other " +
-          "process chemicals for reuse.\n\n" +
-          "The fibers are absorbent and soft against skin, which makes them a common " +
-          "choice for wipes, absorbent hygiene products and industrial applications.",
-      },
-      {
-        _uid: `${prefix}-fiber-2`,
-        component: "accordion_item",
-        title: "VEOCEL™ Lyocell",
-        body:
-          "VEOCEL™ Lyocell fibers have gained a commendable reputation for their " +
-          "environmentally responsible, closed loop production process, which " +
-          "transforms wood pulp into cellulosic fibers using a highly resource-efficient " +
-          "process with low ecological impact. Within this solvent-spinning process, the " +
-          "process water is recycled, and the solvent is recovered at a rate of more " +
-          "than 99%.\n\n" +
-          "The production process for VEOCEL™ Lyocell fibers received the European Award " +
-          "for the Environment from the European Commission in the category “The " +
-          "Technology Award for Sustainable Development” (2000).",
-      },
-    ],
-  };
 }
 
 function story(slug: string, name: string, content: PageBlok): SbStory<PageBlok> {
@@ -400,7 +355,9 @@ const hygiene: PageBlok = {
 };
 
 /*
- * The beauty page — Figma "Desktop [Rev]" frame 492:1198.
+ * The beauty page — Figma "Desktop [Rev]" frame 2010:642, the revision that
+ * superseded 492:1198. Like the wipes and hygiene revisions, it ends after the
+ * application cards — the closing fiber write-ups have left the site.
  *
  * The fourth tab, and the page that completes the strip. This is a fiber
  * application page; it does not restore the deleted `beauty-skincare` category
@@ -409,11 +366,12 @@ const hygiene: PageBlok = {
  * Only two application cards here, not four.
  *
  * NOTE ON THE INTRO: the frame's intro paragraph is the hygiene page's text,
- * unchanged — it argues about hygiene products, baby care, feminine care and
- * adult care on a beauty page, which reads as a copy-paste the designer has not
- * come back to. Shipping it verbatim would put visibly wrong copy on the page,
- * so the intro below is written for beauty in the same shape and register. Swap
- * it for the real text once the design is finished.
+ * unchanged — still, in the 2010:642 revision — it argues about hygiene
+ * products, baby care, feminine care and adult care on a beauty page, which
+ * reads as a copy-paste the designer has not come back to. Shipping it verbatim
+ * would put visibly wrong copy on the page, so the intro below is written for
+ * beauty in the same shape and register. Swap it for the real text once the
+ * design is finished.
  */
 const beauty: PageBlok = {
   _uid: "mock-beauty",
@@ -469,7 +427,7 @@ const beauty: PageBlok = {
         },
       ],
     },
-    fiberRows("be"),
+    // The 2010:642 revision ends after the application cards — no fiber rows.
   ],
 };
 
