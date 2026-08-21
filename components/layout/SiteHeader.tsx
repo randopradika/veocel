@@ -81,7 +81,7 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
           className="rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
           aria-label="VEOCEL — home"
         >
-          <Logo />
+          <Logo variant={overlay ? "light" : "dark"} />
         </Link>
 
         <LanguagePicker locales={locales} current={locale} overlay={overlay} />
