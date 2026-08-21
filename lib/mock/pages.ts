@@ -1,5 +1,6 @@
 import type {
   FeatureAccordionBlok,
+  FiberProductCardBlok,
   HeroNavCardBlok,
   PageBlok,
   SbStory,
@@ -32,7 +33,7 @@ const HERO_TABS: Array<{ label: string; slug: string }> = [
   { label: "VEOCEL™ fibers for hygiene", slug: "hygiene" },
   { label: "VEOCEL™ fibers for beauty", slug: "beauty" },
   { label: "sustainability", slug: "sustainability" },
-  { label: "daily care products with VEOCEL™ fibers", slug: "daily-care" },
+  { label: "daily care products w/ VEOCEL™ fibers", slug: "daily-care" },
   { label: "how to become a VEOCEL™ partner", slug: "partners" },
 ];
 
@@ -155,219 +156,75 @@ const home: PageBlok = {
 };
 
 /*
- * The fiber types page.
+ * The fiber types page — the portfolio revision, Figma frame 2010:465 in the
+ * copy. The earlier certification wall, production diagrams and comparison
+ * table left the page with this design; they live on in git history and the
+ * block library.
  *
- * Certification names and certificate numbers below are read off a
- * low-resolution mockup and are NOT verified against the certificates
- * themselves. Check every one against the issuing body before this page is
- * published — a wrong certificate number is a compliance claim, not a typo.
+ * Every card's diameter/features values are the frame's own template text,
+ * repeated verbatim on all ten cards — placeholders until product data is
+ * confirmed, like the intro's "for the use in" phrasing.
  */
+function fiberCard(uid: string, name: string, application: string): FiberProductCardBlok {
+  return {
+    _uid: uid,
+    component: "fiber_product_card",
+    name,
+    application,
+    diameter: "standard, fine, coarse",
+    features: "crimp, TCF, EC",
+  };
+}
+
 const fiberTypes: PageBlok = {
   _uid: "mock-fiber-types",
   component: "page",
-  seo_title: "VEOCEL™ fibers — lyocell and viscose fiber types",
+  seo_title: "VEOCEL™ fibers — the nonwoven fiber portfolio",
   // Storyblok caps seo_description at 160 characters; the API rejects the whole
   // story on save if this runs over.
   seo_description:
-    "The VEOCEL™ fiber portfolio: lyocell, viscose and viscostar — how each is produced, what it is certified against, and which nonwoven applications it suits.",
+    "The VEOCEL™ nonwoven portfolio: Lyocell and Viscose fiber types and the applications each serves — wipes, hygiene, beauty and surface cleaning.",
   body: [
     {
       _uid: "f-hero",
       component: "hero",
-      headline: "VEOCEL™ fibers",
+      headline: "explore VEOCEL™ fibers",
       headline_size: "title",
-      // The first card points at this page, so the strip marks where the reader is.
       nav_cards: heroTabs("f"),
     },
     {
-      _uid: "f-types",
-      component: "fiber_type_grid",
-      items: [
-        {
-          _uid: "f-type-1",
-          component: "fiber_type_card",
-          title: "VEOCEL™ Lyocell",
-          link_label: "explore",
-          link: { cached_url: "fiber-types/lyocell", linktype: "story" },
-        },
-        {
-          _uid: "f-type-2",
-          component: "fiber_type_card",
-          title: "VEOCEL™ Viscose",
-          link_label: "explore",
-          link: { cached_url: "fiber-types/viscose", linktype: "story" },
-        },
-        {
-          _uid: "f-type-3",
-          component: "fiber_type_card",
-          title: "VEOCEL™ Viscostar",
-          subtitle: "VEOCEL™ Viscostar - Hygiene*",
-          link_label: "explore",
-          link: { cached_url: "fiber-types/viscostar", linktype: "story" },
-        },
-      ],
-    },
-    {
-      _uid: "f-certs",
-      component: "certification_grid",
-      items: [
-        {
-          _uid: "f-cert-1",
-          component: "certification_item",
-          label: "FSC (Chain of Custody)",
-        },
-        {
-          _uid: "f-cert-2",
-          component: "certification_item",
-          label: "PEFC (Chain of Custody)",
-        },
-        {
-          _uid: "f-cert-3",
-          component: "certification_item",
-          label: "The EU Ecolabel (Chain of Custody)",
-        },
-        {
-          _uid: "f-cert-4",
-          component: "certification_item",
-          label: "USDA Certified Biobased Product",
-        },
-        {
-          _uid: "f-cert-5",
-          component: "certification_item",
-          label: "OK biodegradable SOIL",
-        },
-        {
-          _uid: "f-cert-6",
-          component: "certification_item",
-          label: "OK biodegradable WATER",
-        },
-        {
-          _uid: "f-cert-7",
-          component: "certification_item",
-          label: "OK biodegradable MARINE",
-        },
-        {
-          _uid: "f-cert-8",
-          component: "certification_item",
-          label: "OK biodegradable INDUSTRIAL",
-        },
-        {
-          _uid: "f-cert-9",
-          component: "certification_item",
-          label: "OK biodegradable HOME",
-        },
-        {
-          _uid: "f-cert-10",
-          component: "certification_item",
-          label: "ISEGA (No. 66964)",
-          note: "(applying to LENZING™ Lyocell fibers)",
-        },
-        {
-          _uid: "f-cert-11",
-          component: "certification_item",
-          label: "ISEGA (No. 89068)",
-          note: "(applying to LENZING™ Viscose fibers)",
-        },
-        {
-          _uid: "f-cert-12",
-          component: "certification_item",
-          label: "STANDARD 100 by OEKO-TEX®",
-          note: "(annex 6, product class I)",
-        },
-        {
-          _uid: "f-cert-13",
-          component: "certification_item",
-          label: "Medically Tested — Tested for Toxins",
-        },
-      ],
-    },
-    {
-      _uid: "f-diagram-lyocell",
-      component: "process_diagram",
-      heading: "VEOCEL™ Lyocell production process",
-      caption:
-        "Wood is processed into pulp, dissolved in an organic solvent and spun into " +
-        "VEOCEL™ Lyocell fibers. More than 99% of the solvent is recovered from the " +
-        "process water and used again.",
-    },
-    {
-      _uid: "f-diagram-viscose",
-      component: "process_diagram",
-      heading: "VEOCEL™ Viscose production process",
-      caption:
-        "Wood is processed into pulp and spun into VEOCEL™ Viscose fibers. Sodium " +
-        "sulfate and the other process chemicals are recovered and returned to the " +
-        "production loop.",
-    },
-    {
-      _uid: "f-portfolio-lyocell",
-      component: "fiber_portfolio",
+      _uid: "f-lyocell",
+      component: "fiber_product_grid",
       heading: "VEOCEL™ Lyocell Fibers Nonwoven Portfolio",
       intro:
-        "Lenzing provides a wide range of Lyocell fibers designed for use in various " +
-        "applications.",
-      row_labels: "Fiber Diameter\nKey Applications\nFiber Features",
-      columns: [
-        {
-          _uid: "f-lyo-1",
-          component: "portfolio_column",
-          title: "Lyocell Nonwoven",
-          values: "Standard, Fine, Coarse\nWipes, Industrial\nCrimp, TCF, EC",
-        },
-        {
-          _uid: "f-lyo-2",
-          component: "portfolio_column",
-          title: "Lyocell Dry",
-          values: "Standard, Fine, Coarse\nSanitary Pads, Wipes, Technical\nHydrophobic, TCF",
-        },
-        {
-          _uid: "f-lyo-3",
-          component: "portfolio_column",
-          title: "Lyocell Skin",
-          values: "Standard, Micro\nBeauty Sheet Masks, Patches\nTranslucency",
-        },
-        {
-          _uid: "f-lyo-4",
-          component: "portfolio_column",
-          title: "Lyocell Shortcut",
-          values: "Standard, Fine\nMTTs, Wipes\nDispersibility, Special Cut, Antistat",
-        },
+        "Lenzing provides a wide range of Lyocell fibers designed for the use in various applications.",
+      items: [
+        fiberCard("f-ly-1", "VEOCEL™ Lyocell", "Wipes & Hygiene"),
+        fiberCard("f-ly-2", "VEOCEL™ Lyocell Shortcut", "Moist Toilet Tissue"),
+        fiberCard("f-ly-3", "VEOCEL™ Lyocell Fine Shortcut", "Moist Toilet Tissue"),
+        fiberCard("f-ly-4", "VEOCEL™ Lyocell Dry", "Hygiene"),
+        fiberCard("f-ly-5", "VEOCEL™ Lyocell EC", "Surface Cleaning"),
+        fiberCard("f-ly-6", "VEOCEL™ Lyocell Skin", "Beauty"),
+        fiberCard("f-ly-7", "VEOCEL™ Lyocell Micro Skin", "Beauty"),
       ],
     },
     {
-      _uid: "f-portfolio-viscose",
-      component: "fiber_portfolio",
+      _uid: "f-viscose",
+      component: "fiber_product_grid",
       heading: "VEOCEL™ Viscose Fibers Nonwoven Portfolio",
       intro:
-        "Lenzing provides a wide range of Viscose fibers designed for use in various " +
-        "applications.",
-      row_labels: "Fiber Diameter\nKey Applications\nFiber Features",
-      columns: [
-        {
-          _uid: "f-vis-1",
-          component: "portfolio_column",
-          title: "Viscose Nonwoven",
-          values: "Standard, Fine, Coarse\nWipes, AHP, Industrial\nTCF, Absorbency",
-        },
-        {
-          _uid: "f-vis-2",
-          component: "portfolio_column",
-          title: "Viscose Tampon, Viscostar",
-          values: "Coarse\nTampons\nTCF, Trilobal, Bright, High Absorbency",
-        },
-        {
-          _uid: "f-vis-3",
-          component: "portfolio_column",
-          title: "Viscostar Core",
-          values: "Coarse\nAHP Core\nTrilobal, Absorbency, Liquid Spread",
-        },
+        "Lenzing provides a wide range of Viscose fibers designed for the use in various applications.",
+      items: [
+        fiberCard("f-vi-1", "VEOCEL™ Viscose", "Wipes"),
+        fiberCard("f-vi-2", "VEOCEL™ Viscose", "Hygiene"),
+        fiberCard("f-vi-3", "VEOCEL™ Vicostar", "Hygiene"),
       ],
     },
   ],
 };
-
 /*
- * The wipes page — Figma "Desktop [Rev]" frame 492:1468.
+ * The wipes page — Figma frame 2010:900 (revision of 492:1468; same content,
+ * new hero photo, and the fiber rows dropped from the end).
  *
  * Second of the seven tabs in the hero strip, so its own card points back here
  * and the strip marks it as the current page.
@@ -450,17 +307,18 @@ const wipes: PageBlok = {
         },
       ],
     },
-    fiberRows("w"),
+    // The 2010:900 revision ends after the application cards — no fiber rows.
   ],
 };
 
 /*
- * The hygiene page — Figma "Desktop [Rev]" frame 492:1326.
+ * The hygiene page — Figma frame 2010:764 (revision of 492:1326; same content,
+ * new hero photo, and the fiber rows dropped from the end).
  *
- * The same shape as wipes: intro, four application cards, then the shared fiber
- * rows. The intro and the pads description are transcribed from the frame; the
- * other three cards are drawn collapsed there, so that copy is written to match
- * and is a reconstruction.
+ * The same shape as wipes: intro, then four application cards. The intro and
+ * the pads description are transcribed from the frame; the other three cards
+ * are drawn collapsed there, so that copy is written to match and is a
+ * reconstruction.
  */
 const hygiene: PageBlok = {
   _uid: "mock-hygiene",
@@ -537,7 +395,7 @@ const hygiene: PageBlok = {
         },
       ],
     },
-    fiberRows("hy"),
+    // The 2010:764 revision ends after the application cards — no fiber rows.
   ],
 };
 

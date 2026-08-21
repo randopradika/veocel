@@ -23,6 +23,7 @@
           "news_list",
           "brand_strip",
           "fiber_type_grid",
+          "fiber_product_grid",
           "certification_grid",
           "process_diagram",
           "fiber_portfolio",
@@ -866,6 +867,68 @@
       },
       "link": {
         "type": "multilink"
+      }
+    }
+  },
+  {
+    "name": "fiber_product_grid",
+    "display_name": "Fiber product grid",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "A fiber family's catalogue: heading and intro side by side, then cards with photo, name, application and spec rows.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "intro": {
+        "type": "textarea"
+      },
+      "diameter_label": {
+        "type": "text",
+        "description": "Label of the first spec row on every card. Defaults to 'fiber diameter'."
+      },
+      "features_label": {
+        "type": "text",
+        "description": "Label of the second spec row on every card. Defaults to 'fiber features'."
+      },
+      "items": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "fiber_product_card"
+        ]
+      }
+    }
+  },
+  {
+    "name": "fiber_product_card",
+    "display_name": "Fiber product card",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "name": {
+        "type": "text",
+        "required": true
+      },
+      "link": {
+        "type": "multilink",
+        "description": "The fiber's detail page. The name is underlined only when this is set."
+      },
+      "application": {
+        "type": "text",
+        "description": "Shown opposite the name — the application this fiber serves."
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ]
+      },
+      "diameter": {
+        "type": "text"
+      },
+      "features": {
+        "type": "text"
       }
     }
   },

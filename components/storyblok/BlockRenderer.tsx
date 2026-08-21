@@ -10,6 +10,7 @@ import { ExploreTabs } from "./ExploreTabs";
 import { FeatureAccordion } from "./FeatureAccordion";
 import { FeatureSplit } from "./FeatureSplit";
 import { FiberPortfolio } from "./FiberPortfolio";
+import { FiberProductGrid } from "./FiberProductGrid";
 import { FiberTypeGrid } from "./FiberTypeGrid";
 import { Hero } from "./Hero";
 import { ImageBanner } from "./ImageBanner";
@@ -60,6 +61,7 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
   brand_strip: block(BrandStrip),
 
   // Fiber types
+  fiber_product_grid: block(FiberProductGrid),
   fiber_type_grid: block(FiberTypeGrid),
   certification_grid: block(CertificationGrid),
   process_diagram: block(ProcessDiagram),

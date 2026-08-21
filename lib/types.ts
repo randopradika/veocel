@@ -349,6 +349,28 @@ export type FiberTypeGridBlok = SbBlock & {
   items?: FiberTypeCardBlok[];
 };
 
+export type FiberProductCardBlok = SbBlock & {
+  component: "fiber_product_card";
+  name: string;
+  /** Where the underlined name leads — the fiber's detail page, once one exists. */
+  link?: StoryblokLink;
+  /** The application the fiber serves, shown opposite the name. */
+  application?: string;
+  image?: StoryblokAsset;
+  diameter?: string;
+  features?: string;
+};
+
+export type FiberProductGridBlok = SbBlock & {
+  component: "fiber_product_grid";
+  heading?: string;
+  intro?: string;
+  /** Labels of the two spec rows, shared by every card in the grid. */
+  diameter_label?: string;
+  features_label?: string;
+  items?: FiberProductCardBlok[];
+};
+
 export type CertificationItemBlok = SbBlock & {
   component: "certification_item";
   logo?: StoryblokAsset;
@@ -443,6 +465,7 @@ export type AnyBlok =
   | FeatureAccordionBlok
   | BrandStripBlok
   | FiberTypeGridBlok
+  | FiberProductGridBlok
   | CertificationGridBlok
   | ProcessDiagramBlok
   | FiberPortfolioBlok
