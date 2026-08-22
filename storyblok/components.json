@@ -1242,7 +1242,7 @@
         "filetypes": [
           "images"
         ],
-        "description": "Transparent PNG or SVG; it sits on white. With no logo the name is shown as text instead."
+        "description": "Logo artwork. A white background is fine — logos blend onto the tinted band with multiply, so white drops out. With no logo the name is shown as text instead."
       },
       "category": {
         "type": "text",

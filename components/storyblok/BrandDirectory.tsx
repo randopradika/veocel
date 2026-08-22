@@ -179,20 +179,25 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
           a common baseline.
         */}
         {/*
-          Separators are drawn per cell rather than as a gap over a tinted
-          container: a part-filled last row would otherwise leave the container's
-          colour showing as a block where the missing cells would be.
+          The design draws no cell boxes: logos sit straight on the tinted band,
+          with a hairline rule above the grid and under every row. Per-cell
+          bottom borders join into those rules because the columns are flush.
+
+          Most logo files are JPEGs on white, so they blend with `multiply` —
+          the white drops out against the band exactly as the frame composites
+          them. The trade is that a hover tint would darken through the logo
+          too, so the hover cue is the cell's own tint, kept light.
         */}
-        <ul className="mt-10 grid grid-cols-2 overflow-hidden rounded-card border-t border-l border-hairline bg-white sm:grid-cols-3 lg:grid-cols-5">
+        <ul className="mt-10 grid grid-cols-2 border-t border-hairline sm:grid-cols-3 lg:grid-cols-5">
           {visible.map((brand, index) => {
             const current = letterOf(brand.name);
             const starts = index === 0 || letterOf(visible[index - 1].name) !== current;
 
             return (
-              <li key={brand._uid} className="border-r border-b border-hairline bg-white">
+              <li key={brand._uid} className="border-b border-hairline">
                 <SmartLink
                   link={brand.link}
-                  className="flex h-full flex-col px-4 pt-2 pb-5 transition-colors duration-200 hover:bg-brand-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
+                  className="flex h-full flex-col px-4 pt-2 pb-6 transition-colors duration-200 hover:bg-brand-100/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
                 >
                   <span {...editableAttrs(brand)} className="flex h-full flex-col">
                     <span className="h-4 text-[0.7rem] font-semibold text-brand" aria-hidden>
@@ -203,8 +208,8 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
                       asset={brand.logo}
                       alt={brand.name}
                       sizes="200px"
-                      className="relative mt-2 h-14 w-full"
-                      imageClassName="object-contain"
+                      className="relative mt-3 h-20 w-full"
+                      imageClassName="object-contain mix-blend-multiply"
                       placeholderTone="neutral"
                     />
 
