@@ -59,30 +59,31 @@ export const mockConfig: ConfigBlok = {
   // disabled instead of silently discarding an address.
   newsletter_action_url: "",
   social_heading: "follow us on social media",
+  // In the frame's order: Instagram, Facebook, LinkedIn, YouTube.
   socials: [
     {
       _uid: "soc-1",
-      component: "social_link",
-      platform: "linkedin",
-      link: { url: "https://www.linkedin.com/", linktype: "url", target: "_blank" },
-    },
-    {
-      _uid: "soc-2",
       component: "social_link",
       platform: "instagram",
       link: { url: "https://www.instagram.com/", linktype: "url", target: "_blank" },
     },
     {
+      _uid: "soc-2",
+      component: "social_link",
+      platform: "facebook",
+      link: { url: "https://www.facebook.com/", linktype: "url", target: "_blank" },
+    },
+    {
       _uid: "soc-3",
       component: "social_link",
-      platform: "youtube",
-      link: { url: "https://www.youtube.com/", linktype: "url", target: "_blank" },
+      platform: "linkedin",
+      link: { url: "https://www.linkedin.com/", linktype: "url", target: "_blank" },
     },
     {
       _uid: "soc-4",
       component: "social_link",
-      platform: "facebook",
-      link: { url: "https://www.facebook.com/", linktype: "url", target: "_blank" },
+      platform: "youtube",
+      link: { url: "https://www.youtube.com/", linktype: "url", target: "_blank" },
     },
   ],
 
