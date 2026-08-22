@@ -411,6 +411,16 @@ export type ClaimGridBlok = SbBlock & {
   items?: ClaimCardBlok[];
 };
 
+export type CtaPanelBlok = SbBlock & {
+  component: "cta_panel";
+  heading?: string;
+  /** Blank lines start a new paragraph. */
+  body?: string;
+  /** The button only renders when a label is set. */
+  link_label?: string;
+  link?: StoryblokLink;
+};
+
 export type ProcessDiagramBlok = SbBlock & {
   component: "process_diagram";
   heading?: string;
@@ -495,6 +505,7 @@ export type AnyBlok =
   | FiberProductGridBlok
   | CertificationGridBlok
   | ClaimGridBlok
+  | CtaPanelBlok
   | ProcessDiagramBlok
   | FiberPortfolioBlok
   | BrandDirectoryBlok;

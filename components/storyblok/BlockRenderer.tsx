@@ -7,6 +7,7 @@ import { BrandStrip } from "./BrandStrip";
 import { CategoryGrid } from "./CategoryGrid";
 import { CertificationGrid } from "./CertificationGrid";
 import { ClaimGrid } from "./ClaimGrid";
+import { CtaPanel } from "./CtaPanel";
 import { ExploreTabs } from "./ExploreTabs";
 import { FeatureAccordion } from "./FeatureAccordion";
 import { FeatureSplit } from "./FeatureSplit";
@@ -73,6 +74,9 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
 
   // Sustainability
   claim_grid: block(ClaimGrid),
+
+  // Partner
+  cta_panel: block(CtaPanel),
 };
 
 /** Renders a story's `body` field in order. */

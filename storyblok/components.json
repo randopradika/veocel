@@ -26,6 +26,7 @@
           "fiber_product_grid",
           "certification_grid",
           "claim_grid",
+          "cta_panel",
           "process_diagram",
           "fiber_portfolio",
           "brand_directory"
@@ -1038,6 +1039,29 @@
         "component_whitelist": [
           "claim_card"
         ]
+      }
+    }
+  },
+  {
+    "name": "cta_panel",
+    "display_name": "CTA panel",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "White call-to-action panel on the tinted band — centred heading, short pitch, one filled button.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "body": {
+        "type": "textarea",
+        "description": "Blank lines start a new paragraph."
+      },
+      "link_label": {
+        "type": "text",
+        "description": "Button text. The button only renders when this is set."
+      },
+      "link": {
+        "type": "multilink"
       }
     }
   },

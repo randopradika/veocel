@@ -746,6 +746,64 @@ const sustainability: PageBlok = {
   ],
 };
 
+/*
+ * The partner page — Figma "Desktop [Rev]" frame 2010:56, which superseded
+ * 560:227. Tab 7, the last page of the strip: with it published, every tab
+ * leads somewhere.
+ *
+ * Two white CTA panels on the tinted band. Both button targets are real, taken
+ * from the live veocel.com site on 2026-08-22 rather than invented: the
+ * LENZING Pro link is the one that site's "VEOCEL™ for partners" nav carries,
+ * and the design's "master brochure" is mapped to the VEOCEL™ General
+ * Brochure PDF from its downloads page — the closest published document to
+ * that name; confirm the mapping with whoever owns the Figma.
+ */
+const partners: PageBlok = {
+  _uid: "mock-partners",
+  component: "page",
+  seo_title: "how to become a VEOCEL™ partner",
+  seo_description:
+    "Become a VEOCEL™ partner — explore the LENZING Pro portal for fiber solutions and partnership opportunities, and download the product brochure.",
+  body: [
+    {
+      _uid: "pt-hero",
+      component: "hero",
+      headline: "how to become a VEOCEL™ partner",
+      headline_size: "title",
+      nav_cards: heroTabs("pt"),
+    },
+    {
+      _uid: "pt-lenzing-pro",
+      component: "cta_panel",
+      heading: "LENZING Pro",
+      body:
+        "interested in becoming a VEOCEL™ partner? Explore Lenzing Pro to discover " +
+        "our fiber solutions, learn more about partnership opportunities, and access " +
+        "helpful resources designed to support your business journey with VEOCEL™.",
+      link_label: "explore LENZING Pro",
+      link: {
+        url: "https://lenzingpro.com/en/portal/login?companySelectionRoute=en%2Fportal%2FcompanySelection",
+        linktype: "url",
+      },
+    },
+    {
+      _uid: "pt-brochure",
+      component: "cta_panel",
+      heading: "explore our product knowledge",
+      body:
+        "discover detailed information about VEOCEL™ fibers, including their key " +
+        "benefits, applications, and innovative technologies. Download our product " +
+        "brochure to explore the solutions available and find the right fiber for " +
+        "your business needs.",
+      link_label: "download master brochure",
+      link: {
+        url: "https://www.veocel.com/pdf/2025-Brochures/VEOCELTM-General-Brochure_2026.pdf",
+        linktype: "url",
+      },
+    },
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
@@ -754,4 +812,5 @@ export const mockStories: Record<string, SbStory<PageBlok>> = {
   beauty: story("beauty", "VEOCEL™ fibers for beauty", beauty),
   "daily-care": story("daily-care", "where to buy", dailyCare),
   sustainability: story("sustainability", "sustainability", sustainability),
+  partners: story("partners", "how to become a VEOCEL™ partner", partners),
 };
