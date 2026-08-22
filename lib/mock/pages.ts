@@ -1,4 +1,5 @@
 import type {
+  BrandItemBlok,
   FiberProductCardBlok,
   HeroNavCardBlok,
   PageBlok,
@@ -44,6 +45,20 @@ function heroTabs(prefix: string): HeroNavCardBlok[] {
     label: tab.label,
     link: { cached_url: tab.slug, linktype: "story" },
   }));
+}
+
+/**
+ * One "where to buy" directory entry. `category` is a comma-separated list of
+ * category labels; `url` is the brand's external shop link.
+ */
+function brand(uid: string, name: string, category: string, url: string): BrandItemBlok {
+  return {
+    _uid: uid,
+    component: "brand_item",
+    name,
+    category,
+    link: { url, linktype: "url" },
+  };
 }
 
 function story(slug: string, name: string, content: PageBlok): SbStory<PageBlok> {
@@ -432,20 +447,24 @@ const beauty: PageBlok = {
 };
 
 /*
- * The "where to buy" page — Figma "Desktop [Rev]" frame 492:81. Tab 6, whose
- * label is "daily care products with VEOCEL™ fibers"; the page itself is the
- * brand directory.
+ * The "where to buy" page — Figma "Desktop [Rev]" frame 2010:171, which
+ * superseded 492:81. Tab 6, whose label is "daily care products with VEOCEL™
+ * fibers"; the page itself is the brand directory.
  *
- * TWO THINGS HERE ARE SCAFFOLDING, NOT DATA:
+ * The revision's directory section is literally a screen capture of the real
+ * veocel.com where-to-buy page, so THE LIST BELOW IS REAL DATA, not
+ * scaffolding: all 47 brands, their category memberships and their outbound
+ * shop links come from that page's own data API
+ * (https://www.veocel.com/1/api/where-to-buy&lang=en, read 2026-08-22). The
+ * source directory shows only logos and carries no brand names, so the names
+ * here are transcribed from the logos for alt text and A-Z grouping —
+ * CJK/Korean marks are romanized so they group under the letter the source
+ * files them under (水99% Super → "Mizu 99% Super" under m, 예지미인 →
+ * "Yejimiin" under y, and so on).
  *
- * The brand list is partial. The frame shows 47 logos; the names below are the
- * ones legible in a 1920-wide render, and several were unreadable. Replace the
- * whole list with the real one — these are third-party brands and the list is a
- * public statement about who uses VEOCEL™ fibers.
- *
- * The category on each brand is a GUESS. The frame shows category filters but
- * not which brand sits in which, so the assignments below were made to exercise
- * the filter, not from any source. They are very likely wrong in places.
+ * Norafin is filed under all four categories on the source site — that is why
+ * `category` takes a comma-separated list. Tracking parameters (utm, fbclid,
+ * srsltid, spm) are stripped from the links; the targets are unchanged.
  */
 const dailyCare: PageBlok = {
   _uid: "mock-daily-care",
@@ -475,42 +494,53 @@ const dailyCare: PageBlok = {
         { _uid: "dc-cat-4", component: "brand_category", label: "beauty" },
       ],
       brands: [
-        { _uid: "dc-b-1", component: "brand_item", name: "Adventure Ready", category: "body" },
-        { _uid: "dc-b-2", component: "brand_item", name: "BIANCO", category: "beauty" },
-        { _uid: "dc-b-3", component: "brand_item", name: "BIO-RAL", category: "body" },
-        { _uid: "dc-b-4", component: "brand_item", name: "BRIDGE", category: "surface" },
-        { _uid: "dc-b-5", component: "brand_item", name: "Carefree", category: "intimate" },
-        { _uid: "dc-b-6", component: "brand_item", name: "cettua", category: "beauty" },
-        { _uid: "dc-b-7", component: "brand_item", name: "CHIARA AMBRA", category: "beauty" },
-        { _uid: "dc-b-8", component: "brand_item", name: "COSDAN", category: "beauty" },
-        { _uid: "dc-b-9", component: "brand_item", name: "coterie", category: "body" },
-        { _uid: "dc-b-10", component: "brand_item", name: "DeepFresh", category: "surface" },
-        { _uid: "dc-b-11", component: "brand_item", name: "evne", category: "beauty" },
-        { _uid: "dc-b-12", component: "brand_item", name: "FRISS", category: "surface" },
-        { _uid: "dc-b-13", component: "brand_item", name: "goop", category: "beauty" },
-        { _uid: "dc-b-14", component: "brand_item", name: "HARTMANN", category: "body" },
-        { _uid: "dc-b-15", component: "brand_item", name: "Hogara", category: "beauty" },
-        { _uid: "dc-b-16", component: "brand_item", name: "IMCLEAN", category: "surface" },
-        { _uid: "dc-b-17", component: "brand_item", name: "kindoh", category: "body" },
-        { _uid: "dc-b-18", component: "brand_item", name: "KUDOS", category: "body" },
-        { _uid: "dc-b-19", component: "brand_item", name: "Lab. Smart", category: "surface" },
-        { _uid: "dc-b-20", component: "brand_item", name: "mytowel", category: "body" },
-        { _uid: "dc-b-21", component: "brand_item", name: "neomamaism", category: "intimate" },
-        { _uid: "dc-b-22", component: "brand_item", name: "Neroli", category: "beauty" },
-        { _uid: "dc-b-23", component: "brand_item", name: "Norafin", category: "surface" },
-        { _uid: "dc-b-24", component: "brand_item", name: "PAEDIPROTECT", category: "body" },
-        { _uid: "dc-b-25", component: "brand_item", name: "popotine", category: "intimate" },
-        { _uid: "dc-b-26", component: "brand_item", name: "RICO", category: "body" },
-        {
-          _uid: "dc-b-27",
-          component: "brand_item",
-          name: "Sensatia Botanicals",
-          category: "beauty",
-        },
-        { _uid: "dc-b-28", component: "brand_item", name: "watsons", category: "beauty" },
-        { _uid: "dc-b-29", component: "brand_item", name: "Welkeeps", category: "intimate" },
-        { _uid: "dc-b-30", component: "brand_item", name: "wellros", category: "body" },
-        { _uid: "dc-b-31", component: "brand_item", name: "29 Days", category: "intimate" },
+        brand("dc-b-1", "Adventure Ready", "body", "https://adventurereadyoutdoor.com/products/body-wipes"),
+        brand("dc-b-2", "Annie's Way", "beauty", "https://anniesway.com.tw/%E5%A4%A2%E5%B9%BB%E7%A7%98%E5%A2%83"),
+        brand("dc-b-3", "Annie's Way Bubble Tea Mask", "beauty", "https://anniesway.com.tw/%E5%AE%89%E5%A6%AE%E7%B5%B2%E8%96%87%E7%8F%8D%E7%8F%A0%E5%A5%B6%E8%8C%B6%E9%9D%A2%E8%86%9C,Annie--039;s-Way-Bubble-Tea-Mask"),
+        brand("dc-b-4", "BIANCO", "beauty", "https://smartstore.naver.com/bianco_/products/5505862030"),
+        brand("dc-b-5", "BIO-RAL", "body", "http://www.lifecorp.jp/pb/bioral/tmp/item_detail.html?janCode=4973220239603"),
+        brand("dc-b-6", "BRIDGE", "beauty", "https://www.bridge247.net/products/hydrasoothingfacialmask"),
+        brand("dc-b-7", "carefree", "intimate", "https://carefreelinersandpads.com/collections/carefree-pads"),
+        brand("dc-b-8", "cettua", "beauty", "https://smartstore.naver.com/cettua/products/8555095920"),
+        brand("dc-b-9", "CHIARA AMBRA", "beauty", "https://www.chiara-ambra.de/en"),
+        brand("dc-b-10", "COSDAN", "beauty", "https://www.cosdan.com.tw/products/centella-asiatica-snail-mucus-soothing-mask"),
+        brand("dc-b-11", "coterie", "body", "https://www.coterie.com/products/wipes"),
+        brand("dc-b-12", "DeepFresh", "surface", "https://www.deepfresh.com.tr/"),
+        brand("dc-b-13", "DJEDNEL", "beauty", "https://djednel.jp/"),
+        brand("dc-b-14", "Dr. Hsieh", "beauty", "https://www.dr-hsieh.com/collections/masksale"),
+        brand("dc-b-15", "evne", "intimate", "https://kindoh.co.kr/product/list.html?cate_no=197"),
+        brand("dc-b-16", "FRISS", "body", "https://www.alibaba.com/product-detail/80Pcs-Natural-Eco-Friendly-Flushable-Wet_1601377949314.html"),
+        brand("dc-b-17", "Gbuuty", "beauty", "https://pse.is/66e5b4"),
+        brand("dc-b-18", "GIVE A SH!T", "body", "https://www.amazon.com/Plant-Based-Full-Body-Wipes-Dogs/dp/B0CW7D6PRS"),
+        brand("dc-b-19", "goop", "beauty", "https://goop.com/goop-beauty-goopgenes-lift-and-depuff-eye-masks/30-pack/p/"),
+        brand("dc-b-20", "HARTMANN", "surface", "https://www.bode-chemie.com/en/products/surfaces/bacillol-zero"),
+        brand("dc-b-21", "Hogara", "beauty", "https://hogara.jp/products/4580532121207"),
+        brand("dc-b-22", "I'mO", "intimate", "https://imo.imweb.me/shop-pad/?idx=96in"),
+        brand("dc-b-23", "IMCLEAN", "body", "https://smartstore.naver.com/allgoodlife/products/4411804776"),
+        brand("dc-b-24", "kindoh", "body", "https://kindoh.co.kr/product/%ED%82%A8%EB%8F%84-%EC%95%84%EA%B8%B0-%EB%AC%BC%ED%8B%B0%EC%8A%88-%EA%B3%A8%EB%93%9C-%EC%9D%BC%EB%B0%98%ED%98%95-10%ED%8C%A9-700%EB%A7%A4/58/category/1/display/3/"),
+        brand("dc-b-25", "KUDOS", "body", "https://mykudos.com/products/babywipes"),
+        brand("dc-b-26", "Lab. Smart", "beauty", "https://www.dr-hsieh.com/collections/lab-smart%E9%9D%A2%E8%86%9C"),
+        brand("dc-b-27", "LIL LUV DOG", "body", "https://lilluvdog.com/products/the-daily-wipe"),
+        brand("dc-b-28", "Merhen Haus", "surface", "https://smartstore.naver.com/merhenhaus/products/6083463218"),
+        brand("dc-b-29", "Mizu 99% Super", "body", "https://shop.akachan.jp/shop/g/g216986400/"),
+        brand("dc-b-30", "Mui Mui Bear", "body", "https://pse.is/66e57b"),
+        brand("dc-b-31", "mytowel", "surface", "https://mytowel.com/en/"),
+        brand("dc-b-32", "neomamaism", "body", "https://neomamaism.com/products/wood-based-wipes18"),
+        brand("dc-b-33", "Neroli", "beauty", "http://shop.neroliaroma.com/shopdetail/000000000655/ct140/page1/order/"),
+        brand("dc-b-34", "Norafin", "surface, beauty, body, intimate", "https://www.norafin.de/produktdetails/0316099-spunlace-140gsm-100-lyocell/"),
+        brand("dc-b-35", "PAEDIPROTECT", "body", "https://paediprotect.de/produkt/feuchttuecher/"),
+        brand("dc-b-36", "popotine", "intimate", "https://popotine.com/en/what-is-veocel-the-cellulosic-fiber-used-in-popotine-diapers-how-is-it-manufactured/"),
+        brand("dc-b-37", "QYING", "body", "https://detail.tmall.com/item.htm?id=810977038431"),
+        brand("dc-b-38", "RICO Baby", "body", "https://smartstore.naver.com/ricobabywipes/products/9526286323"),
+        brand("dc-b-39", "Sansho Shigyo", "surface", "https://www.sanshoshigyo.jp/product_page_02.html"),
+        brand("dc-b-40", "seazons", "body", "https://detail.tmall.com/item.htm?id=860243335058"),
+        brand("dc-b-41", "Sensatia Botanicals", "beauty", "https://www.sensatia.com/face/facial-mask/"),
+        brand("dc-b-42", "The Beautid", "intimate", "https://thebeautid.com/product/list.html?cate_no=42"),
+        brand("dc-b-43", "watsons", "beauty", "https://www.watsons.co.th/en/search?text=%E0%B8%A7%E0%B8%B1%E0%B8%95%E0%B8%AA%E0%B8%B1%E0%B8%99%2B%E0%B9%80%E0%B8%A5%E0%B8%B4%E0%B8%9F%2B%E0%B8%A1%E0%B8%B2%E0%B8%A2%2B%E0%B9%82%E0%B8%81%E0%B8%A5%E0%B8%A7%E0%B9%8C&useDefaultSearch=false&brandRedirect=true"),
+        brand("dc-b-44", "Welkeeps", "body", "https://www.skstoa.com/display/goods/29858254"),
+        brand("dc-b-45", "wellros", "body", "https://www.amway.co.kr/shop/one-for-one/baby/wellros/p/300180K"),
+        brand("dc-b-46", "Yejimiin", "intimate", "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000121067"),
+        brand("dc-b-47", "29 Days", "intimate", "https://29days.co.kr/category/%EB%8B%A8%ED%92%88/120/"),
       ],
     },
   ],

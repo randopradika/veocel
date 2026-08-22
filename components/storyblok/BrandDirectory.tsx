@@ -9,6 +9,7 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import type {
   BrandCategoryBlok,
   BrandDirectoryBlok,
+  BrandItemBlok,
   SbBlock,
 } from "@/lib/types";
 
@@ -42,6 +43,17 @@ function letterOf(name: string): string {
   return /[a-z]/.test(first) ? first : OTHER;
 }
 
+/**
+ * A brand can sit in several categories, comma-separated in the field — the
+ * source directory files one brand (Norafin) under all four.
+ */
+function categoriesOf(brand: BrandItemBlok): string[] {
+  return (brand.category ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+}
+
 export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
   const categories = blok.categories ?? [];
   // Memoised so the fallback doesn't hand every render a fresh array and defeat
@@ -51,13 +63,24 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
   const [category, setCategory] = useState<string>(ALL);
   const [letter, setLetter] = useState<string | null>(null);
 
+  // Alphabetical, except the "#" group closes the list as the design draws it —
+  // digits would otherwise sort ahead of "a" and open the grid.
   const sorted = useMemo(
-    () => [...brands].sort((a, b) => a.name.localeCompare(b.name)),
+    () =>
+      [...brands].sort((a, b) => {
+        const letterA = letterOf(a.name);
+        const letterB = letterOf(b.name);
+        if (letterA !== letterB) {
+          if (letterA === OTHER) return 1;
+          if (letterB === OTHER) return -1;
+        }
+        return a.name.localeCompare(b.name);
+      }),
     [brands],
   );
 
   const inCategory = useMemo(
-    () => (category === ALL ? sorted : sorted.filter((b) => b.category === category)),
+    () => (category === ALL ? sorted : sorted.filter((b) => categoriesOf(b).includes(category))),
     [sorted, category],
   );
 
@@ -69,8 +92,9 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
   const counts = useMemo(() => {
     const map = new Map<string, number>([[ALL, brands.length]]);
     for (const brand of brands) {
-      if (!brand.category) continue;
-      map.set(brand.category, (map.get(brand.category) ?? 0) + 1);
+      for (const entry of categoriesOf(brand)) {
+        map.set(entry, (map.get(entry) ?? 0) + 1);
+      }
     }
     return map;
   }, [brands]);
@@ -235,7 +259,12 @@ function CategoryButton({
             alt=""
             sizes="24px"
             className="relative h-5 w-5"
-            imageClassName="object-contain"
+            /*
+              The icon artwork is a dark glyph. On the filled active circle it
+              would stay dark, so invert it to white there — the raster can't
+              take `currentColor` the way the fallback SVG does.
+            */
+            imageClassName={active ? "object-contain brightness-0 invert" : "object-contain"}
           />
         ) : (
           <svg

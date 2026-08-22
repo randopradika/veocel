@@ -1218,7 +1218,7 @@
       },
       "category": {
         "type": "text",
-        "description": "Must match a category's Label exactly. Leave empty and the brand appears only under \"all\"."
+        "description": "One or more category Labels, comma-separated — a brand can sit in several. Leave empty and the brand appears only under \"all\"."
       },
       "link": {
         "type": "multilink",

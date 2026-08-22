@@ -460,7 +460,10 @@ export type BrandItemBlok = SbBlock & {
   /** Drives both the alphabet grouping and the logo's alt text. */
   name: string;
   logo?: StoryblokAsset;
-  /** Must match a category's `label` to be filterable. Blank shows under "all" only. */
+  /**
+   * One or more category `label`s, comma-separated — a brand can sit in
+   * several. Blank shows under "all" only.
+   */
   category?: string;
   link?: StoryblokLink;
 };
