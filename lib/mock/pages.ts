@@ -126,23 +126,36 @@ const home: PageBlok = {
 };
 
 /*
- * The fiber types page — the portfolio revision, Figma frame 2010:465 in the
- * copy. The earlier certification wall, production diagrams and comparison
- * table left the page with this design; they live on in git history and the
- * block library.
+ * The fiber types page — Figma frame 2019:1326, the revision that superseded
+ * the 2010:465 portfolio. The earlier certification wall, production diagrams
+ * and comparison table left the page with the first portfolio design; they
+ * live on in git history and the block library.
  *
- * Every card's diameter/features values are the frame's own template text,
- * repeated verbatim on all ten cards — placeholders until product data is
- * confirmed, like the intro's "for the use in" phrasing.
+ * The 2019:1326 revision trims the catalogue to seven fibers (four Lyocell,
+ * three Viscose), drops the application tag beside each name, and — for the
+ * first time — carries REAL spec values per card in three rows: fiber
+ * diameter, key applications, fiber features. All values are transcribed from
+ * the frame. Two frame typos are corrected rather than copied: the Lyocell
+ * Skin card labels its key-applications row "fiber features" (the values make
+ * the intent plain), and the Vicostar Core features read "triobal" where its
+ * sibling card spells "trilobal". Note the design now writes "Vicostar" in
+ * both Viscose card names, while the hygiene tampon copy still says
+ * "Viscostar" — the naming split survives.
  */
-function fiberCard(uid: string, name: string, application: string): FiberProductCardBlok {
+function fiberCard(
+  uid: string,
+  name: string,
+  diameter: string,
+  applications: string,
+  features: string,
+): FiberProductCardBlok {
   return {
     _uid: uid,
     component: "fiber_product_card",
     name,
-    application,
-    diameter: "standard, fine, coarse",
-    features: "crimp, TCF, EC",
+    diameter,
+    applications,
+    features,
   };
 }
 
@@ -169,13 +182,34 @@ const fiberTypes: PageBlok = {
       intro:
         "Lenzing provides a wide range of Lyocell fibers designed for the use in various applications.",
       items: [
-        fiberCard("f-ly-1", "VEOCEL™ Lyocell", "Wipes & Hygiene"),
-        fiberCard("f-ly-2", "VEOCEL™ Lyocell Shortcut", "Moist Toilet Tissue"),
-        fiberCard("f-ly-3", "VEOCEL™ Lyocell Fine Shortcut", "Moist Toilet Tissue"),
-        fiberCard("f-ly-4", "VEOCEL™ Lyocell Dry", "Hygiene"),
-        fiberCard("f-ly-5", "VEOCEL™ Lyocell EC", "Surface Cleaning"),
-        fiberCard("f-ly-6", "VEOCEL™ Lyocell Skin", "Beauty"),
-        fiberCard("f-ly-7", "VEOCEL™ Lyocell Micro Skin", "Beauty"),
+        fiberCard(
+          "f-ly-1",
+          "VEOCEL™ Lyocell Nonwoven",
+          "standard, fine, coarse",
+          "wipes, industrial",
+          "crimp, TCF, EC",
+        ),
+        fiberCard(
+          "f-ly-2",
+          "VEOCEL™ Lyocell Dry",
+          "standard, fine, coarse",
+          "sanitary pads, wipes, technical",
+          "hydrophobic, TCF",
+        ),
+        fiberCard(
+          "f-ly-3",
+          "VEOCEL™ Lyocell Skin",
+          "standard, micro",
+          "MTTs, wipes",
+          "translucency",
+        ),
+        fiberCard(
+          "f-ly-4",
+          "VEOCEL™ Lyocell Shortcut",
+          "standard, fine",
+          "MTTs, wipes",
+          "dispersibility, special cut, antistat",
+        ),
       ],
     },
     {
@@ -185,9 +219,27 @@ const fiberTypes: PageBlok = {
       intro:
         "Lenzing provides a wide range of Viscose fibers designed for the use in various applications.",
       items: [
-        fiberCard("f-vi-1", "VEOCEL™ Viscose", "Wipes"),
-        fiberCard("f-vi-2", "VEOCEL™ Viscose", "Hygiene"),
-        fiberCard("f-vi-3", "VEOCEL™ Vicostar", "Hygiene"),
+        fiberCard(
+          "f-vi-1",
+          "VEOCEL™ Viscose Nonwoven",
+          "standard, fine, coarse",
+          "wipes, AHP, industrial",
+          "TCF, absorbency",
+        ),
+        fiberCard(
+          "f-vi-2",
+          "VEOCEL™ Tampon, Vicostar",
+          "coarse",
+          "tampons",
+          "TCF, trilobal, bright, high absorbency",
+        ),
+        fiberCard(
+          "f-vi-3",
+          "VEOCEL™ Vicostar Core",
+          "coarse",
+          "AHP core",
+          "trilobal, absorbency, liquid spread",
+        ),
       ],
     },
   ],

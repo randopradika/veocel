@@ -7,11 +7,12 @@ import { editable } from "./editable";
 
 /**
  * A fiber family's product catalogue: heading and intro on one line, then a
- * grid of cards — photograph, the fiber's name opposite its application, and
- * two spec rows. The fibers page runs two of these, Lyocell and Viscose.
+ * grid of cards — photograph, the fiber's centred name, and three spec rows
+ * (diameter, key applications, features — the 2019:1326 revision's set). The
+ * fibers page runs two of these, Lyocell and Viscose.
  *
- * The spec-row labels live on the grid, not the cards, so ten cards can't
- * drift into nine "fiber diameter"s and one "fibre diameter".
+ * The spec-row labels live on the grid, not the cards, so seven cards can't
+ * drift into six "fiber diameter"s and one "fibre diameter".
  *
  * The design underlines every fiber name as a link. The detail pages don't
  * exist yet, so the underline is drawn only when a card actually has a link —
@@ -44,6 +45,7 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
               <FiberProductCard
                 blok={item}
                 diameterLabel={blok.diameter_label || "fiber diameter"}
+                applicationsLabel={blok.applications_label || "key applications"}
                 featuresLabel={blok.features_label || "fiber features"}
               />
             </li>
@@ -61,14 +63,17 @@ function hasTarget(link?: StoryblokLink): boolean {
 function FiberProductCard({
   blok,
   diameterLabel,
+  applicationsLabel,
   featuresLabel,
 }: {
   blok: FiberProductCardBlok;
   diameterLabel: string;
+  applicationsLabel: string;
   featuresLabel: string;
 }) {
   const specs = [
     [diameterLabel, blok.diameter],
+    [applicationsLabel, blok.applications],
     [featuresLabel, blok.features],
   ].filter((row): row is [string, string] => Boolean(row[1]));
 
@@ -82,26 +87,20 @@ function FiberProductCard({
         placeholderTone="sky"
       />
 
-      <div className="mt-5 flex items-baseline justify-between gap-4">
-        <h3 className="text-sm font-bold text-brand md:text-base">
-          <SmartLink
-            link={blok.link}
-            className={`focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand ${
-              hasTarget(blok.link)
-                ? "underline underline-offset-4 transition-opacity hover:opacity-75"
-                : ""
-            }`}
-          >
-            {blok.name}
-          </SmartLink>
-        </h3>
-
-        {blok.application ? (
-          <p className="text-right text-sm font-bold text-brand md:text-base">
-            {blok.application}
-          </p>
-        ) : null}
-      </div>
+      {/* Centred, as the 2019:1326 revision draws it — the application tag
+          that used to sit opposite left the design with that revision. */}
+      <h3 className="mt-5 text-center text-sm font-bold text-brand md:text-base">
+        <SmartLink
+          link={blok.link}
+          className={`focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand ${
+            hasTarget(blok.link)
+              ? "underline underline-offset-4 transition-opacity hover:opacity-75"
+              : ""
+          }`}
+        >
+          {blok.name}
+        </SmartLink>
+      </h3>
 
       {specs.length > 0 ? (
         <dl className="mt-4 space-y-1 text-sm">

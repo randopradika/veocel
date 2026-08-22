@@ -877,7 +877,7 @@
     "display_name": "Fiber product grid",
     "is_root": false,
     "is_nestable": true,
-    "description": "A fiber family's catalogue: heading and intro side by side, then cards with photo, name, application and spec rows.",
+    "description": "A fiber family's catalogue: heading and intro side by side, then cards with photo, name and three spec rows.",
     "schema": {
       "heading": {
         "type": "text"
@@ -889,9 +889,13 @@
         "type": "text",
         "description": "Label of the first spec row on every card. Defaults to 'fiber diameter'."
       },
+      "applications_label": {
+        "type": "text",
+        "description": "Label of the second spec row on every card. Defaults to 'key applications'."
+      },
       "features_label": {
         "type": "text",
-        "description": "Label of the second spec row on every card. Defaults to 'fiber features'."
+        "description": "Label of the third spec row on every card. Defaults to 'fiber features'."
       },
       "items": {
         "type": "bloks",
@@ -916,10 +920,6 @@
         "type": "multilink",
         "description": "The fiber's detail page. The name is underlined only when this is set."
       },
-      "application": {
-        "type": "text",
-        "description": "Shown opposite the name — the application this fiber serves."
-      },
       "image": {
         "type": "asset",
         "filetypes": [
@@ -928,6 +928,10 @@
       },
       "diameter": {
         "type": "text"
+      },
+      "applications": {
+        "type": "text",
+        "description": "The applications this fiber serves — the middle spec row."
       },
       "features": {
         "type": "text"

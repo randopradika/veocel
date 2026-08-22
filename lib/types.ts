@@ -354,10 +354,10 @@ export type FiberProductCardBlok = SbBlock & {
   name: string;
   /** Where the underlined name leads — the fiber's detail page, once one exists. */
   link?: StoryblokLink;
-  /** The application the fiber serves, shown opposite the name. */
-  application?: string;
   image?: StoryblokAsset;
   diameter?: string;
+  /** The applications the fiber serves — the middle spec row. */
+  applications?: string;
   features?: string;
 };
 
@@ -365,8 +365,9 @@ export type FiberProductGridBlok = SbBlock & {
   component: "fiber_product_grid";
   heading?: string;
   intro?: string;
-  /** Labels of the two spec rows, shared by every card in the grid. */
+  /** Labels of the three spec rows, shared by every card in the grid. */
   diameter_label?: string;
+  applications_label?: string;
   features_label?: string;
   items?: FiberProductCardBlok[];
 };
