@@ -29,7 +29,9 @@ export function Logo({
         alt=""
         width={193}
         height={53}
-        className={`h-14 w-auto transition-opacity duration-300 ${
+        // `block` so the wrapper measures the artwork's true 56px — an inline img
+        // carries a baseline gap that inflates any layout sized from its content.
+        className={`block h-14 w-auto transition-opacity duration-300 ${
           variant === "dark" ? "opacity-100" : "opacity-0"
         }`}
       />
