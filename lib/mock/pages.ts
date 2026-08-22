@@ -516,6 +516,206 @@ const dailyCare: PageBlok = {
   ],
 };
 
+/*
+ * The sustainability page — Figma "Desktop [Rev]" frame 2010:279. Tab 5, so
+ * only the partner page now renders its tab as a dead link.
+ *
+ * EVERY CERTIFICATE BELOW IS A COMPLIANCE CLAIM transcribed from artwork, not
+ * from the issuing bodies — names, numbers and scopes need verification before
+ * launch (see HANDOFF.md). Three deliberate deviations from the frame:
+ *
+ * - The frame draws a row of languages (english 简体中文 繁體中文 한국어 日本語)
+ *   between the intro and the claims, with nothing linked. The site's language
+ *   picker lives in the header and the space has no such locales, so the strip
+ *   is not built — raise with whoever owns the Figma.
+ * - The frame's ISEGA No. 68954 caption reads "LENZING™ Lycocell fibers"; no
+ *   such fiber exists, so "Lyocell" is written here instead of the typo.
+ * - The captions "OK biodegradable INDUSTRIAL" and "HOME" are transcribed
+ *   verbatim, but the artwork under both is TÜV's OK *compost* mark (matching
+ *   the claim copy, which says compostable under those conditions). One of the
+ *   two — caption or artwork — is wrong; flagged rather than resolved.
+ */
+const sustainability: PageBlok = {
+  _uid: "mock-sustainability",
+  component: "page",
+  seo_title: "sustainability | VEOCEL™",
+  seo_description:
+    "How VEOCEL™ fibers back their environmental claims — wood-based, responsibly produced, biodegradable — and the product certificates behind them.",
+  body: [
+    {
+      _uid: "su-hero",
+      component: "hero",
+      headline: "sustainability",
+      headline_size: "title",
+      nav_cards: heroTabs("su"),
+    },
+    {
+      _uid: "su-intro",
+      component: "text_columns",
+      align: "split",
+      heading: "we take regulations and green claims seriously",
+      body:
+        "Adhering to regulations is key in the fast-changing and complex environment " +
+        "for claims. That’s why we have a process in place, factoring in " +
+        "rapidly-evolving regulatory requirements when developing and updating the " +
+        "claims. With our QR-coded claims and updated webpage, we provide more " +
+        "clarity on what our fibers offer to conscious consumers.",
+    },
+    {
+      _uid: "su-claims",
+      component: "claim_grid",
+      heading: "environmental responsibility claims",
+      items: [
+        {
+          _uid: "su-claim-1",
+          component: "claim_card",
+          title: "wood-based fibers",
+          body:
+            "VEOCEL™ fibers are wood-based, derived from renewable wood sources " +
+            "through a pulping process and finally made into fibers. VEOCEL™ fibers " +
+            "bring the inherent advantages of cellulose to personal care and hygiene " +
+            "products: natural absorbency, liquid distribution, biodegradability and " +
+            "versatility.",
+          proof_label: "proof:",
+          proof:
+            "USDA biobased product\n" +
+            "FSC® / PEFC certified\n" +
+            "Lenzing Wood and Pulp Policy\n" +
+            "TÜV AUSTRIA certification",
+        },
+        {
+          _uid: "su-claim-2",
+          component: "claim_card",
+          title: "responsible production",
+          body:
+            "VEOCEL™ branded fibers are manufactured with high production standards " +
+            "with low emissions to air and water, thereby safeguarding resources for " +
+            "future generations*.\n\n" +
+            "* these results were calculated using the Higg Materials Sustainability " +
+            "Index (Higg MSI) tools provided by the Sustainable Apparel Coalition. The " +
+            "Higg MSI tools assess impacts of materials from cradle-to-gate for a " +
+            "finished material (e.g. to the point at which the materials are ready to " +
+            "be assembled into a product). However, this figure only shows impacts " +
+            "from cradle to fiber production gate. VEOCEL™ branded fibers’ LCA " +
+            "results are represented by TENCEL™/ECOVERO™ data based on Higg MSI " +
+            "database v3.7 (December, 2023).",
+          proof_label: "proof:",
+          proof:
+            "externally calculated LCA results\n" +
+            "Higg MSI data\n" +
+            "Lenzing Focus Paper “Responsible Production”\n" +
+            "sustainability reports\n" +
+            "EU Ecolabel / EU BAT standard",
+        },
+        {
+          _uid: "su-claim-3",
+          component: "claim_card",
+          title: "biodegradable fibers",
+          body:
+            "derived from the natural material — wood, VEOCEL™ fibers are " +
+            "biodegradable in soil, freshwater and marine conditions and compostable " +
+            "under industrial and home conditions, and can fully return to nature*.\n\n" +
+            "* this claim is not applicable in California, U.S.A. and France.",
+          proof_label: "proof:",
+          proof: "TÜV AUSTRIA certification\nSCRIPPS study",
+        },
+        {
+          _uid: "su-claim-4",
+          component: "claim_card",
+          title: "responsible wood and pulp sourcing",
+          body:
+            "the raw material for VEOCEL™ fibers is derived from wood sources grown " +
+            "in responsibly managed forests*, following the stringent guidelines of " +
+            "the Lenzing Wood and Pulp Policy and applying trusted forest " +
+            "certification systems.\n\n" +
+            "* please refer to Lenzing Wood & Pulp Policy (lenzing.com)",
+          proof_label: "proof:",
+          proof:
+            "Lenzing’s Wood and Pulp Policy\n" +
+            "FSC®/ PEFC certificates with Chain of Custody\n" +
+            "The Hot Button Report",
+        },
+      ],
+    },
+    {
+      _uid: "su-certificates",
+      component: "certification_grid",
+      heading: "product certificates",
+      align: "left",
+      items: [
+        {
+          _uid: "su-cert-1",
+          component: "certification_item",
+          label: "FSC (Chain of Custody)",
+        },
+        {
+          _uid: "su-cert-2",
+          component: "certification_item",
+          label: "PEFC (Chain of Custody)",
+        },
+        {
+          _uid: "su-cert-3",
+          component: "certification_item",
+          label: "The EU Ecolabel (Chain of Custody)",
+        },
+        {
+          _uid: "su-cert-4",
+          component: "certification_item",
+          label: "USDA Certified Biobased Product",
+        },
+        {
+          _uid: "su-cert-5",
+          component: "certification_item",
+          label: "OK biodegradable SOIL",
+        },
+        {
+          _uid: "su-cert-6",
+          component: "certification_item",
+          label: "OK biodegradable WATER",
+        },
+        {
+          _uid: "su-cert-7",
+          component: "certification_item",
+          label: "OK biodegradable MARINE",
+        },
+        {
+          _uid: "su-cert-8",
+          component: "certification_item",
+          label: "OK biodegradable INDUSTRIAL",
+        },
+        {
+          _uid: "su-cert-9",
+          component: "certification_item",
+          label: "OK biodegradable HOME",
+        },
+        {
+          _uid: "su-cert-10",
+          component: "certification_item",
+          label: "ISEGA (No. 68954)",
+          note: "(Applying to LENZING™ Lyocell fibers)",
+        },
+        {
+          _uid: "su-cert-11",
+          component: "certification_item",
+          label: "ISEGA (No. 59063)",
+          note: "(Applying to LENZING™ Viscose fibers)",
+        },
+        {
+          _uid: "su-cert-12",
+          component: "certification_item",
+          label: "STANDARD 100 by OEKO-TEX",
+          note: "(Annex 6, product class 1)",
+        },
+        {
+          _uid: "su-cert-13",
+          component: "certification_item",
+          label: "Medically Tested - Tested for Toxins",
+        },
+      ],
+    },
+  ],
+};
+
 export const mockStories: Record<string, SbStory<PageBlok>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
@@ -523,4 +723,5 @@ export const mockStories: Record<string, SbStory<PageBlok>> = {
   hygiene: story("hygiene", "VEOCEL™ fibers for hygiene", hygiene),
   beauty: story("beauty", "VEOCEL™ fibers for beauty", beauty),
   "daily-care": story("daily-care", "where to buy", dailyCare),
+  sustainability: story("sustainability", "sustainability", sustainability),
 };

@@ -6,6 +6,7 @@ import { BrandDirectory } from "./BrandDirectory";
 import { BrandStrip } from "./BrandStrip";
 import { CategoryGrid } from "./CategoryGrid";
 import { CertificationGrid } from "./CertificationGrid";
+import { ClaimGrid } from "./ClaimGrid";
 import { ExploreTabs } from "./ExploreTabs";
 import { FeatureAccordion } from "./FeatureAccordion";
 import { FeatureSplit } from "./FeatureSplit";
@@ -69,6 +70,9 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
 
   // Where to buy
   brand_directory: block(BrandDirectory),
+
+  // Sustainability
+  claim_grid: block(ClaimGrid),
 };
 
 /** Renders a story's `body` field in order. */

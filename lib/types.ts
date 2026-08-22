@@ -384,7 +384,31 @@ export type CertificationGridBlok = SbBlock & {
   component: "certification_grid";
   heading?: string;
   intro?: string;
+  /**
+   * `center` is the original wall with its centred heading; `left` ranges the
+   * heading with the rest of the page, as the sustainability frame draws it.
+   */
+  align?: "center" | "left";
   items?: CertificationItemBlok[];
+};
+
+export type ClaimCardBlok = SbBlock & {
+  component: "claim_card";
+  /** Line-drawn mark above the title. Decorative — the title carries the meaning. */
+  icon?: StoryblokAsset;
+  title: string;
+  /** Blank lines start a new paragraph; footnote paragraphs begin with "*". */
+  body?: string;
+  /** Caption over the proof list — its own field so it can be translated. */
+  proof_label?: string;
+  /** One certification or document per line. */
+  proof?: string;
+};
+
+export type ClaimGridBlok = SbBlock & {
+  component: "claim_grid";
+  heading?: string;
+  items?: ClaimCardBlok[];
 };
 
 export type ProcessDiagramBlok = SbBlock & {
@@ -467,6 +491,7 @@ export type AnyBlok =
   | FiberTypeGridBlok
   | FiberProductGridBlok
   | CertificationGridBlok
+  | ClaimGridBlok
   | ProcessDiagramBlok
   | FiberPortfolioBlok
   | BrandDirectoryBlok;

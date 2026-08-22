@@ -25,6 +25,7 @@
           "fiber_type_grid",
           "fiber_product_grid",
           "certification_grid",
+          "claim_grid",
           "process_diagram",
           "fiber_portfolio",
           "brand_directory"
@@ -998,12 +999,75 @@
       "intro": {
         "type": "textarea"
       },
+      "align": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Centred — the original wall",
+            "value": "center"
+          },
+          {
+            "name": "Left — ranged with the page's section headings",
+            "value": "left"
+          }
+        ],
+        "default_value": "center"
+      },
       "items": {
         "type": "bloks",
         "restrict_components": true,
         "component_whitelist": [
           "certification_item"
         ]
+      }
+    }
+  },
+  {
+    "name": "claim_grid",
+    "display_name": "Claim grid",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "Environmental-responsibility claim cards — icon, claim and proof list — under a ruled heading.",
+    "schema": {
+      "heading": {
+        "type": "text"
+      },
+      "items": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "claim_card"
+        ]
+      }
+    }
+  },
+  {
+    "name": "claim_card",
+    "display_name": "Claim card",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "icon": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Line-drawn mark above the title. Decorative — the title carries the meaning."
+      },
+      "title": {
+        "type": "text"
+      },
+      "body": {
+        "type": "textarea",
+        "description": "Blank lines start a new paragraph. Footnote paragraphs begin with *."
+      },
+      "proof_label": {
+        "type": "text",
+        "description": "Caption over the proof list (\"proof:\"). A field so it can be translated."
+      },
+      "proof": {
+        "type": "textarea",
+        "description": "One certification or document per line."
       }
     }
   },
