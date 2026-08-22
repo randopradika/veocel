@@ -6,8 +6,9 @@
  *
  * The rasters are the "purely-you-logo" images the Figma frames carry, with
  * the "Purely for you" tagline cropped off — every placement in the design
- * crops it. The sources are 193px/341px wide: enough for these rendered sizes,
- * but replace with vector artwork if the logo ever needs to grow.
+ * crops it. Sized to the frames' ~56px lockup (2019:1441 checked), which
+ * pushes the 193px colored source slightly past 1x — it reads a touch soft on
+ * high-DPI screens. Vector artwork is now needed, not just nice to have.
  *
  * Plain `<img>` on purpose: `next/image` runs every source through the
  * Storyblok image service loader, which cannot serve files from /public.
@@ -28,7 +29,7 @@ export function Logo({
         alt=""
         width={193}
         height={53}
-        className={`h-9 w-auto transition-opacity duration-300 ${
+        className={`h-14 w-auto transition-opacity duration-300 ${
           variant === "dark" ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -38,7 +39,7 @@ export function Logo({
         alt=""
         width={341}
         height={92}
-        className={`absolute inset-0 h-9 w-auto transition-opacity duration-300 ${
+        className={`absolute inset-0 h-14 w-auto transition-opacity duration-300 ${
           variant === "light" ? "opacity-100" : "opacity-0"
         }`}
       />
