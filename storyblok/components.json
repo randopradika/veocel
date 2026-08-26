@@ -414,7 +414,7 @@
     "display_name": "Process row",
     "is_root": false,
     "is_nestable": true,
-    "description": "Statement heading over a row of lifecycle steps.",
+    "description": "A sequence of steps: a ring with copy beside it, a horizontal strip under a heading, or photo-led cards on the tinted band.",
     "schema": {
       "heading": {
         "type": "text"
@@ -455,6 +455,10 @@
           {
             "name": "Row — horizontal strip under the heading",
             "value": "row"
+          },
+          {
+            "name": "Cards — photo-led step cards, three up, on the tinted band",
+            "value": "cards"
           }
         ],
         "default_value": "ring"
@@ -881,7 +885,7 @@
     "display_name": "Fiber product grid",
     "is_root": false,
     "is_nestable": true,
-    "description": "A fiber family's catalogue: heading and intro side by side, then cards with photo, name and three spec rows.",
+    "description": "A fiber family's catalogue: heading and intro side by side, then cards with photo and name. The name opens a pop-up with the description and three spec rows.",
     "schema": {
       "heading": {
         "type": "text"
@@ -922,13 +926,24 @@
       },
       "link": {
         "type": "multilink",
-        "description": "The fiber's detail page. The name is underlined only when this is set."
+        "description": "Where the name leads instead of opening the pop-up — the fiber's detail page, once one exists. Leave empty to open the pop-up."
       },
       "image": {
         "type": "asset",
         "filetypes": [
           "images"
         ]
+      },
+      "detail_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Portrait photograph for the pop-up's left half. Falls back to the card photo."
+      },
+      "description": {
+        "type": "textarea",
+        "description": "Shown in the pop-up above the spec rows. Blank lines start a new paragraph."
       },
       "diameter": {
         "type": "text"

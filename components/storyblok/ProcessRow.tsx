@@ -13,15 +13,22 @@ const ALIGN = {
 } as const;
 
 /**
- * The wood-to-fiber-to-nature lifecycle, in two arrangements:
+ * A sequence of steps, in three arrangements:
  *
- *   ring — steps spaced evenly around a circle, copy alongside. This is the
- *          natural-circularity diagram: the shape is the argument, so the last
- *          step sits next to the first rather than at the end of a line.
- *   row  — a single horizontal strip under a statement heading.
+ *   ring  — steps spaced evenly around a circle, copy alongside. This is the
+ *           natural-circularity diagram: the shape is the argument, so the last
+ *           step sits next to the first rather than at the end of a line.
+ *   row   — a single horizontal strip under a statement heading.
+ *   cards — white, photo-led cards three up on the tinted band: the partner
+ *           page's licensing steps (frame 2039:549). One block rather than a
+ *           third that would drift, the same reasoning as `feature_accordion`.
  */
 export function ProcessRow({ blok }: { blok: ProcessRowBlok }) {
   const steps = blok.steps ?? [];
+
+  if (blok.layout === "cards") {
+    return <ProcessCards blok={blok} steps={steps} />;
+  }
 
   if ((blok.layout ?? "row") === "ring") {
     return <ProcessRing blok={blok} steps={steps} />;
@@ -180,6 +187,64 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
         </div>
       </Container>
     </Section>
+  );
+}
+
+/**
+ * Step cards on the tinted band — the band is part of the layout, not an
+ * option, because white cards on the white page would have no edge at all.
+ */
+function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStepBlok[] }) {
+  return (
+    <Section {...editable(blok)} spacing="tight" className="bg-brand-50">
+      <Container>
+        {blok.heading ? (
+          <h2
+            className={`text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2] ${
+              ALIGN[blok.align ?? "center"]
+            }`}
+          >
+            {blok.heading}
+          </h2>
+        ) : null}
+
+        {steps.length > 0 ? (
+          <ol className={`${blok.heading ? "mt-12 " : ""}grid gap-6 md:grid-cols-3`}>
+            {steps.map((step) => (
+              <StepCard key={step._uid} blok={step} />
+            ))}
+          </ol>
+        ) : null}
+      </Container>
+    </Section>
+  );
+}
+
+/**
+ * Photograph, title, copy. The card spans three subgrid rows so the titles of
+ * a row of cards share a baseline whether they run to one line or two — the
+ * frame bottom-aligns them and starts every description on the same line.
+ */
+function StepCard({ blok }: { blok: ProcessStepBlok }) {
+  return (
+    <li
+      {...editable(blok)}
+      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center"
+    >
+      <BlockImage
+        asset={blok.image}
+        alt=""
+        sizes="(max-width: 768px) 100vw, 33vw"
+        className="relative aspect-[433/262] w-full rounded-card"
+        placeholderTone="sky"
+      />
+      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand">
+        {blok.title}
+      </h3>
+      {blok.description ? (
+        <p className="mt-4 px-4 text-xs leading-[1.75] text-ink">{blok.description}</p>
+      ) : null}
+    </li>
   );
 }
 

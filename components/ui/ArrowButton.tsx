@@ -25,7 +25,14 @@ const TONES = {
   ghost: "border border-white/60 text-white",
 } as const;
 
-type IconName = "arrow-right" | "arrow-down" | "plus" | "minus" | "chevron-down" | "chevron-up";
+type IconName =
+  | "arrow-right"
+  | "arrow-down"
+  | "plus"
+  | "minus"
+  | "chevron-down"
+  | "chevron-up"
+  | "close";
 
 function Icon({ name }: { name: IconName }) {
   const common = {
@@ -68,6 +75,12 @@ function Icon({ name }: { name: IconName }) {
       return (
         <svg {...common}>
           <path d="M4 9.5 8 5.5l4 4" />
+        </svg>
+      );
+    case "close":
+      return (
+        <svg {...common}>
+          <path d="M4 4l8 8M12 4l-8 8" />
         </svg>
       );
     default:

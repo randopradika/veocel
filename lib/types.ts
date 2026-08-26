@@ -192,8 +192,10 @@ export type ProcessRowBlok = SbBlock & {
   /**
    * `ring` arranges the steps evenly around a circle with the copy beside them —
    * the natural-circularity diagram. `row` is a single horizontal strip.
+   * `cards` sets each step on a white, photo-led card, three up on the tinted
+   * band — the partner page's licensing steps.
    */
-  layout?: "row" | "ring";
+  layout?: "row" | "ring" | "cards";
   /**
    * The segmented-wheel artwork of the ring layout: one circular image whose
    * wedges carry the photography, with the step titles drawn over it as live
@@ -357,9 +359,17 @@ export type FiberTypeGridBlok = SbBlock & {
 export type FiberProductCardBlok = SbBlock & {
   component: "fiber_product_card";
   name: string;
-  /** Where the underlined name leads — the fiber's detail page, once one exists. */
+  /**
+   * Where the name leads instead of opening the pop-up — the fiber's detail
+   * page, once one exists. Empty, the name opens the pop-up (when the card has
+   * anything to show in it).
+   */
   link?: StoryblokLink;
   image?: StoryblokAsset;
+  /** Portrait photograph for the pop-up's left half. Falls back to `image`. */
+  detail_image?: StoryblokAsset;
+  /** Shown in the pop-up above the spec rows. Blank lines start a new paragraph. */
+  description?: string;
   diameter?: string;
   /** The applications the fiber serves — the middle spec row. */
   applications?: string;
@@ -370,7 +380,7 @@ export type FiberProductGridBlok = SbBlock & {
   component: "fiber_product_grid";
   heading?: string;
   intro?: string;
-  /** Labels of the three spec rows, shared by every card in the grid. */
+  /** Labels of the three spec rows in every card's pop-up, shared by the grid. */
   diameter_label?: string;
   applications_label?: string;
   features_label?: string;

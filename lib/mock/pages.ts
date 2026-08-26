@@ -126,36 +126,40 @@ const home: PageBlok = {
 };
 
 /*
- * The fiber types page — Figma frame 2019:1326, the revision that superseded
- * the 2010:465 portfolio. The earlier certification wall, production diagrams
- * and comparison table left the page with the first portfolio design; they
- * live on in git history and the block library.
+ * The fiber types page — Figma frame 2039:961 on the "Desktop Dev" page, the
+ * third portfolio revision (after 2010:465 and 2019:1326). The earlier
+ * certification wall, production diagrams and comparison table left the page
+ * with the first portfolio design; they live on in git history and the block
+ * library.
  *
- * The 2019:1326 revision trims the catalogue to seven fibers (four Lyocell,
- * three Viscose), drops the application tag beside each name, and — for the
- * first time — carries REAL spec values per card in three rows: fiber
- * diameter, key applications, fiber features. All values are transcribed from
- * the frame. Two frame typos are corrected rather than copied: the Lyocell
- * Skin card labels its key-applications row "fiber features" (the values make
- * the intent plain), and the Vicostar Core features read "triobal" where its
- * sibling card spells "trilobal". Note the design now writes "Vicostar" in
- * both Viscose card names, while the hygiene tampon copy still says
- * "Viscostar" — the naming split survives.
+ * This revision takes the three spec rows OFF the cards: a card is photo and
+ * underlined name, and the name opens a pop-up (frame 2039:359) carrying a
+ * description and the rows — fiber diameter, key applications, fiber
+ * features. It adds an eighth fiber, VEOCEL™ Lyocell EC, and writes the two
+ * Viscose names "Viscostar", closing the split with the hygiene tampon copy
+ * that 2019:1326's "Vicostar" had opened.
+ *
+ * The spec values are still the 2019:1326 transcriptions — this revision
+ * draws no specs of its own — so they still need checking against product
+ * documentation. Only one description exists in the design, Lyocell Dry's
+ * (the pop-up preview); the other cards open on their specs alone until copy
+ * is written, and Lyocell EC, with neither, keeps a plain name until it has
+ * something to show. Two 2019:1326 typos stay corrected: the Lyocell Skin
+ * card labelled its key-applications row "fiber features", and Vicostar
+ * Core's features read "triobal" for "trilobal".
  */
 function fiberCard(
   uid: string,
   name: string,
-  diameter: string,
-  applications: string,
-  features: string,
+  specs?: { diameter: string; applications: string; features: string },
+  description?: string,
 ): FiberProductCardBlok {
   return {
     _uid: uid,
     component: "fiber_product_card",
     name,
-    diameter,
-    applications,
-    features,
+    description,
+    ...specs,
   };
 }
 
@@ -182,34 +186,36 @@ const fiberTypes: PageBlok = {
       intro:
         "Lenzing provides a wide range of Lyocell fibers designed for the use in various applications.",
       items: [
-        fiberCard(
-          "f-ly-1",
-          "VEOCEL™ Lyocell Nonwoven",
-          "standard, fine, coarse",
-          "wipes, industrial",
-          "crimp, TCF, EC",
-        ),
+        fiberCard("f-ly-1", "VEOCEL™ Lyocell Nonwoven", {
+          diameter: "standard, fine, coarse",
+          applications: "wipes, industrial",
+          features: "crimp, TCF, EC",
+        }),
         fiberCard(
           "f-ly-2",
           "VEOCEL™ Lyocell Dry",
-          "standard, fine, coarse",
-          "sanitary pads, wipes, technical",
-          "hydrophobic, TCF",
+          {
+            diameter: "standard, fine, coarse",
+            applications: "sanitary pads, wipes, technical",
+            features: "hydrophobic, TCF",
+          },
+          "Lyocell Dry fibers achieve liquid-controlling properties with a performance " +
+            "enhancing treatment. Consumers can experience impeccable dryness and " +
+            "next-to-skin comfort.",
         ),
-        fiberCard(
-          "f-ly-3",
-          "VEOCEL™ Lyocell Skin",
-          "standard, micro",
-          "MTTs, wipes",
-          "translucency",
-        ),
-        fiberCard(
-          "f-ly-4",
-          "VEOCEL™ Lyocell Shortcut",
-          "standard, fine",
-          "MTTs, wipes",
-          "dispersibility, special cut, antistat",
-        ),
+        fiberCard("f-ly-3", "VEOCEL™ Lyocell Skin", {
+          diameter: "standard, micro",
+          applications: "MTTs, wipes",
+          features: "translucency",
+        }),
+        fiberCard("f-ly-4", "VEOCEL™ Lyocell Shortcut", {
+          diameter: "standard, fine",
+          applications: "MTTs, wipes",
+          features: "dispersibility, special cut, antistat",
+        }),
+        // New in 2039:961. The frame gives it a photograph and a name, nothing
+        // else, so until specs or copy arrive the name stays plain text.
+        fiberCard("f-ly-5", "VEOCEL™ Lyocell EC"),
       ],
     },
     {
@@ -219,27 +225,21 @@ const fiberTypes: PageBlok = {
       intro:
         "Lenzing provides a wide range of Viscose fibers designed for the use in various applications.",
       items: [
-        fiberCard(
-          "f-vi-1",
-          "VEOCEL™ Viscose Nonwoven",
-          "standard, fine, coarse",
-          "wipes, AHP, industrial",
-          "TCF, absorbency",
-        ),
-        fiberCard(
-          "f-vi-2",
-          "VEOCEL™ Tampon, Vicostar",
-          "coarse",
-          "tampons",
-          "TCF, trilobal, bright, high absorbency",
-        ),
-        fiberCard(
-          "f-vi-3",
-          "VEOCEL™ Vicostar Core",
-          "coarse",
-          "AHP core",
-          "trilobal, absorbency, liquid spread",
-        ),
+        fiberCard("f-vi-1", "VEOCEL™ Viscose Nonwoven", {
+          diameter: "standard, fine, coarse",
+          applications: "wipes, AHP, industrial",
+          features: "TCF, absorbency",
+        }),
+        fiberCard("f-vi-2", "VEOCEL™ Tampon, Viscostar", {
+          diameter: "coarse",
+          applications: "tampons",
+          features: "TCF, trilobal, bright, high absorbency",
+        }),
+        fiberCard("f-vi-3", "VEOCEL™ Viscostar Core", {
+          diameter: "coarse",
+          applications: "AHP core",
+          features: "trilobal, absorbency, liquid spread",
+        }),
       ],
     },
   ],
@@ -799,23 +799,26 @@ const sustainability: PageBlok = {
 };
 
 /*
- * The partner page — Figma "Desktop [Rev]" frame 2010:56, which superseded
- * 560:227. Tab 7, the last page of the strip: with it published, every tab
- * leads somewhere.
+ * The partner page — Figma frame 2039:549 on the "Desktop Dev" page, the
+ * later of that page's two partner frames. (2039:435 keeps the 2010:56
+ * layout, whose second panel was the "explore our product knowledge"
+ * brochure download; 2039:549 replaces that panel with the three licensing
+ * steps, and is the one built.) Tab 7, the last page of the strip.
  *
- * Two white CTA panels on the tinted band. Both button targets are real, taken
- * from the live veocel.com site on 2026-08-22 rather than invented: the
- * LENZING Pro link is the one that site's "VEOCEL™ for partners" nav carries,
- * and the design's "master brochure" is mapped to the VEOCEL™ General
- * Brochure PDF from its downloads page — the closest published document to
- * that name; confirm the mapping with whoever owns the Figma.
+ * A white CTA panel on the tinted band, then three photo-led step cards on
+ * the same band. The LENZING Pro target is real, taken from the live
+ * veocel.com site's "VEOCEL™ for partners" nav on 2026-08-22. The brochure
+ * link the dropped panel carried — the VEOCEL™ General Brochure PDF from that
+ * site's downloads page — is in git history should the panel come back. The
+ * step copy is transcribed as drawn, "then prepare" and "benefit, claims"
+ * included.
  */
 const partners: PageBlok = {
   _uid: "mock-partners",
   component: "page",
   seo_title: "how to become a VEOCEL™ partner",
   seo_description:
-    "Become a VEOCEL™ partner — explore the LENZING Pro portal for fiber solutions and partnership opportunities, and download the product brochure.",
+    "Become a VEOCEL™ partner — explore the LENZING Pro portal, fill out the online forms, send a sample for testing and receive your brand license.",
   body: [
     {
       _uid: "pt-hero",
@@ -827,7 +830,7 @@ const partners: PageBlok = {
     {
       _uid: "pt-lenzing-pro",
       component: "cta_panel",
-      heading: "LENZING Pro",
+      heading: "Lenzing Pro",
       body:
         "interested in becoming a VEOCEL™ partner? Explore Lenzing Pro to discover " +
         "our fiber solutions, learn more about partnership opportunities, and access " +
@@ -839,19 +842,34 @@ const partners: PageBlok = {
       },
     },
     {
-      _uid: "pt-brochure",
-      component: "cta_panel",
-      heading: "explore our product knowledge",
-      body:
-        "discover detailed information about VEOCEL™ fibers, including their key " +
-        "benefits, applications, and innovative technologies. Download our product " +
-        "brochure to explore the solutions available and find the right fiber for " +
-        "your business needs.",
-      link_label: "download master brochure",
-      link: {
-        url: "https://www.veocel.com/pdf/2025-Brochures/VEOCELTM-General-Brochure_2026.pdf",
-        linktype: "url",
-      },
+      _uid: "pt-steps",
+      component: "process_row",
+      layout: "cards",
+      steps: [
+        {
+          _uid: "pt-step-1",
+          component: "process_step",
+          title: "fill out the online forms",
+          description:
+            "Lenzing Partners from Nonwoven Industry planning to use VEOCEL™ can start right away.",
+        },
+        {
+          _uid: "pt-step-2",
+          component: "process_step",
+          title: "send us a physical sample for testing and verifications",
+          description:
+            "Lenzing reviews your license application and a sample needs to be provided for testing.",
+        },
+        {
+          _uid: "pt-step-3",
+          component: "process_step",
+          title: "receive your license confirmation letter",
+          description:
+            "After successful review by Lenzing, you will receive a VEOCEL™ brand license. " +
+            "then prepare your product launch using our brand logos, benefit, claims with " +
+            "the support of our Licensing team.",
+        },
+      ],
     },
   ],
 };
