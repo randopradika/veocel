@@ -74,11 +74,13 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // Padding, not a fixed height: over the hero the content sits at the frame's
       // 70/1920 offset (fluid, so it stays proportional at any width), then the bar
       // compacts once it turns solid so it doesn't blanket the page while scrolled.
+      // On phones the mobile frame (2035:137) draws the lockup and the pill 26px
+      // from the top, 1:1, so the offset is fixed below `md`.
       // The border is always present and only changes colour, so the switch never
       // shifts content by a pixel.
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding] duration-300 ${
         overlay
-          ? "border-transparent pt-4 pb-4 text-white md:pt-[min(3.65vw,70px)] md:pb-6"
+          ? "border-transparent pt-[26px] pb-4 text-white md:pt-[min(3.65vw,70px)] md:pb-6"
           : "border-hairline bg-white/95 py-3 text-brand backdrop-blur"
       }`}
     >
@@ -86,13 +88,14 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       <Container className="flex items-start justify-between gap-6">
         <Link
           href={localePath(locale, "")}
-          // `flex` so the link hugs the 56px artwork — as an inline box its own
+          // `flex` so the link hugs the artwork — as an inline box its own
           // line-height strut would add a phantom ~7px below the lockup, and the
           // bar's height is sized from this content.
           className="flex rounded focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current"
           aria-label="VEOCEL — home"
         >
-          <Logo variant={overlay ? "light" : "dark"} />
+          {/* 40px on phones (the mobile frame's 141×40 lockup), 56px from `md`. */}
+          <Logo variant={overlay ? "light" : "dark"} height="h-10 md:h-14" />
         </Link>
 
         <LanguagePicker locales={locales} current={locale} overlay={overlay} />
@@ -169,9 +172,11 @@ function LanguagePicker({
         disabled={locales.length < 2}
         // Sized to the frame's 127×46 pill at 0.75: ~34px tall, 12px type at the
         // regular weight (Circular Book in the design), solid white in both states.
+        // On phones the mobile frame draws it 1:1 instead — 117×40 with 16px type
+        // and a 16px globe — so the pill and its glyphs step down at `md`.
         // The border also stays in both states (transparent over the hero) so the
         // pill never changes size when the header switches appearance.
-        className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current disabled:cursor-default ${
+        className={`flex h-10 items-center gap-1.5 rounded-full border px-4 text-base transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current disabled:cursor-default md:h-auto md:py-2 md:text-xs ${
           overlay
             ? "border-transparent bg-white text-brand hover:bg-brand-50"
             : "border-hairline bg-white text-brand hover:border-brand/40"
@@ -219,7 +224,7 @@ function GlobeIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      className="h-3 w-3"
+      className="h-4 w-4 md:h-3 md:w-3"
       aria-hidden
     >
       <circle cx="12" cy="12" r="9" />
@@ -237,7 +242,7 @@ function ChevronIcon({ open }: { open: boolean }) {
       strokeWidth={1.8}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`h-2.5 w-2.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+      className={`h-3 w-3 transition-transform duration-200 md:h-2.5 md:w-2.5 ${open ? "rotate-180" : ""}`}
       aria-hidden
     >
       <path d="m6 9 6 6 6-6" />

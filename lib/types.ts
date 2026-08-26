@@ -141,6 +141,11 @@ export type HeroBlok = SbBlock & {
   align?: "center" | "left";
   /** Numbered shortcut cards pinned along the bottom edge of the hero. */
   nav_cards?: HeroNavCardBlok[];
+  /**
+   * What the phone-width dropdown says when no card matches the page — the
+   * home page, mostly. Falls back to "select destination".
+   */
+  nav_placeholder?: string;
 };
 
 export type HeroNavCardBlok = SbBlock & {

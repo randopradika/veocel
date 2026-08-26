@@ -81,8 +81,10 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       </Container>
 
       {cards.length > 0 ? (
-        <Container width="wide" className="pb-8">
-          <HeroNavCards cards={cards} />
+        // The mobile frame pins its dropdown 40px above the hero's bottom edge;
+        // the desktop strip keeps its 32px.
+        <Container width="wide" className="pb-10 lg:pb-8">
+          <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />
         </Container>
       ) : null}
     </section>

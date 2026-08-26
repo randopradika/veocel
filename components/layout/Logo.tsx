@@ -16,10 +16,17 @@
 export function Logo({
   variant = "dark",
   className = "",
+  height = "h-14",
 }: {
   /** `light` is the white lockup for dark photography. */
   variant?: "dark" | "light";
   className?: string;
+  /**
+   * Height utilities for the artwork. The default is the frames' 56px lockup;
+   * the header passes a phone-width override, where the mobile frame draws
+   * it 40px tall.
+   */
+  height?: string;
 }) {
   return (
     <span className={`relative inline-block ${className}`}>
@@ -29,9 +36,10 @@ export function Logo({
         alt=""
         width={193}
         height={53}
-        // `block` so the wrapper measures the artwork's true 56px — an inline img
-        // carries a baseline gap that inflates any layout sized from its content.
-        className={`block h-14 w-auto transition-opacity duration-300 ${
+        // `block` so the wrapper measures the artwork's true height — an inline
+        // img carries a baseline gap that inflates any layout sized from its
+        // content.
+        className={`block ${height} w-auto transition-opacity duration-300 ${
           variant === "dark" ? "opacity-100" : "opacity-0"
         }`}
       />
@@ -41,7 +49,7 @@ export function Logo({
         alt=""
         width={341}
         height={92}
-        className={`absolute inset-0 h-14 w-auto transition-opacity duration-300 ${
+        className={`absolute inset-0 ${height} w-auto transition-opacity duration-300 ${
           variant === "light" ? "opacity-100" : "opacity-0"
         }`}
       />

@@ -282,6 +282,10 @@
         ],
         "maximum": 8,
         "description": "Numbered shortcut cards pinned along the bottom of the hero."
+      },
+      "nav_placeholder": {
+        "type": "text",
+        "description": "What the phone-width dropdown says when no card matches the page (the home page). Defaults to 'select destination'."
       }
     }
   },
