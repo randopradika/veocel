@@ -23,9 +23,14 @@
   --color-hairline: #e4e7ea;
   --color-canvas: #ffffff;
 
-  /* The site is set in a rounded geometric sans, all-lowercase headings. */
-  --font-sans: var(--font-nunito-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-nunito), var(--font-nunito-sans), sans-serif;
+  /*
+    The site is set in Circular Std, all-lowercase headings. One face does both
+    jobs, so display and body differ by size and weight, not by family — the two
+    variables stay split because components already reference `font-display`.
+    Declared in `app/layout.tsx`.
+  */
+  --font-sans: var(--font-circular), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-circular), ui-sans-serif, system-ui, sans-serif;
 
   /* Display scale — the mockups jump hard from body copy to headline. */
   --text-display: 5.5rem;
