@@ -125,6 +125,11 @@ export type HeroBlok = SbBlock & {
   component: "hero";
   eyebrow?: string;
   headline: string;
+  /**
+   * A word or phrase inside `headline` to set in a pale blue plate — the fibers
+   * page boxes "fibers" that way. Ignored when it isn't found in the headline.
+   */
+  headline_highlight?: string;
   subline?: string;
   background_image?: StoryblokAsset;
   scroll_hint?: string;

@@ -20,6 +20,9 @@ import { HeroNavCards } from "./HeroNavCards";
  * `align: left` starts the type at the column edge instead of centring it — the
  * home revision's arrangement, where the right half of the photograph carries
  * the magnifier motif and the type stays clear of it.
+ *
+ * `headline_highlight` names a run of the headline to sit on a pale blue plate —
+ * the fibers page boxes its last word that way.
  */
 
 const HEADLINE_SIZE = {
@@ -27,9 +30,26 @@ const HEADLINE_SIZE = {
   title: "text-h1 md:text-[4.5rem] md:leading-[1.05]",
 } as const;
 
+/**
+ * Splits the headline around `highlight` so the matched run can be boxed. The
+ * first occurrence only, and nothing at all when the run isn't there — editors
+ * rename headlines without touching this field.
+ */
+function splitHeadline(headline: string, highlight?: string) {
+  const at = highlight ? headline.indexOf(highlight) : -1;
+  if (at < 0 || !highlight) return null;
+
+  return {
+    before: headline.slice(0, at),
+    match: headline.slice(at, at + highlight.length),
+    after: headline.slice(at + highlight.length),
+  };
+}
+
 export function Hero({ blok }: { blok: HeroBlok }) {
   const cards = blok.nav_cards ?? [];
   const left = blok.align === "left";
+  const parts = splitHeadline(blok.headline, blok.headline_highlight);
 
   return (
     <section
@@ -64,7 +84,23 @@ export function Hero({ blok }: { blok: HeroBlok }) {
             HEADLINE_SIZE[blok.headline_size ?? "display"]
           }`}
         >
-          {blok.headline}
+          {parts ? (
+            <>
+              {parts.before}
+              {/*
+                Square plate, not a rounded pill, and the literal hexes rather
+                than the nearest tokens: #0f7ab8 on #bae4f4 is the pair the
+                design calls for, near enough to the selected nav tab below
+                that the boxed word and the current tab read as one marker.
+              */}
+              <span className="inline-block bg-[#bae4f4] px-[0.12em] text-[#0f7ab8]">
+                {parts.match}
+              </span>
+              {parts.after}
+            </>
+          ) : (
+            blok.headline
+          )}
         </h1>
 
         {blok.subline ? (

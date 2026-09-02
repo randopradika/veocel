@@ -234,6 +234,10 @@
         "type": "text",
         "required": true
       },
+      "headline_highlight": {
+        "type": "text",
+        "description": "A word or phrase from the headline to set on a pale blue plate, e.g. 'fibers'. Must match the headline exactly, including case."
+      },
       "subline": {
         "type": "text"
       },
