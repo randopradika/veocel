@@ -34,15 +34,27 @@ const HEADLINE_SIZE = {
  * Splits the headline around `highlight` so the matched run can be boxed. The
  * first occurrence only, and nothing at all when the run isn't there — editors
  * rename headlines without touching this field.
+ *
+ * The run does not have to be a whole word: the fibers page boxes "fiber" and
+ * leaves the "s" outside. `padded` reports which sides of the plate may carry
+ * breathing room — a side that runs into the rest of a word takes none, or the
+ * padding would open a gap mid-word.
  */
 function splitHeadline(headline: string, highlight?: string) {
   const at = highlight ? headline.indexOf(highlight) : -1;
   if (at < 0 || !highlight) return null;
 
+  const before = headline.slice(0, at);
+  const after = headline.slice(at + highlight.length);
+
   return {
-    before: headline.slice(0, at),
+    before,
     match: headline.slice(at, at + highlight.length),
-    after: headline.slice(at + highlight.length),
+    after,
+    padded: {
+      left: before === "" || /\s$/.test(before),
+      right: after === "" || /^\s/.test(after),
+    },
   };
 }
 
@@ -93,7 +105,11 @@ export function Hero({ blok }: { blok: HeroBlok }) {
                 design calls for, near enough to the selected nav tab below
                 that the boxed word and the current tab read as one marker.
               */}
-              <span className="inline-block bg-[#bae4f4] px-[0.12em] text-[#0f7ab8]">
+              <span
+                className={`inline-block bg-[#bae4f4] text-[#0f7ab8] ${
+                  parts.padded.left ? "pl-[0.12em]" : ""
+                } ${parts.padded.right ? "pr-[0.12em]" : ""}`}
+              >
                 {parts.match}
               </span>
               {parts.after}

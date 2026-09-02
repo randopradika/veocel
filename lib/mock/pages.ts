@@ -176,7 +176,7 @@ const fiberTypes: PageBlok = {
       _uid: "f-hero",
       component: "hero",
       headline: "explore VEOCEL™ fibers",
-      headline_highlight: "fibers",
+      headline_highlight: "fiber",
       headline_size: "title",
       nav_cards: heroTabs("f"),
     },
