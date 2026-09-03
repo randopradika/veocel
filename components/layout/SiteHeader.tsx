@@ -19,9 +19,30 @@ import { Logo } from "./Logo";
  * brand type once past it. Which one applies is decided by measuring the
  * `[data-hero]` element that `Hero` and `PageHero` mark, so no prop threading from
  * the page and pages without a dark hero simply start solid.
+ *
+ * The bar shows only at the top of the page. Scrolling down takes it away and it
+ * stays away — a scroll back up does not summon it — until the reader returns to
+ * the top, where it slides in again.
  */
 /** Switch a little before the hero fully leaves, so type never sits on the seam. */
 const HERO_EXIT_OFFSET = 96;
+
+/** Back within this of the top counts as being at the top, and the bar returns. */
+const REVEAL_WITHIN = 24;
+
+/**
+ * Past this the reader has committed to going down the page, and the bar goes with
+ * them. The gap to `REVEAL_WITHIN` is hysteresis — a single boundary would let the
+ * bar flicker in and out while they nudged around it.
+ */
+const RETRACT_BEYOND = 72;
+
+type HeaderState = {
+  /** Over a dark hero: transparent bar, white type. */
+  overlay: boolean;
+  /** Slid off the top because the reader has scrolled away from it. */
+  retracted: boolean;
+};
 
 /**
  * Whether the header is currently over a dark hero.
@@ -37,21 +58,81 @@ function readOverlay(): boolean {
   return hero ? window.scrollY < hero.offsetHeight - HERO_EXIT_OFFSET : false;
 }
 
+/**
+ * Latched rather than derived, which is what separates this from `overlay`: in the
+ * band between the two thresholds the bar keeps doing whatever it is already doing,
+ * and that cannot be read back off a scroll position alone. Module scope rather
+ * than a ref — the value describes the page, and there is one header on it.
+ */
+let isRetracted = false;
+
+/**
+ * Whether the reader is mid-interaction with the bar, in which case it stays put:
+ * a focused control has to remain visible, and an open language menu should not be
+ * pulled off the screen half way through choosing from it.
+ */
+function headerIsBusy(): boolean {
+  const header = document.querySelector("[data-site-header]");
+  if (!header) return false;
+
+  return (
+    header.contains(document.activeElement) ||
+    header.querySelector('[aria-expanded="true"]') !== null
+  );
+}
+
+function updateRetracted(): void {
+  const y = Math.max(0, window.scrollY);
+
+  // Between the two marks neither branch fires and the bar holds its ground.
+  if (y > RETRACT_BEYOND) isRetracted = !headerIsBusy();
+  else if (y < REVEAL_WITHIN) isRetracted = false;
+}
+
+/**
+ * Cached because `useSyncExternalStore` compares snapshots by identity — a fresh
+ * object per read would re-render forever. `overlay` is still measured on every
+ * read rather than pushed in from the listener, so the backgrounded-tab reasoning
+ * above still holds.
+ */
+let snapshot: HeaderState = { overlay: false, retracted: false };
+
+function readHeaderState(): HeaderState {
+  const overlay = readOverlay();
+  if (overlay === snapshot.overlay && isRetracted === snapshot.retracted) return snapshot;
+  snapshot = { overlay, retracted: isRetracted };
+  return snapshot;
+}
+
+/** The server has no scroll position and no DOM, so it renders the resting state. */
+const SERVER_STATE: HeaderState = { overlay: false, retracted: false };
+const readServerHeaderState = (): HeaderState => SERVER_STATE;
+
 function subscribeToScroll(onChange: () => void): () => void {
   let frame = 0;
 
-  // rAF here only throttles change notifications; the value itself is read
-  // synchronously above, so a suspended frame loop cannot leave state stale.
+  // rAF here only throttles change notifications; `overlay` itself is read
+  // synchronously above, so a suspended frame loop cannot leave it stale.
   const schedule = () => {
     if (frame) return;
     frame = window.requestAnimationFrame(() => {
       frame = 0;
+      updateRetracted();
       onChange();
     });
   };
 
+  // Focus arriving in the bar — the skip link, or Tab from the top of the page —
+  // must never land on something parked off-screen.
+  const onFocusIn = (event: FocusEvent) => {
+    if (!(event.target as Element | null)?.closest("[data-site-header]")) return;
+    isRetracted = false;
+    onChange();
+  };
+
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule);
+  window.addEventListener("focusin", onFocusIn);
   // The hero can change height while the tab is hidden — images finishing load, a
   // font swapping — so re-measure when it comes back rather than trusting the last
   // value computed before it went away.
@@ -61,16 +142,21 @@ function subscribeToScroll(onChange: () => void): () => void {
     if (frame) window.cancelAnimationFrame(frame);
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
+    window.removeEventListener("focusin", onFocusIn);
     document.removeEventListener("visibilitychange", schedule);
   };
 }
 
 export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: string }) {
-  // The server has no scroll position and no DOM, so it renders the solid state.
-  const overlay = useSyncExternalStore(subscribeToScroll, readOverlay, () => false);
+  const { overlay, retracted } = useSyncExternalStore(
+    subscribeToScroll,
+    readHeaderState,
+    readServerHeaderState,
+  );
 
   return (
     <header
+      data-site-header
       // Padding, not a fixed height: over the hero the content sits at the frame's
       // 70/1920 offset (fluid, so it stays proportional at any width), then the bar
       // compacts once it turns solid so it doesn't blanket the page while scrolled.
@@ -78,7 +164,11 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // from the top, 1:1, so the offset is fixed below `md`.
       // The border is always present and only changes colour, so the switch never
       // shifts content by a pixel.
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding] duration-300 ${
+      // Retracting is a transform rather than a height or `top` change, so leaving
+      // costs no layout and nothing underneath reflows as the bar comes and goes.
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding,transform] duration-300 motion-reduce:transition-none ${
+        retracted ? "-translate-y-full" : "translate-y-0"
+      } ${
         overlay
           ? "border-transparent pt-[26px] pb-4 text-white md:pt-[min(3.65vw,70px)] md:pb-6"
           : "border-hairline bg-white/95 py-3 text-brand backdrop-blur"
