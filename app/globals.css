@@ -84,11 +84,47 @@
 }
 
 @layer utilities {
-  /* Fluid headline used by the hero so "cellulosics" never wraps. */
+  /*
+    Home hero type.
+
+    The design draws this hero at two widths — 402px (node 2035:137) and 1920px
+    (node 2053:1175) — so every value below is the pair it gives at those two,
+    interpolated straight between them and clamped outside. A single vw ratio
+    cannot serve both: the phone frame sets type far larger against its canvas
+    than the desktop one does, so the slopes are fitted to the two points rather
+    than derived from either.
+  */
+
+  /*
+    Headline, nodes 2035:162 and 2053:1190: Circular Bold, 64px then 140px.
+    Tracking is -0.05em in both frames (-3.2px on 64, -7px on 140).
+
+    The leading is the phone frame's 68/64, because that is the only one that is
+    a decision — the desktop headline is a single line, so what Figma reports for
+    it is just the face's own `normal` box and carries no intent. It is also the
+    leading a wrapped headline wants, which is what a longer translation gets.
+  */
   .text-display-fluid {
-    font-size: clamp(2.75rem, 11vw, 8rem);
-    line-height: 0.95;
+    font-size: clamp(3rem, 2.742rem + 5.0066vw, 8.75rem);
+    line-height: 1.0625;
+    letter-spacing: -0.05em;
+  }
+
+  /*
+    Subline, nodes 2035:161 and 2053:1189: Circular Book, 24px then 48px, and
+    -0.02em in both (-0.48px on 24, -0.96px on 48).
+
+    The measure is the design's own text box — 329px, then 703px — which is what
+    breaks the line where each frame breaks it, so the break is inherited rather
+    than hard-coded. Clearance below the headline is 15px on the phone frame and,
+    once the desktop headline is re-measured at the leading above, 38px.
+  */
+  .hero-subline {
+    font-size: clamp(1rem, 1.1027rem + 1.581vw, 3rem);
+    line-height: 1.271;
     letter-spacing: -0.02em;
+    max-width: clamp(18rem, 14.3725rem + 24.6377vw, 43.9375rem);
+    margin-top: clamp(0.75rem, 0.5548rem + 1.5234vw, 2.3828rem);
   }
 
   /* Label plates sit on photography; a soft scrim keeps them legible. */
