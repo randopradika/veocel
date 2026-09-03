@@ -718,6 +718,162 @@ const sustainability: PageBlok = {
             "FSC®/ PEFC certificates with Chain of Custody\n" +
             "The Hot Button Report",
         },
+        /*
+          The ten further claims, from node 2055:1391 — a detached frame beside
+          the page rather than part of the 2053:474 artboard, so it reads as a
+          continuation of this same grid and not a section of its own.
+
+          Ordered as the frame lays them out (left to right, top to bottom), not
+          by its layer names: it numbers these 5-14 but places 5 and 7 in the
+          right column with 6 and 8 to their left, so following the names would
+          mirror the first two rows against the drawing.
+
+          No `icon` here, as with the four above — the marks are attached to the
+          cards in Storyblok, and a field set in the mock would overwrite them on
+          the next seed.
+        */
+        {
+          _uid: "su-claim-5",
+          component: "claim_card",
+          title: "gentle on skin",
+          body:
+            "VEOCEL™ Lyocell fibers are gentle on skin and naturally smooth, " +
+            "providing comfort for skin.",
+          proof_label: "proof:",
+          proof:
+            "microscopic fiber surface of VEOCEL™ Lyocell fibers\n" +
+            "softness panel tests – comparison of rough / smooth",
+        },
+        {
+          _uid: "su-claim-6",
+          component: "claim_card",
+          title: "skin-friendly fibers",
+          body:
+            "VEOCEL™ branded fibers are suitable for products that come into " +
+            "contact with skin, as ensured by international standards, tests and " +
+            "industry-wide recognized certifications.",
+          proof_label: "proof:",
+          proof:
+            "study “friction coefficient on skin”\n" +
+            "inherent properties of cellulosic fibers",
+        },
+        {
+          _uid: "su-claim-7",
+          component: "claim_card",
+          title: "dermatologically tested",
+          body: "dermatologically tested skin-friendly material.",
+          proof_label: "proof:",
+          proof: "softness results for LENZING™ Lyocell Skin fibers (dry + wet state)",
+        },
+        {
+          _uid: "su-claim-8",
+          component: "claim_card",
+          title: "natural wearing comfort",
+          body:
+            "VEOCEL™ fibers contribute to keep your skin in natural balance. They " +
+            "support your skin’s natural thermal and moisture regulation.",
+          proof_label: "proof:",
+          proof:
+            "inherent properties of VEOCEL™ Lyocell fibers\n" +
+            "softness panel results for LENZING™ Lyocell Dry fibers\n" +
+            "pictures taken by microscope\n" +
+            "R&D measurements",
+        },
+        {
+          _uid: "su-claim-9",
+          component: "claim_card",
+          title: "high quality standards",
+          body:
+            "VEOCEL™ fibers are compliant with OEKO-TEX® STANDARD 100 Product " +
+            "class I, including Appendix 6, affirming that the fibers have been " +
+            "tested for numerous regulated and non-regulated harmful substances, " +
+            "and therefore, indicating that the fibers are harmless to human " +
+            "health. VEOCEL™ fibers are awarded with the FKT label “MEDICALLY " +
+            "TESTED – TESTED FOR TOXINS” and have passed FKT’s strict body " +
+            "compatibility tests.",
+          proof_label: "proof:",
+          proof:
+            "OEKO-TEX® STANDARD 100 Product class I, including Appendix 6\n" +
+            "FKT label “MEDICALLY TESTED – TESTED FOR TOXINS”\n" +
+            "Internal standards (Mibio, BAT for VEOCEL™ Viscose)\n" +
+            "ISEGA // food contact compliant\n" +
+            "European Pharmacopoeia\n" +
+            "ISO / BISFA norms\n" +
+            "risk assessments done by external parties\n" +
+            "Global pest control system – internal set-up\n" +
+            "The Blue Label Denmark",
+        },
+        {
+          _uid: "su-claim-10",
+          component: "claim_card",
+          title: "fragrance-free fibers",
+          body:
+            "The odor neutrality of VEOCEL™ Lyocell fibers supports the trend " +
+            "towards fragrance-reduced wipes and makes the use of masking agents " +
+            "in nonwoven products unnecessary.",
+          proof_label: "proof:",
+          proof: "inherent properties of VEOCEL™ Lyocell fibers",
+        },
+        {
+          _uid: "su-claim-11",
+          component: "claim_card",
+          title: "great wet strength",
+          body:
+            "VEOCEL™ Lyocell fibers are versatile and distinguished by their " +
+            "great strength among cellulosic fibers. They can be used to produce " +
+            "lightweight nonwoven fabrics that exhibit great tensile strength in " +
+            "both dry and wet states.",
+          proof_label: "proof:",
+          proof:
+            "tenacity measurements // inherent properties of VEOCEL™ Lyocell fibers",
+        },
+        {
+          _uid: "su-claim-12",
+          component: "claim_card",
+          title: "liquid management",
+          body:
+            "The inherent properties of cellulosic fibers naturally regulate " +
+            "liquid absorption and release. This leads to a uniform distribution " +
+            "of the liquid within the fibers and by extension the personal care " +
+            "products made from them, offering an effective way to care for, and " +
+            "ultimately greater comfort, to your skin.",
+          proof_label: "proof:",
+          proof:
+            "inherent properties of cellulosic fibers\n" +
+            "regular liquid management measurements of VEOCEL™ Lyocell and " +
+            "Viscose fibers (R&D)",
+        },
+        {
+          _uid: "su-claim-13",
+          component: "claim_card",
+          // The frame's layer reads "chlorrine"; the claim itself spells it correctly.
+          title: "totally chlorine-free fibers",
+          body:
+            "VEOCEL™ branded fibers are totally chlorine-free and produced with " +
+            "extensive and advanced quality controls to assure fibers deliver on " +
+            "consumer and industry expectations for usage in intimate products, " +
+            "such as tampons, which come into direct contact with the most " +
+            "sensitive parts of the body.",
+          proof_label: "proof:",
+          proof:
+            "AOX Measurement: Below 0.01 mg/L detection limit according to " +
+            "ISO 9562: 2004.\n" +
+            "TCF production / Lenzing self-declaration",
+        },
+        {
+          _uid: "su-claim-14",
+          component: "claim_card",
+          title: "premium European-made fibers",
+          body:
+            "VEOCEL™ wood-based cellulosic fibers are produced in Europe " +
+            "according to high environmental and production standards. These " +
+            "European-made fibers are a key ingredient in the development and " +
+            "manufacturing of many high-quality premium products.",
+          proof_label: "proof:",
+          proof:
+            "production site in Europe (certificate of origin)\n" +
+            "EU Ecolabel + SBT commitment + aspirational targets in ZDHC",
+        },
       ],
     },
     {
