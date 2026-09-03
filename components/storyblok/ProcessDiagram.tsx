@@ -22,7 +22,7 @@ export function ProcessDiagram({ blok }: { blok: ProcessDiagramBlok }) {
     <Section {...editable(blok)} spacing="tight">
       <Container>
         {blok.heading ? (
-          <h2 className="max-w-md text-h2 font-bold text-brand md:text-[2.25rem] md:leading-[1.15]">
+          <h2 className="max-w-3xl text-h2 font-bold text-brand md:text-h1">
             {blok.heading}
           </h2>
         ) : null}
@@ -38,7 +38,7 @@ export function ProcessDiagram({ blok }: { blok: ProcessDiagramBlok }) {
           />
 
           {blok.caption ? (
-            <figcaption className="mx-auto mt-4 max-w-3xl text-center text-xs leading-relaxed text-ink-muted">
+            <figcaption className="mx-auto mt-4 max-w-3xl text-center text-[0.9375rem] leading-relaxed text-ink-muted">
               {blok.caption}
             </figcaption>
           ) : null}

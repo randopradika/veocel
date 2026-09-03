@@ -76,7 +76,7 @@ export function FeatureSplit({ blok }: { blok: FeatureSplitBlok }) {
             ) : null}
 
             {blok.body ? (
-              <p className="max-w-sm text-xs leading-relaxed text-ink-muted md:text-sm">
+              <p className="max-w-sm text-[0.9375rem] leading-relaxed text-ink-muted md:text-sm">
                 {blok.body}
               </p>
             ) : null}

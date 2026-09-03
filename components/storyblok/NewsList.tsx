@@ -35,7 +35,7 @@ export function NewsList({ blok }: { blok: NewsListBlok }) {
           ) : null}
 
           {blok.intro ? (
-            <p className="max-w-xs text-xs leading-relaxed text-ink-muted md:text-right">
+            <p className="max-w-xs text-[0.9375rem] leading-relaxed text-ink-muted md:text-right">
               {blok.intro}
             </p>
           ) : null}
@@ -74,7 +74,7 @@ function NewsRow({ blok }: { blok: NewsItemBlok }) {
 
         <span className="flex-1">
           {blok.category || date ? (
-            <span className="flex flex-wrap items-center gap-3 text-[0.7rem] text-ink-faint">
+            <span className="flex flex-wrap items-center gap-3 text-sm text-ink-faint">
               {blok.category ? <span>{blok.category}</span> : null}
               {date ? <time dateTime={blok.date}>{date}</time> : null}
             </span>

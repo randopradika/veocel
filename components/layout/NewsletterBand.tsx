@@ -27,7 +27,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
       aria-labelledby="newsletter-heading"
     >
       <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:py-12">
-        <h2 id="newsletter-heading" className="text-2xl font-bold md:text-sm md:font-semibold">
+        <h2 id="newsletter-heading" className="text-2xl font-bold md:text-[1.75rem]">
           {config.newsletter_heading ?? "newsletter subscriptions"}
         </h2>
 
@@ -59,14 +59,14 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
         </form>
 
         {!action ? (
-          <p className="mt-2 text-[0.7rem] text-brand-800/60">
+          <p className="mt-2 text-sm text-brand-800/60">
             Signup opens once a provider endpoint is set in the Storyblok config story.
           </p>
         ) : null}
       </div>
 
       <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:py-12">
-        <h2 className="text-2xl font-bold md:text-sm md:font-semibold">
+        <h2 className="text-2xl font-bold md:text-[1.75rem]">
           {config.social_heading ?? "follow us on social media"}
         </h2>
 
@@ -89,13 +89,13 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
 
       {responsibility ? (
         <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:py-12">
-          <h2 className="text-2xl font-bold md:text-sm md:font-semibold">
+          <h2 className="text-2xl font-bold md:text-[1.75rem]">
             {config.responsibility_heading ?? "social responsibility platform"}
           </h2>
 
           <SmartLink
             link={config.responsibility_link}
-            className="mt-3 text-[2.25rem] font-bold italic md:text-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            className="mt-3 text-[2.25rem] font-normal italic md:text-[3rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           >
             {responsibility}
           </SmartLink>

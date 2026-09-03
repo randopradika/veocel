@@ -30,7 +30,7 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
       <Container>
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
           {blok.heading ? (
-            <h2 className="max-w-xl text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2]">
+            <h2 className="max-w-3xl text-h2 font-bold text-brand md:text-h1">
               {blok.heading}
             </h2>
           ) : null}

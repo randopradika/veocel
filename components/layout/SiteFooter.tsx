@@ -84,7 +84,7 @@ export function SiteFooter({
             />
             <button
               type="submit"
-              className="h-12 rounded-full bg-brand px-6 text-xl font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-auto md:py-2.5 md:text-sm md:font-semibold"
+              className="h-12 rounded-full bg-brand px-6 text-2xl font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-auto md:py-2.5 md:text-sm md:font-semibold"
             >
               search
             </button>
@@ -104,7 +104,7 @@ export function SiteFooter({
                     <li key={item._uid}>
                       <SmartLink
                         link={item.link}
-                        className="text-xs leading-relaxed transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                        className="text-[0.9375rem] leading-relaxed transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                       >
                         {item.label}
                       </SmartLink>
@@ -136,7 +136,7 @@ export function SiteFooter({
           the gutters from `md`. The copyright is last and centred on phones,
           first and left-set from `md`; it stays first in the DOM.
         */}
-        <div className="-mx-6 flex flex-col gap-7 border-t border-brand-800/15 px-6 py-7 text-base md:mx-0 md:flex-row md:items-center md:justify-between md:gap-4 md:px-0 md:py-6 md:text-[0.7rem]">
+        <div className="-mx-6 flex flex-col gap-7 border-t border-brand-800/15 px-6 py-7 text-base md:mx-0 md:flex-row md:items-center md:justify-between md:gap-4 md:px-0 md:py-6 md:text-sm">
           {config.copyright ? (
             <p className="order-last text-center font-bold text-ink md:order-none md:text-left md:font-normal md:text-inherit md:opacity-70">
               {config.copyright}

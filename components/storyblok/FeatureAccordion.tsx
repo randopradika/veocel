@@ -131,7 +131,7 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
         {paragraphs(blok.body).map((paragraph, index) => (
           <p
             key={index}
-            className="mt-3 px-4 text-center text-xs leading-relaxed text-brand-800/80"
+            className="mt-3 px-4 text-center text-[0.9375rem] leading-relaxed text-brand-800/80"
           >
             {paragraph}
           </p>
@@ -171,7 +171,7 @@ function AccordionRow({ blok, open, onToggle }: ItemProps) {
 
       <div id={panelId} hidden={!open}>
         {paragraphs(blok.body).map((paragraph, index) => (
-          <p key={index} className="mt-5 max-w-4xl text-xs leading-relaxed text-brand-800/80">
+          <p key={index} className="mt-5 max-w-4xl text-[0.9375rem] leading-relaxed text-brand-800/80">
             {paragraph}
           </p>
         ))}
@@ -242,7 +242,7 @@ function AccordionTile({
 
       <div id={panelId} hidden={!open}>
         {blok.body ? (
-          <p className="mt-4 text-xs leading-relaxed text-brand-800/80">{blok.body}</p>
+          <p className="mt-4 text-[0.9375rem] leading-relaxed text-brand-800/80">{blok.body}</p>
         ) : null}
       </div>
     </div>

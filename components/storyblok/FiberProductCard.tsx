@@ -152,7 +152,7 @@ export function FiberProductCard({
                 <ArrowMarker icon="close" tone="brand" size="md" />
               </button>
 
-              <h2 id={titleId} className="text-h2 font-bold text-brand">
+              <h2 id={titleId} className="text-2xl font-bold tracking-[-0.02em] text-brand">
                 {blok.name}
               </h2>
 

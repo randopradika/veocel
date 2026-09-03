@@ -34,13 +34,13 @@ export function FiberPortfolio({ blok }: { blok: FiberPortfolioBlok }) {
       <Container>
         <div className="grid items-start gap-6 md:grid-cols-[1fr_minmax(0,22rem)] md:gap-16">
           {blok.heading ? (
-            <h2 className="max-w-md text-h2 font-bold text-brand md:text-[2.25rem] md:leading-[1.15]">
+            <h2 className="max-w-3xl text-h2 font-bold text-brand md:text-h1">
               {blok.heading}
             </h2>
           ) : null}
 
           {blok.intro ? (
-            <p className="text-xs leading-relaxed text-ink-muted md:pt-2">{blok.intro}</p>
+            <p className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl">{blok.intro}</p>
           ) : null}
         </div>
 
@@ -67,7 +67,7 @@ export function FiberPortfolio({ blok }: { blok: FiberPortfolioBlok }) {
                 <tr key={label}>
                   <th
                     scope="row"
-                    className="rounded-sm bg-brand-100 px-4 py-3 text-left text-xs font-semibold text-brand-800"
+                    className="rounded-sm bg-brand-100 px-4 py-3 text-left text-[0.9375rem] font-semibold text-brand-800"
                   >
                     {label}
                   </th>
@@ -80,7 +80,7 @@ export function FiberPortfolio({ blok }: { blok: FiberPortfolioBlok }) {
                   {columns.map((column) => (
                     <td
                       key={column._uid}
-                      className="rounded-sm bg-brand-50 px-3 py-3 text-center text-[0.7rem] leading-snug text-ink-muted"
+                      className="rounded-sm bg-brand-50 px-3 py-3 text-center text-sm leading-snug text-ink-muted"
                     >
                       {lines(column.values)[row]?.trim() ?? ""}
                     </td>
@@ -107,12 +107,12 @@ function ColumnHeader({ blok }: { blok: PortfolioColumnBlok }) {
           placeholderTone="neutral"
         />
 
-        <span className="mt-3 block text-xs leading-snug font-bold text-brand-800">
+        <span className="mt-3 block text-[0.9375rem] leading-snug font-bold text-brand-800">
           {blok.title}
         </span>
 
         {blok.subtitle ? (
-          <span className="mt-0.5 block text-[0.65rem] leading-snug font-normal text-ink-muted">
+          <span className="mt-0.5 block text-sm leading-snug font-normal text-ink-muted">
             {blok.subtitle}
           </span>
         ) : null}

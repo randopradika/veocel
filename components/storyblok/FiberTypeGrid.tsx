@@ -59,7 +59,7 @@ function FiberTypeCard({ blok }: { blok: FiberTypeCardBlok }) {
       <h3 className="mt-4 text-base font-bold text-brand">{blok.title}</h3>
 
       {blok.subtitle ? (
-        <p className="mt-1 text-[0.7rem] leading-snug text-ink-muted">{blok.subtitle}</p>
+        <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.subtitle}</p>
       ) : null}
 
       {/* Pushed to the bottom so the buttons line up across cards of unequal height. */}

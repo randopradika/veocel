@@ -60,7 +60,7 @@ export function BlockImage({
         role="presentation"
       >
         {placeholderLabel ? (
-          <span className="absolute inset-0 flex items-center justify-center px-4 text-center text-xs tracking-wide text-white/70">
+          <span className="absolute inset-0 flex items-center justify-center px-4 text-center text-[0.9375rem] tracking-wide text-white/70">
             {placeholderLabel}
           </span>
         ) : null}

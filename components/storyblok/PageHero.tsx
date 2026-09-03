@@ -42,12 +42,12 @@ export function PageHero({ blok }: { blok: PageHeroBlok }) {
       ) : null}
 
       <Container className={`pt-40 pb-14 ${dark ? "text-white" : "text-brand"}`}>
-        <h1 className="max-w-3xl text-h1 font-bold md:text-[3.75rem] md:leading-[1.05]">
+        <h1 className="max-w-5xl text-h1 font-bold md:text-hero">
           {blok.title}
         </h1>
 
         {blok.subtitle ? (
-          <p className={`mt-4 max-w-xl text-sm ${dark ? "text-white/85" : "text-ink-muted"}`}>
+          <p className={`mt-4 max-w-2xl text-base leading-[1.4] md:text-xl ${dark ? "text-white/85" : "text-ink-muted"}`}>
             {blok.subtitle}
           </p>
         ) : null}

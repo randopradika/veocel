@@ -31,7 +31,7 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
       <Container>
         <div className="rounded-panel border border-hairline bg-white px-8 py-12 text-center md:px-16 md:py-16">
           {blok.heading ? (
-            <h2 className="text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2]">
+            <h2 className="text-h2 font-bold text-brand md:text-h1">
               {blok.heading}
             </h2>
           ) : null}

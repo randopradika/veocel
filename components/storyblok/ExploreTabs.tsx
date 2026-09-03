@@ -44,7 +44,7 @@ function ExploreTab({ blok, index }: { blok: ExploreTabBlok; index: number }) {
     >
       <span {...editable(blok)} className="flex flex-1 flex-col">
         <span
-          className="flex h-6 w-6 items-center justify-center rounded-full border border-brand/30 text-[0.65rem] font-semibold text-brand transition-colors group-hover:border-transparent group-hover:bg-brand group-hover:text-white"
+          className="flex h-6 w-6 items-center justify-center rounded-full border border-brand/30 text-sm font-semibold text-brand transition-colors group-hover:border-transparent group-hover:bg-brand group-hover:text-white"
           aria-hidden
         >
           {index + 1}
@@ -55,7 +55,7 @@ function ExploreTab({ blok, index }: { blok: ExploreTabBlok; index: number }) {
         </span>
 
         {blok.description ? (
-          <span className="mt-2 mb-6 block text-xs leading-relaxed text-ink-muted">
+          <span className="mt-2 mb-6 block text-[0.9375rem] leading-relaxed text-ink-muted">
             {blok.description}
           </span>
         ) : null}

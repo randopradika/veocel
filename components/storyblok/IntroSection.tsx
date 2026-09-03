@@ -35,7 +35,7 @@ export function IntroSection({ blok }: { blok: IntroSectionBlok }) {
           ) : null}
 
           {blok.body ? (
-            <p className="text-sm leading-relaxed text-ink-muted md:pt-3">{blok.body}</p>
+            <p className="text-base leading-[1.4] text-ink-muted md:pt-3 md:text-xl">{blok.body}</p>
           ) : null}
         </div>
       </Container>

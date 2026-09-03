@@ -152,7 +152,7 @@ export function MagnifierImage({
       {/* Hint, so the interaction is discoverable rather than hidden. */}
       <span
         aria-hidden
-        className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-3 py-1.5 text-[0.7rem] whitespace-nowrap text-white transition-opacity duration-200 motion-reduce:transition-none ${
+        className={`pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/55 px-3 py-1.5 text-sm whitespace-nowrap text-white transition-opacity duration-200 motion-reduce:transition-none ${
           lensVisible ? "opacity-0" : "opacity-100"
         }`}
       >

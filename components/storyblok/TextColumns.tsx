@@ -24,7 +24,7 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
               </h2>
             ) : null}
             {blok.body ? (
-              <p className="mt-12 ml-auto max-w-md text-sm leading-relaxed text-ink-muted">
+              <p className="mt-12 ml-auto max-w-xl text-base leading-[1.4] md:text-xl text-ink-muted">
                 {blok.body}
               </p>
             ) : null}
@@ -32,12 +32,12 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
         ) : (
           <div className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-16">
             {blok.heading ? (
-              <h2 className="text-h2 font-bold text-brand md:text-[2.75rem] md:leading-[1.1]">
+              <h2 className="text-h2 font-bold text-brand md:text-h1">
                 {blok.heading}
               </h2>
             ) : null}
             {blok.body ? (
-              <p className="text-sm leading-relaxed text-ink-muted md:pt-2">{blok.body}</p>
+              <p className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl">{blok.body}</p>
             ) : null}
           </div>
         )}

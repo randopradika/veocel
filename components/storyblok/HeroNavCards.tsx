@@ -20,7 +20,7 @@ import { editable } from "./editable";
  * the same strip is repeated across every page in a section, so a flag would have
  * to be re-pointed on each copy and would go stale the moment a slug changed.
  *
- * Below `lg` seven cards cannot sit side by side, so the strip collapses into
+ * Below `xl` seven cards cannot sit side by side, so the strip collapses into
  * the mobile frame's dropdown (2035:137 / 2035:211): one pill naming the page
  * you are on — or inviting you to "select destination" where no card matches,
  * as on the home page — that opens the same list of links. It used to scroll
@@ -48,9 +48,26 @@ export function HeroNavCards({
     <>
       <HeroNavDropdown cards={cards} currentIndex={currentIndex} placeholder={placeholder} />
 
-      <ul className="hidden gap-2 pb-1 lg:grid lg:grid-cols-7">
+      {/*
+        `gap-2.5` is the design's 10px between tabs (nodes 2053:1230 and
+        2053:1224 sit 225px apart on a 215px card).
+
+        Seven across only from `xl`, where it used to be `lg`. The label sizing
+        below is a fixed fraction of the tab, which is what holds the two lines
+        steady, but it also means a narrow strip buys narrow type: at 1024 the
+        tabs are 111px and the labels land near 11px. The dropdown is the
+        design's own answer at that width, so it now covers everything under
+        1280 rather than everything under 1024.
+      */}
+      <ul className="mx-auto hidden max-w-[1565px] gap-2.5 pb-1 xl:grid xl:grid-cols-7">
         {cards.map((card, index) => {
           const current = index === currentIndex;
+          /*
+            Every tab is two lines in the design, and it buys the last two — the
+            only ones over four words — a step of type to keep them there: 20px
+            on nodes 2053:1195 and 2053:1201 against 22px everywhere else.
+          */
+          const long = card.label.trim().split(/\s+/).length > 4;
 
           return (
             <li key={card._uid}>
@@ -65,14 +82,14 @@ export function HeroNavCards({
                   thing across the strip: the page you are on, or the one you are
                   about to open.
                 */
-                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 [container-type:inline-size] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                   current ? "bg-brand-200 text-brand" : "text-white hover:bg-brand-200 hover:text-brand"
                 }`}
               >
                 <span {...editable(card)} className="flex flex-1 flex-col justify-between gap-6">
                   {/* Outlined on a plain tab, filled once the tab is selected. */}
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full border text-[0.6rem] leading-none text-white transition-colors duration-200 ${
+                    className={`flex h-6 w-6 items-center justify-center rounded-full border text-sm leading-none text-white transition-colors duration-200 ${
                       current
                         ? "border-brand bg-brand"
                         : "border-white group-hover:border-brand group-hover:bg-brand"
@@ -81,7 +98,46 @@ export function HeroNavCards({
                   >
                     {index + 1}
                   </span>
-                  <span className="text-[0.95rem] leading-[1.27] font-bold">{card.label}</span>
+                  {/*
+                    Two lines, always, and pinned to the same place at every
+                    zoom level.
+
+                    The size is a fraction of the tab rather than a px value:
+                    `container-type: inline-size` on the tab makes `cqw` 1% of
+                    its content box, and the design's ratio is 22px of type in a
+                    176px label box (12.5%). Holding that ratio is what fixes
+                    the line breaks — the browser wraps on the type-to-box
+                    ratio, so keeping it constant keeps the break identical at
+                    any tab width. Zooming changes the CSS viewport, which would
+                    otherwise re-wrap a px-sized label; here it cannot, because
+                    the gutters on the strip are a percentage too.
+
+                    Deliberately a bare ratio, with no `clamp()` around it.
+                    Any bound on the type re-wraps the label the moment it
+                    binds: a lower bound pinned the type while the tab kept
+                    shrinking and pushed a third line at 1280, and an upper one
+                    pinned it while the tab kept growing, which moved the break
+                    to "explore VEOCEL™ / fibers" by 2560. The size is bounded
+                    by the strip's own `max-w-[1565px]` instead — the design's
+                    width at 1920 — so past that width nothing moves at all,
+                    and below it the ratio holds. 22px is the ceiling either
+                    way, and the break never shifts.
+
+                    `h-[2.5455em]` is two lines at the design's 28/22 leading,
+                    which reserves the second line even for the one-word tab —
+                    the design does the same with an empty first line on node
+                    2053:1207 — so all seven labels sit on a common baseline.
+                    `justify-end` is what puts that lone word on the lower line.
+                  */}
+                  <span
+                    className={`flex h-[2.5455em] flex-col justify-end overflow-hidden leading-[1.2727] font-bold ${
+                      long
+                        ? "text-[10.4cqw]"
+                        : "text-[12.2cqw]"
+                    }`}
+                  >
+                    {card.label}
+                  </span>
                 </span>
               </SmartLink>
             </li>
@@ -144,7 +200,7 @@ function HeroNavDropdown({
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative lg:hidden">
+    <div ref={containerRef} className="relative xl:hidden">
       <button
         ref={buttonRef}
         type="button"
@@ -188,7 +244,7 @@ function HeroNavDropdown({
                 }`}
               >
                 <span
-                  className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-brand text-[0.6rem] leading-none ${
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-brand text-sm leading-none ${
                     isCurrent ? "bg-brand text-white" : ""
                   }`}
                   aria-hidden

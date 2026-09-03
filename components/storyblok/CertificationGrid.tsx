@@ -33,7 +33,7 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
           <h2
             className={
               left
-                ? "mb-10 text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2]"
+                ? "mb-10 text-h2 font-bold text-brand md:text-h1"
                 : "mb-4 text-center text-h2 font-bold text-brand md:text-h1"
             }
           >
@@ -87,13 +87,13 @@ function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
           dropping it to `ink-faint` at this size would put it under 3:1 on white.
         */}
         {blok.label ? (
-          <span className="mt-2.5 block text-center text-[0.7rem] leading-snug text-ink-muted">
+          <span className="mt-2.5 block text-center text-base font-bold leading-[2] text-ink-muted">
             {blok.label}
           </span>
         ) : null}
 
         {blok.note ? (
-          <span className="mt-0.5 block text-center text-[0.65rem] leading-snug text-ink-muted">
+          <span className="mt-0.5 block text-center text-sm leading-snug text-ink-muted">
             {blok.note}
           </span>
         ) : null}

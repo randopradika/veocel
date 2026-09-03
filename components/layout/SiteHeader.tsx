@@ -266,7 +266,7 @@ function LanguagePicker({
         // and a 16px globe — so the pill and its glyphs step down at `md`.
         // The border also stays in both states (transparent over the hero) so the
         // pill never changes size when the header switches appearance.
-        className={`flex h-10 items-center gap-1.5 rounded-full border px-4 text-base transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current disabled:cursor-default md:h-auto md:py-2 md:text-xs ${
+        className={`flex h-10 items-center gap-1.5 rounded-full border px-4 text-base transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current disabled:cursor-default md:h-auto md:py-2 md:text-[0.9375rem] ${
           overlay
             ? "border-transparent bg-white text-brand hover:bg-brand-50"
             : "border-hairline bg-white text-brand hover:border-brand/40"

@@ -51,7 +51,7 @@ function CategoryCard({ blok }: { blok: CategoryCardBlok }) {
       <span className="card-scrim pointer-events-none absolute inset-0" aria-hidden />
 
       {blok.kicker ? (
-        <span className="absolute top-5 left-6 text-[0.7rem] tracking-[0.08em] text-white/85">
+        <span className="absolute top-5 left-6 text-sm tracking-[0.08em] text-white/85">
           {blok.kicker}
         </span>
       ) : null}

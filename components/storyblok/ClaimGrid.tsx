@@ -45,7 +45,7 @@ export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
       <Container>
         {blok.heading ? (
           <>
-            <h2 className="text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2]">
+            <h2 className="text-h2 font-bold text-brand md:text-h1">
               {blok.heading}
             </h2>
             {/* The design rules a hairline under the heading, across the column. */}
@@ -80,20 +80,20 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
         />
       ) : null}
 
-      <h3 className="mt-8 font-display text-lg font-bold text-brand">{blok.title}</h3>
+      <h3 className="mt-8 font-display text-2xl font-bold tracking-[-0.05em] text-brand">{blok.title}</h3>
 
       {paragraphs(blok.body).map((paragraph, index) => (
-        <p key={index} className="mt-4 text-xs leading-relaxed text-brand-800/80">
+        <p key={index} className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
           {paragraph}
         </p>
       ))}
 
       {proof.length > 0 ? (
         <>
-          <p className="mt-4 text-xs leading-relaxed text-brand-800/80">
+          <p className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
             {blok.proof_label || "proof:"}
           </p>
-          <ul className="mt-1 list-disc pl-5 text-xs leading-relaxed text-brand-800/80">
+          <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-brand-800/80">
             {proof.map((entry, index) => (
               <li key={index}>{entry}</li>
             ))}

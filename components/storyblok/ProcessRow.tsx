@@ -99,7 +99,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
                   <li
                     key={step._uid}
                     {...editable(step)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-semibold whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-xl lg:text-2xl"
+                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold tracking-[-0.05em] whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-xl lg:text-2xl"
                     style={{
                       left: `${WHEEL_LABELS[index][0]}%`,
                       top: `${WHEEL_LABELS[index][1]}%`,
@@ -150,7 +150,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
                         className="relative aspect-square w-full rounded-full ring-8 ring-white"
                         placeholderTone="sky"
                       />
-                      <p className="mt-3 text-sm font-semibold text-brand">{step.title}</p>
+                      <p className="mt-3 text-2xl font-bold tracking-[-0.05em] text-brand">{step.title}</p>
                     </div>
                   );
                 })}
@@ -160,7 +160,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
 
           <div>
             {blok.heading ? (
-              <h2 className="text-h2 font-bold text-brand md:text-[2.25rem] md:leading-[1.15]">
+              <h2 className="text-h2 font-bold text-brand">
                 {blok.heading}
               </h2>
             ) : null}
@@ -169,7 +169,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
               ? blok.body
                   .split(/\n\s*\n/)
                   .map((paragraph, index) => (
-                    <p key={index} className="mt-5 text-sm leading-relaxed text-ink-muted">
+                    <p key={index} className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl">
                       {paragraph}
                     </p>
                   ))
@@ -200,7 +200,7 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
       <Container>
         {blok.heading ? (
           <h2
-            className={`text-h2 font-bold text-brand md:text-[2.5rem] md:leading-[1.2] ${
+            className={`text-h2 font-bold text-brand md:text-h1 ${
               ALIGN[blok.align ?? "center"]
             }`}
           >
@@ -242,7 +242,7 @@ function StepCard({ blok }: { blok: ProcessStepBlok }) {
         {blok.title}
       </h3>
       {blok.description ? (
-        <p className="mt-4 px-4 text-xs leading-[1.75] text-ink">{blok.description}</p>
+        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink">{blok.description}</p>
       ) : null}
     </li>
   );
@@ -258,9 +258,9 @@ function RowStep({ blok }: { blok: ProcessStepBlok }) {
         className="relative h-16 w-16 rounded-full"
         placeholderTone="sky"
       />
-      <h3 className="mt-4 text-sm font-semibold text-brand">{blok.title}</h3>
+      <h3 className="mt-4 text-base font-bold text-brand">{blok.title}</h3>
       {blok.description ? (
-        <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">{blok.description}</p>
+        <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-ink-muted">{blok.description}</p>
       ) : null}
     </li>
   );

@@ -117,7 +117,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mt-4 max-w-xl text-center text-xs leading-relaxed text-ink-muted">
+          <p className="mx-auto mt-4 max-w-xl text-center text-[0.9375rem] leading-relaxed text-ink-muted">
             {blok.intro}
           </p>
         ) : null}
@@ -154,7 +154,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
                 aria-pressed={active}
                 aria-label={entry === OTHER ? "brands starting with a number or symbol" : entry}
                 onClick={() => setLetter(active ? null : entry)}
-                className={`h-6 w-6 rounded-full text-[0.65rem] leading-none transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                className={`h-6 w-6 rounded-full text-sm leading-none transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
                   active
                     ? "bg-brand text-white"
                     : enabled
@@ -200,7 +200,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
                   className="flex h-full flex-col px-4 pt-2 pb-6 transition-colors duration-200 hover:bg-brand-100/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
                 >
                   <span {...editableAttrs(brand)} className="flex h-full flex-col">
-                    <span className="h-4 text-[0.7rem] font-semibold text-brand" aria-hidden>
+                    <span className="h-4 text-sm font-semibold text-brand" aria-hidden>
                       {starts ? current : ""}
                     </span>
 
@@ -216,7 +216,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
                     {/* With a logo the name is the image's alt text; without one
                         it has to be visible or the cell is anonymous. */}
                     {brand.logo?.filename ? null : (
-                      <span className="mt-2 text-center text-[0.7rem] leading-snug text-ink-muted">
+                      <span className="mt-2 text-center text-sm leading-snug text-ink-muted">
                         {brand.name}
                       </span>
                     )}
@@ -288,9 +288,9 @@ function CategoryButton({
         )}
       </span>
 
-      <span className="text-[0.7rem] leading-none text-brand">
+      <span className="text-sm leading-none text-brand">
         {label}
-        <sup className="ml-0.5 text-[0.55rem]">{count}</sup>
+        <sup className="ml-0.5 text-xs">{count}</sup>
       </span>
     </button>
   );
