@@ -11,6 +11,7 @@
     "storyblok:push": "node scripts/push-components.mjs",
     "storyblok:seed": "node scripts/seed-stories.mjs",
     "storyblok:merge-claims": "node scripts/merge-claim-cards.mjs",
+    "storyblok:fill-claims": "node scripts/fill-claim-cards.mjs",
     "storyblok:pull": "storyblok components pull --space"
   },
   "dependencies": {

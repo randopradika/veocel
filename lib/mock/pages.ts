@@ -49,22 +49,263 @@ function heroTabs(prefix: string): HeroNavCardBlok[] {
 }
 
 /**
- * The claims a product page states, as `claim_card`s for a `claim_grid`.
+ * Every claim VEOCEL™ states, with the copy, footnotes and proof list behind
+ * it. The sustainability page shows the full set; the product pages restate a
+ * subset through `claimCards()`, so a claim is worded and evidenced identically
+ * wherever it appears and is edited here once.
  *
- * Titles only. These cards carry no body, proof list or icon, so each renders
- * as the tinted plate the sustainability claims use with a single line on it —
- * attach marks in the Visual Editor if the design gains them.
+ * Uids are the sustainability page's own. `claimCards()` re-stamps them per
+ * page, because a blok uid has to be unique across stories.
+ */
+const CLAIMS: ClaimCardBlok[] = [
+  {
+    _uid: "su-claim-1",
+    component: "claim_card",
+    title: "wood-based fibers",
+    body:
+      "VEOCEL™ fibers are wood-based, derived from renewable wood sources " +
+      "through a pulping process and finally made into fibers. VEOCEL™ fibers " +
+      "bring the inherent advantages of cellulose to personal care and hygiene " +
+      "products: natural absorbency, liquid distribution, biodegradability and " +
+      "versatility.",
+    proof_label: "proof:",
+    proof:
+      "USDA biobased product\n" +
+      "FSC® / PEFC certified\n" +
+      "Lenzing Wood and Pulp Policy\n" +
+      "TÜV AUSTRIA certification",
+  },
+  {
+    _uid: "su-claim-2",
+    component: "claim_card",
+    title: "responsible production",
+    body:
+      "VEOCEL™ branded fibers are manufactured with high production standards " +
+      "with low emissions to air and water, thereby safeguarding resources for " +
+      "future generations*.\n\n" +
+      "* these results were calculated using the Higg Materials Sustainability " +
+      "Index (Higg MSI) tools provided by the Sustainable Apparel Coalition. The " +
+      "Higg MSI tools assess impacts of materials from cradle-to-gate for a " +
+      "finished material (e.g. to the point at which the materials are ready to " +
+      "be assembled into a product). However, this figure only shows impacts " +
+      "from cradle to fiber production gate. VEOCEL™ branded fibers’ LCA " +
+      "results are represented by TENCEL™/ECOVERO™ data based on Higg MSI " +
+      "database v3.7 (December, 2023).",
+    proof_label: "proof:",
+    proof:
+      "externally calculated LCA results\n" +
+      "Higg MSI data\n" +
+      "Lenzing Focus Paper “Responsible Production”\n" +
+      "sustainability reports\n" +
+      "EU Ecolabel / EU BAT standard",
+  },
+  {
+    _uid: "su-claim-3",
+    component: "claim_card",
+    title: "biodegradable fibers",
+    body:
+      "derived from the natural material — wood, VEOCEL™ fibers are " +
+      "biodegradable in soil, freshwater and marine conditions and compostable " +
+      "under industrial and home conditions, and can fully return to nature*.\n\n" +
+      "* this claim is not applicable in California, U.S.A. and France.",
+    proof_label: "proof:",
+    proof: "TÜV AUSTRIA certification\nSCRIPPS study",
+  },
+  {
+    _uid: "su-claim-4",
+    component: "claim_card",
+    title: "responsible wood and pulp sourcing",
+    body:
+      "the raw material for VEOCEL™ fibers is derived from wood sources grown " +
+      "in responsibly managed forests*, following the stringent guidelines of " +
+      "the Lenzing Wood and Pulp Policy and applying trusted forest " +
+      "certification systems.\n\n" +
+      "* please refer to Lenzing Wood & Pulp Policy (lenzing.com)",
+    proof_label: "proof:",
+    proof:
+      "Lenzing’s Wood and Pulp Policy\n" +
+      "FSC®/ PEFC certificates with Chain of Custody\n" +
+      "The Hot Button Report",
+  },
+  /*
+    The ten further claims, from node 2055:1391 — a detached frame beside
+    the page rather than part of the 2053:474 artboard, so it reads as a
+    continuation of this same grid and not a section of its own.
+
+    Ordered as the frame lays them out (left to right, top to bottom), not
+    by its layer names: it numbers these 5-14 but places 5 and 7 in the
+    right column with 6 and 8 to their left, so following the names would
+    mirror the first two rows against the drawing.
+
+    No `icon` here, as with the four above — the marks are attached to the
+    cards in Storyblok, and a field set in the mock would overwrite them on
+    the next seed.
+  */
+  {
+    _uid: "su-claim-5",
+    component: "claim_card",
+    title: "gentle on skin",
+    body:
+      "VEOCEL™ Lyocell fibers are gentle on skin and naturally smooth, " +
+      "providing comfort for skin.",
+    proof_label: "proof:",
+    proof:
+      "microscopic fiber surface of VEOCEL™ Lyocell fibers\n" +
+      "softness panel tests – comparison of rough / smooth",
+  },
+  {
+    _uid: "su-claim-6",
+    component: "claim_card",
+    title: "skin-friendly fibers",
+    body:
+      "VEOCEL™ branded fibers are suitable for products that come into " +
+      "contact with skin, as ensured by international standards, tests and " +
+      "industry-wide recognized certifications.",
+    proof_label: "proof:",
+    proof:
+      "study “friction coefficient on skin”\n" +
+      "inherent properties of cellulosic fibers",
+  },
+  {
+    _uid: "su-claim-7",
+    component: "claim_card",
+    title: "dermatologically tested",
+    body: "dermatologically tested skin-friendly material.",
+    proof_label: "proof:",
+    proof: "softness results for LENZING™ Lyocell Skin fibers (dry + wet state)",
+  },
+  {
+    _uid: "su-claim-8",
+    component: "claim_card",
+    title: "natural wearing comfort",
+    body:
+      "VEOCEL™ fibers contribute to keep your skin in natural balance. They " +
+      "support your skin’s natural thermal and moisture regulation.",
+    proof_label: "proof:",
+    proof:
+      "inherent properties of VEOCEL™ Lyocell fibers\n" +
+      "softness panel results for LENZING™ Lyocell Dry fibers\n" +
+      "pictures taken by microscope\n" +
+      "R&D measurements",
+  },
+  {
+    _uid: "su-claim-9",
+    component: "claim_card",
+    title: "high quality standards",
+    body:
+      "VEOCEL™ fibers are compliant with OEKO-TEX® STANDARD 100 Product " +
+      "class I, including Appendix 6, affirming that the fibers have been " +
+      "tested for numerous regulated and non-regulated harmful substances, " +
+      "and therefore, indicating that the fibers are harmless to human " +
+      "health. VEOCEL™ fibers are awarded with the FKT label “MEDICALLY " +
+      "TESTED – TESTED FOR TOXINS” and have passed FKT’s strict body " +
+      "compatibility tests.",
+    proof_label: "proof:",
+    proof:
+      "OEKO-TEX® STANDARD 100 Product class I, including Appendix 6\n" +
+      "FKT label “MEDICALLY TESTED – TESTED FOR TOXINS”\n" +
+      "Internal standards (Mibio, BAT for VEOCEL™ Viscose)\n" +
+      "ISEGA // food contact compliant\n" +
+      "European Pharmacopoeia\n" +
+      "ISO / BISFA norms\n" +
+      "risk assessments done by external parties\n" +
+      "Global pest control system – internal set-up\n" +
+      "The Blue Label Denmark",
+  },
+  {
+    _uid: "su-claim-10",
+    component: "claim_card",
+    title: "fragrance-free fibers",
+    body:
+      "The odor neutrality of VEOCEL™ Lyocell fibers supports the trend " +
+      "towards fragrance-reduced wipes and makes the use of masking agents " +
+      "in nonwoven products unnecessary.",
+    proof_label: "proof:",
+    proof: "inherent properties of VEOCEL™ Lyocell fibers",
+  },
+  {
+    _uid: "su-claim-11",
+    component: "claim_card",
+    title: "great wet strength",
+    body:
+      "VEOCEL™ Lyocell fibers are versatile and distinguished by their " +
+      "great strength among cellulosic fibers. They can be used to produce " +
+      "lightweight nonwoven fabrics that exhibit great tensile strength in " +
+      "both dry and wet states.",
+    proof_label: "proof:",
+    proof:
+      "tenacity measurements // inherent properties of VEOCEL™ Lyocell fibers",
+  },
+  {
+    _uid: "su-claim-12",
+    component: "claim_card",
+    title: "liquid management",
+    body:
+      "The inherent properties of cellulosic fibers naturally regulate " +
+      "liquid absorption and release. This leads to a uniform distribution " +
+      "of the liquid within the fibers and by extension the personal care " +
+      "products made from them, offering an effective way to care for, and " +
+      "ultimately greater comfort, to your skin.",
+    proof_label: "proof:",
+    proof:
+      "inherent properties of cellulosic fibers\n" +
+      "regular liquid management measurements of VEOCEL™ Lyocell and " +
+      "Viscose fibers (R&D)",
+  },
+  {
+    _uid: "su-claim-13",
+    component: "claim_card",
+    // The frame's layer reads "chlorrine"; the claim itself spells it correctly.
+    title: "totally chlorine-free fibers",
+    body:
+      "VEOCEL™ branded fibers are totally chlorine-free and produced with " +
+      "extensive and advanced quality controls to assure fibers deliver on " +
+      "consumer and industry expectations for usage in intimate products, " +
+      "such as tampons, which come into direct contact with the most " +
+      "sensitive parts of the body.",
+    proof_label: "proof:",
+    proof:
+      "AOX Measurement: Below 0.01 mg/L detection limit according to " +
+      "ISO 9562: 2004.\n" +
+      "TCF production / Lenzing self-declaration",
+  },
+  {
+    _uid: "su-claim-14",
+    component: "claim_card",
+    title: "premium European-made fibers",
+    body:
+      "VEOCEL™ wood-based cellulosic fibers are produced in Europe " +
+      "according to high environmental and production standards. These " +
+      "European-made fibers are a key ingredient in the development and " +
+      "manufacturing of many high-quality premium products.",
+    proof_label: "proof:",
+    proof:
+      "production site in Europe (certificate of origin)\n" +
+      "EU Ecolabel + SBT commitment + aspirational targets in ZDHC",
+  },
+];
+
+/**
+ * The claims a product page restates, copied from `CLAIMS` by title.
+ *
+ * A claim carries the same icon, copy, footnotes and proof list on every page
+ * that makes it, so the product pages quote the sustainability card rather than
+ * wording it again — pass the titles this page states, in the order it states
+ * them.
  *
  * `prefix` keeps uids unique across stories, and the index makes them stable:
  * `scripts/merge-claim-cards.mjs` pairs live cards by `_uid`, so reordering a
  * list here would read to it as a set of new cards.
+ *
+ * Throws on an unknown title. That is deliberate — a typo should stop the build
+ * rather than quietly drop a claim from a page.
  */
 function claimCards(prefix: string, titles: string[]): ClaimCardBlok[] {
-  return titles.map((title, index) => ({
-    _uid: `${prefix}-claim-${index + 1}`,
-    component: "claim_card",
-    title,
-  }));
+  return titles.map((title, index) => {
+    const claim = CLAIMS.find((card) => card.title === title);
+    if (!claim) throw new Error(`No claim titled "${title}" in CLAIMS`);
+    return { ...structuredClone(claim), _uid: `${prefix}-claim-${index + 1}` };
+  });
 }
 
 /**
@@ -368,7 +609,7 @@ const wipes: PageBlok = {
         "fragrance-free fibers",
         "great wet strength",
         "liquid management",
-        "totally chlorine-free fibers / TCF fibers",
+        "totally chlorine-free fibers",
       ]),
     },
   ],
@@ -476,7 +717,7 @@ const hygiene: PageBlok = {
         "fragrance-free fibers",
         "great wet strength",
         "liquid management",
-        "totally chlorine-free fibers / TCF fibers",
+        "totally chlorine-free fibers",
         "premium European-made fibers",
       ]),
     },
@@ -728,233 +969,7 @@ const sustainability: PageBlok = {
       _uid: "su-claims",
       component: "claim_grid",
       heading: "environmental responsibility claims",
-      items: [
-        {
-          _uid: "su-claim-1",
-          component: "claim_card",
-          title: "wood-based fibers",
-          body:
-            "VEOCEL™ fibers are wood-based, derived from renewable wood sources " +
-            "through a pulping process and finally made into fibers. VEOCEL™ fibers " +
-            "bring the inherent advantages of cellulose to personal care and hygiene " +
-            "products: natural absorbency, liquid distribution, biodegradability and " +
-            "versatility.",
-          proof_label: "proof:",
-          proof:
-            "USDA biobased product\n" +
-            "FSC® / PEFC certified\n" +
-            "Lenzing Wood and Pulp Policy\n" +
-            "TÜV AUSTRIA certification",
-        },
-        {
-          _uid: "su-claim-2",
-          component: "claim_card",
-          title: "responsible production",
-          body:
-            "VEOCEL™ branded fibers are manufactured with high production standards " +
-            "with low emissions to air and water, thereby safeguarding resources for " +
-            "future generations*.\n\n" +
-            "* these results were calculated using the Higg Materials Sustainability " +
-            "Index (Higg MSI) tools provided by the Sustainable Apparel Coalition. The " +
-            "Higg MSI tools assess impacts of materials from cradle-to-gate for a " +
-            "finished material (e.g. to the point at which the materials are ready to " +
-            "be assembled into a product). However, this figure only shows impacts " +
-            "from cradle to fiber production gate. VEOCEL™ branded fibers’ LCA " +
-            "results are represented by TENCEL™/ECOVERO™ data based on Higg MSI " +
-            "database v3.7 (December, 2023).",
-          proof_label: "proof:",
-          proof:
-            "externally calculated LCA results\n" +
-            "Higg MSI data\n" +
-            "Lenzing Focus Paper “Responsible Production”\n" +
-            "sustainability reports\n" +
-            "EU Ecolabel / EU BAT standard",
-        },
-        {
-          _uid: "su-claim-3",
-          component: "claim_card",
-          title: "biodegradable fibers",
-          body:
-            "derived from the natural material — wood, VEOCEL™ fibers are " +
-            "biodegradable in soil, freshwater and marine conditions and compostable " +
-            "under industrial and home conditions, and can fully return to nature*.\n\n" +
-            "* this claim is not applicable in California, U.S.A. and France.",
-          proof_label: "proof:",
-          proof: "TÜV AUSTRIA certification\nSCRIPPS study",
-        },
-        {
-          _uid: "su-claim-4",
-          component: "claim_card",
-          title: "responsible wood and pulp sourcing",
-          body:
-            "the raw material for VEOCEL™ fibers is derived from wood sources grown " +
-            "in responsibly managed forests*, following the stringent guidelines of " +
-            "the Lenzing Wood and Pulp Policy and applying trusted forest " +
-            "certification systems.\n\n" +
-            "* please refer to Lenzing Wood & Pulp Policy (lenzing.com)",
-          proof_label: "proof:",
-          proof:
-            "Lenzing’s Wood and Pulp Policy\n" +
-            "FSC®/ PEFC certificates with Chain of Custody\n" +
-            "The Hot Button Report",
-        },
-        /*
-          The ten further claims, from node 2055:1391 — a detached frame beside
-          the page rather than part of the 2053:474 artboard, so it reads as a
-          continuation of this same grid and not a section of its own.
-
-          Ordered as the frame lays them out (left to right, top to bottom), not
-          by its layer names: it numbers these 5-14 but places 5 and 7 in the
-          right column with 6 and 8 to their left, so following the names would
-          mirror the first two rows against the drawing.
-
-          No `icon` here, as with the four above — the marks are attached to the
-          cards in Storyblok, and a field set in the mock would overwrite them on
-          the next seed.
-        */
-        {
-          _uid: "su-claim-5",
-          component: "claim_card",
-          title: "gentle on skin",
-          body:
-            "VEOCEL™ Lyocell fibers are gentle on skin and naturally smooth, " +
-            "providing comfort for skin.",
-          proof_label: "proof:",
-          proof:
-            "microscopic fiber surface of VEOCEL™ Lyocell fibers\n" +
-            "softness panel tests – comparison of rough / smooth",
-        },
-        {
-          _uid: "su-claim-6",
-          component: "claim_card",
-          title: "skin-friendly fibers",
-          body:
-            "VEOCEL™ branded fibers are suitable for products that come into " +
-            "contact with skin, as ensured by international standards, tests and " +
-            "industry-wide recognized certifications.",
-          proof_label: "proof:",
-          proof:
-            "study “friction coefficient on skin”\n" +
-            "inherent properties of cellulosic fibers",
-        },
-        {
-          _uid: "su-claim-7",
-          component: "claim_card",
-          title: "dermatologically tested",
-          body: "dermatologically tested skin-friendly material.",
-          proof_label: "proof:",
-          proof: "softness results for LENZING™ Lyocell Skin fibers (dry + wet state)",
-        },
-        {
-          _uid: "su-claim-8",
-          component: "claim_card",
-          title: "natural wearing comfort",
-          body:
-            "VEOCEL™ fibers contribute to keep your skin in natural balance. They " +
-            "support your skin’s natural thermal and moisture regulation.",
-          proof_label: "proof:",
-          proof:
-            "inherent properties of VEOCEL™ Lyocell fibers\n" +
-            "softness panel results for LENZING™ Lyocell Dry fibers\n" +
-            "pictures taken by microscope\n" +
-            "R&D measurements",
-        },
-        {
-          _uid: "su-claim-9",
-          component: "claim_card",
-          title: "high quality standards",
-          body:
-            "VEOCEL™ fibers are compliant with OEKO-TEX® STANDARD 100 Product " +
-            "class I, including Appendix 6, affirming that the fibers have been " +
-            "tested for numerous regulated and non-regulated harmful substances, " +
-            "and therefore, indicating that the fibers are harmless to human " +
-            "health. VEOCEL™ fibers are awarded with the FKT label “MEDICALLY " +
-            "TESTED – TESTED FOR TOXINS” and have passed FKT’s strict body " +
-            "compatibility tests.",
-          proof_label: "proof:",
-          proof:
-            "OEKO-TEX® STANDARD 100 Product class I, including Appendix 6\n" +
-            "FKT label “MEDICALLY TESTED – TESTED FOR TOXINS”\n" +
-            "Internal standards (Mibio, BAT for VEOCEL™ Viscose)\n" +
-            "ISEGA // food contact compliant\n" +
-            "European Pharmacopoeia\n" +
-            "ISO / BISFA norms\n" +
-            "risk assessments done by external parties\n" +
-            "Global pest control system – internal set-up\n" +
-            "The Blue Label Denmark",
-        },
-        {
-          _uid: "su-claim-10",
-          component: "claim_card",
-          title: "fragrance-free fibers",
-          body:
-            "The odor neutrality of VEOCEL™ Lyocell fibers supports the trend " +
-            "towards fragrance-reduced wipes and makes the use of masking agents " +
-            "in nonwoven products unnecessary.",
-          proof_label: "proof:",
-          proof: "inherent properties of VEOCEL™ Lyocell fibers",
-        },
-        {
-          _uid: "su-claim-11",
-          component: "claim_card",
-          title: "great wet strength",
-          body:
-            "VEOCEL™ Lyocell fibers are versatile and distinguished by their " +
-            "great strength among cellulosic fibers. They can be used to produce " +
-            "lightweight nonwoven fabrics that exhibit great tensile strength in " +
-            "both dry and wet states.",
-          proof_label: "proof:",
-          proof:
-            "tenacity measurements // inherent properties of VEOCEL™ Lyocell fibers",
-        },
-        {
-          _uid: "su-claim-12",
-          component: "claim_card",
-          title: "liquid management",
-          body:
-            "The inherent properties of cellulosic fibers naturally regulate " +
-            "liquid absorption and release. This leads to a uniform distribution " +
-            "of the liquid within the fibers and by extension the personal care " +
-            "products made from them, offering an effective way to care for, and " +
-            "ultimately greater comfort, to your skin.",
-          proof_label: "proof:",
-          proof:
-            "inherent properties of cellulosic fibers\n" +
-            "regular liquid management measurements of VEOCEL™ Lyocell and " +
-            "Viscose fibers (R&D)",
-        },
-        {
-          _uid: "su-claim-13",
-          component: "claim_card",
-          // The frame's layer reads "chlorrine"; the claim itself spells it correctly.
-          title: "totally chlorine-free fibers",
-          body:
-            "VEOCEL™ branded fibers are totally chlorine-free and produced with " +
-            "extensive and advanced quality controls to assure fibers deliver on " +
-            "consumer and industry expectations for usage in intimate products, " +
-            "such as tampons, which come into direct contact with the most " +
-            "sensitive parts of the body.",
-          proof_label: "proof:",
-          proof:
-            "AOX Measurement: Below 0.01 mg/L detection limit according to " +
-            "ISO 9562: 2004.\n" +
-            "TCF production / Lenzing self-declaration",
-        },
-        {
-          _uid: "su-claim-14",
-          component: "claim_card",
-          title: "premium European-made fibers",
-          body:
-            "VEOCEL™ wood-based cellulosic fibers are produced in Europe " +
-            "according to high environmental and production standards. These " +
-            "European-made fibers are a key ingredient in the development and " +
-            "manufacturing of many high-quality premium products.",
-          proof_label: "proof:",
-          proof:
-            "production site in Europe (certificate of origin)\n" +
-            "EU Ecolabel + SBT commitment + aspirational targets in ZDHC",
-        },
-      ],
+      items: CLAIMS,
     },
     {
       _uid: "su-certificates",
