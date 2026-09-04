@@ -177,3 +177,55 @@
     animation: none;
   }
 }
+
+/*
+  The header before hydration.
+
+  `SiteHeader` chooses its appearance by measuring the page — is a dark hero
+  under it, and how far down has the reader scrolled — and the server can answer
+  neither, so its markup is the resting one: shown, and solid white. Every page
+  but search and 404 opens on a dark hero, so that answer is wrong on almost
+  every load, and it is the answer on screen for the whole gap between first
+  paint and hydration. Throttled to a slow connection that gap measured about
+  two seconds of white bar laid across the hero.
+
+  The hero is in the DOM long before the JavaScript is, so the same decision can
+  be made here: while `data-boot` marks the markup as the server's guess, a page
+  carrying `[data-hero]` gets the transparent appearance from the first paint.
+  `SiteHeader` drops the attribute on its first client render and its own
+  classes — measured by then — take over.
+
+  Deliberately unlayered. Tailwind's utilities are a cascade layer, and a layer
+  beats anything specificity can say from inside one; unlayered rules sit above
+  the lot. The values below are therefore the only copy of the overlay
+  appearance outside the component, and have to move with it.
+*/
+body:has([data-hero]) [data-site-header][data-boot] {
+  padding-top: 26px;
+  padding-bottom: 1rem;
+  border-color: transparent;
+  background-color: transparent;
+  backdrop-filter: none;
+  color: #fff;
+}
+
+@media (width >= 48rem) {
+  body:has([data-hero]) [data-site-header][data-boot] {
+    padding-top: min(3.65vw, 70px);
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* The lockup crossfades with the colours; over a dark hero it is the white one. */
+body:has([data-hero]) [data-site-header][data-boot] [data-logo="dark"] {
+  opacity: 0;
+}
+
+body:has([data-hero]) [data-site-header][data-boot] [data-logo="light"] {
+  opacity: 1;
+}
+
+/* The pill keeps its border in both appearances and only changes its colour. */
+body:has([data-hero]) [data-site-header][data-boot] [data-language-pill] {
+  border-color: transparent;
+}

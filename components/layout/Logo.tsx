@@ -12,6 +12,9 @@
  *
  * Plain `<img>` on purpose: `next/image` runs every source through the
  * Storyblok image service loader, which cannot serve files from /public.
+ *
+ * Both rasters are marked `data-logo` so the header's pre-hydration styling in
+ * `globals.css` can make the same crossfade before `variant` has been decided.
  */
 export function Logo({
   variant = "dark",
@@ -34,6 +37,7 @@ export function Logo({
       <img
         src="/brand/veocel-logo.png"
         alt=""
+        data-logo="dark"
         width={193}
         height={53}
         // `block` so the wrapper measures the artwork's true height — an inline
@@ -47,6 +51,7 @@ export function Logo({
       <img
         src="/brand/veocel-logo-white.png"
         alt=""
+        data-logo="light"
         width={341}
         height={92}
         className={`absolute inset-0 ${height} w-auto transition-opacity duration-300 ${

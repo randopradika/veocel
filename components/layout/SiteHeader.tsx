@@ -22,7 +22,9 @@ import { Logo } from "./Logo";
  *
  * The bar shows only at the top of the page. Scrolling down takes it away and it
  * stays away — a scroll back up does not summon it — until the reader returns to
- * the top, where it slides in again.
+ * the top, where it slides in again. That includes arriving part way down: a
+ * refresh restores the reader's position, and the bar is not part of what they
+ * come back to.
  */
 /** Switch a little before the hero fully leaves, so type never sits on the seam. */
 const HERO_EXIT_OFFSET = 96;
@@ -42,6 +44,13 @@ type HeaderState = {
   overlay: boolean;
   /** Slid off the top because the reader has scrolled away from it. */
   retracted: boolean;
+  /**
+   * False while the markup on screen is still the server's guess at the two
+   * above — see `SERVER_STATE`. The header carries it as `data-boot` so
+   * `globals.css` can make that guess look right until the real measurement
+   * arrives.
+   */
+  hydrated: boolean;
 };
 
 /**
@@ -95,17 +104,24 @@ function updateRetracted(): void {
  * read rather than pushed in from the listener, so the backgrounded-tab reasoning
  * above still holds.
  */
-let snapshot: HeaderState = { overlay: false, retracted: false };
+let snapshot: HeaderState = { overlay: false, retracted: false, hydrated: true };
 
 function readHeaderState(): HeaderState {
   const overlay = readOverlay();
   if (overlay === snapshot.overlay && isRetracted === snapshot.retracted) return snapshot;
-  snapshot = { overlay, retracted: isRetracted };
+  snapshot = { overlay, retracted: isRetracted, hydrated: true };
   return snapshot;
 }
 
-/** The server has no scroll position and no DOM, so it renders the resting state. */
-const SERVER_STATE: HeaderState = { overlay: false, retracted: false };
+/**
+ * The server has no scroll position and no DOM, so it renders the resting state:
+ * shown, and solid because it cannot see whether a dark hero is under it. Both
+ * halves are a guess, and both are wrong often enough to matter — every page but
+ * search and 404 opens on a dark hero — so the markup marks itself `data-boot`
+ * and `globals.css` corrects the appearance for the paint or two before this
+ * component takes over.
+ */
+const SERVER_STATE: HeaderState = { overlay: false, retracted: false, hydrated: false };
 const readServerHeaderState = (): HeaderState => SERVER_STATE;
 
 function subscribeToScroll(onChange: () => void): () => void {
@@ -130,9 +146,18 @@ function subscribeToScroll(onChange: () => void): () => void {
     onChange();
   };
 
+  // Read the position once, here, rather than waiting for a scroll event: the
+  // browser restores it on a refresh before this listener exists, so a reader
+  // who reloads half way down the page produces no scroll at all — and the bar
+  // sat there, solid, across the middle of their page until they moved.
+  updateRetracted();
+
   window.addEventListener("scroll", schedule, { passive: true });
   window.addEventListener("resize", schedule);
   window.addEventListener("focusin", onFocusIn);
+  // The restore can also land *after* hydration — the document only reaches its
+  // full height once the images are in — so take the reading again at load.
+  window.addEventListener("load", schedule);
   // The hero can change height while the tab is hidden — images finishing load, a
   // font swapping — so re-measure when it comes back rather than trusting the last
   // value computed before it went away.
@@ -143,12 +168,13 @@ function subscribeToScroll(onChange: () => void): () => void {
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
     window.removeEventListener("focusin", onFocusIn);
+    window.removeEventListener("load", schedule);
     document.removeEventListener("visibilitychange", schedule);
   };
 }
 
 export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: string }) {
-  const { overlay, retracted } = useSyncExternalStore(
+  const { overlay, retracted, hydrated } = useSyncExternalStore(
     subscribeToScroll,
     readHeaderState,
     readServerHeaderState,
@@ -157,6 +183,9 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
   return (
     <header
       data-site-header
+      // Dropped on the first client render, which is the point the appearance
+      // stops being a guess. `globals.css` hangs the stand-in styling off it.
+      data-boot={hydrated ? undefined : ""}
       // Padding, not a fixed height: over the hero the content sits at the frame's
       // 70/1920 offset (fluid, so it stays proportional at any width), then the bar
       // compacts once it turns solid so it doesn't blanket the page while scrolled.
@@ -253,6 +282,9 @@ function LanguagePicker({
       <button
         ref={buttonRef}
         type="button"
+        // Marked so the header's pre-hydration styling can reach the one thing
+        // on the pill that differs between the two appearances, its border.
+        data-language-pill
         onClick={() => setOpen((wasOpen) => !wasOpen)}
         aria-expanded={open}
         aria-haspopup="menu"
