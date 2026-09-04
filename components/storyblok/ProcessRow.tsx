@@ -1,6 +1,7 @@
 import { ArrowTextLink } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import { SmartLink } from "@/components/ui/SmartLink";
 import type { ProcessRowBlok, ProcessStepBlok } from "@/lib/types";
 
@@ -165,15 +166,12 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
               </h2>
             ) : null}
 
-            {blok.body
-              ? blok.body
-                  .split(/\n\s*\n/)
-                  .map((paragraph, index) => (
-                    <p key={index} className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl">
-                      {paragraph}
-                    </p>
-                  ))
-              : null}
+            <Markdown
+              className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl"
+              gap="loose"
+            >
+              {blok.body}
+            </Markdown>
 
             {blok.link_label ? (
               <SmartLink

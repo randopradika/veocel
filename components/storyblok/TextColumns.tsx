@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import type { TextColumnsBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -23,11 +24,9 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
                 {blok.heading}
               </h2>
             ) : null}
-            {blok.body ? (
-              <p className="mt-12 ml-auto max-w-xl text-base leading-[1.4] md:text-xl text-ink-muted">
-                {blok.body}
-              </p>
-            ) : null}
+            <Markdown className="mt-12 ml-auto max-w-xl text-base leading-[1.4] md:text-xl text-ink-muted">
+              {blok.body}
+            </Markdown>
           </>
         ) : (
           <div className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-16">
@@ -36,9 +35,9 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
                 {blok.heading}
               </h2>
             ) : null}
-            {blok.body ? (
-              <p className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl">{blok.body}</p>
-            ) : null}
+            <Markdown className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl">
+              {blok.body}
+            </Markdown>
           </div>
         )}
       </Container>

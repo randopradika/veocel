@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import { SmartLink } from "@/components/ui/SmartLink";
 import type { CtaPanelBlok } from "@/lib/types";
 
@@ -13,16 +14,6 @@ import { editable } from "./editable";
  * same tint, the way `brand_directory` colours its band.
  */
 
-/** Blank lines start a new paragraph, as elsewhere in the block library. */
-function paragraphs(body?: string): string[] {
-  if (!body) return [];
-  return body
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
-}
-
 export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
   if (!blok.heading && !blok.body && !blok.link_label) return null;
 
@@ -36,14 +27,12 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
             </h2>
           ) : null}
 
-          {paragraphs(blok.body).map((paragraph, index) => (
-            <p
-              key={index}
-              className="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-ink-muted"
-            >
-              {paragraph}
-            </p>
-          ))}
+          <Markdown
+            className="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-ink-muted"
+            gap="loose"
+          >
+            {blok.body}
+          </Markdown>
 
           {blok.link_label ? (
             <SmartLink

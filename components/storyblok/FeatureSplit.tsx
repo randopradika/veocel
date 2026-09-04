@@ -1,5 +1,6 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import type { FeatureSplitBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -75,11 +76,9 @@ export function FeatureSplit({ blok }: { blok: FeatureSplitBlok }) {
               <h2 className="text-h3 font-bold text-brand md:text-[1.75rem]">{blok.heading}</h2>
             ) : null}
 
-            {blok.body ? (
-              <p className="max-w-sm text-[0.9375rem] leading-relaxed text-ink-muted md:text-sm">
-                {blok.body}
-              </p>
-            ) : null}
+            <Markdown className="max-w-sm text-[0.9375rem] leading-relaxed text-ink-muted md:text-sm">
+              {blok.body}
+            </Markdown>
           </div>
         </div>
       </Container>

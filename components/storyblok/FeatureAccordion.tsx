@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import type { AccordionItemBlok, FeatureAccordionBlok, SbBlock } from "@/lib/types";
 
 /**
@@ -28,16 +29,6 @@ import type { AccordionItemBlok, FeatureAccordionBlok, SbBlock } from "@/lib/typ
  */
 function editableAttrs(blok: SbBlock) {
   return storyblokEditable(blok as unknown as SbBlokData);
-}
-
-/** Blank lines start a new paragraph, as elsewhere in the block library. */
-function paragraphs(body?: string): string[] {
-  if (!body) return [];
-  return body
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
 }
 
 const GRID = {
@@ -128,14 +119,12 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
       </button>
 
       <div id={panelId} hidden={!open}>
-        {paragraphs(blok.body).map((paragraph, index) => (
-          <p
-            key={index}
-            className="mt-3 px-4 text-center text-[0.9375rem] leading-relaxed text-brand-800/80"
-          >
-            {paragraph}
-          </p>
-        ))}
+        <Markdown
+          className="mt-3 px-4 text-center text-[0.9375rem] leading-relaxed text-brand-800/80"
+          gap="tight"
+        >
+          {blok.body}
+        </Markdown>
       </div>
     </div>
   );
@@ -170,11 +159,12 @@ function AccordionRow({ blok, open, onToggle }: ItemProps) {
       </button>
 
       <div id={panelId} hidden={!open}>
-        {paragraphs(blok.body).map((paragraph, index) => (
-          <p key={index} className="mt-5 max-w-4xl text-[0.9375rem] leading-relaxed text-brand-800/80">
-            {paragraph}
-          </p>
-        ))}
+        <Markdown
+          className="mt-5 max-w-4xl text-[0.9375rem] leading-relaxed text-brand-800/80"
+          gap="loose"
+        >
+          {blok.body}
+        </Markdown>
       </div>
     </div>
   );
@@ -241,9 +231,9 @@ function AccordionTile({
       </button>
 
       <div id={panelId} hidden={!open}>
-        {blok.body ? (
-          <p className="mt-4 text-[0.9375rem] leading-relaxed text-brand-800/80">{blok.body}</p>
-        ) : null}
+        <Markdown className="mt-4 text-[0.9375rem] leading-relaxed text-brand-800/80">
+          {blok.body}
+        </Markdown>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import type { ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -17,14 +18,15 @@ import { editable } from "./editable";
  * to fold away — this is not another `feature_accordion` arrangement.
  */
 
-/** Blank lines start a new paragraph, as elsewhere in the block library. */
-function paragraphs(body?: string): string[] {
-  if (!body) return [];
-  return body
-    .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean);
+/**
+ * Escapes the `*` that opens a footnote paragraph.
+ *
+ * Claim copy marks a footnote by starting the paragraph with `*` (see
+ * `ClaimCardBlok` in `lib/types.ts`), which Markdown would otherwise read as a
+ * bullet. Escaping keeps the asterisk visible and the footnote a paragraph.
+ */
+function escapeFootnotes(body?: string): string | undefined {
+  return body?.replace(/^\*(?=\s)/gm, "\\*");
 }
 
 /** One proof entry per line; blank lines are skipped. */
@@ -82,11 +84,9 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
 
       <h3 className="mt-8 font-display text-2xl font-bold tracking-[-0.05em] text-brand">{blok.title}</h3>
 
-      {paragraphs(blok.body).map((paragraph, index) => (
-        <p key={index} className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
-          {paragraph}
-        </p>
-      ))}
+      <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+        {escapeFootnotes(blok.body)}
+      </Markdown>
 
       {proof.length > 0 ? (
         <>

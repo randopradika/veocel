@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/ui/Container";
+import { Markdown } from "@/components/ui/Markdown";
 import type { IntroSectionBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -34,9 +35,9 @@ export function IntroSection({ blok }: { blok: IntroSectionBlok }) {
             </h2>
           ) : null}
 
-          {blok.body ? (
-            <p className="text-base leading-[1.4] text-ink-muted md:pt-3 md:text-xl">{blok.body}</p>
-          ) : null}
+          <Markdown className="text-base leading-[1.4] text-ink-muted md:pt-3 md:text-xl">
+            {blok.body}
+          </Markdown>
         </div>
       </Container>
     </Section>
