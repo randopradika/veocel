@@ -82,7 +82,12 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
         />
       ) : null}
 
-      <h3 className="mt-8 font-display text-2xl font-bold tracking-[-0.05em] text-brand">{blok.title}</h3>
+      {/* The mark sits above the title; with no mark the title leads the plate. */}
+      <h3
+        className={`${blok.icon?.filename ? "mt-8 " : ""}font-display text-2xl font-bold tracking-[-0.05em] text-brand`}
+      >
+        {blok.title}
+      </h3>
 
       <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
         {escapeFootnotes(blok.body)}

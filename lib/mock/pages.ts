@@ -1,5 +1,6 @@
 import type {
   BrandItemBlok,
+  ClaimCardBlok,
   FiberProductCardBlok,
   HeroNavCardBlok,
   PageBlok,
@@ -44,6 +45,25 @@ function heroTabs(prefix: string): HeroNavCardBlok[] {
     component: "hero_nav_card",
     label: tab.label,
     link: { cached_url: tab.slug, linktype: "story" },
+  }));
+}
+
+/**
+ * The claims a product page states, as `claim_card`s for a `claim_grid`.
+ *
+ * Titles only. These cards carry no body, proof list or icon, so each renders
+ * as the tinted plate the sustainability claims use with a single line on it —
+ * attach marks in the Visual Editor if the design gains them.
+ *
+ * `prefix` keeps uids unique across stories, and the index makes them stable:
+ * `scripts/merge-claim-cards.mjs` pairs live cards by `_uid`, so reordering a
+ * list here would read to it as a set of new cards.
+ */
+function claimCards(prefix: string, titles: string[]): ClaimCardBlok[] {
+  return titles.map((title, index) => ({
+    _uid: `${prefix}-claim-${index + 1}`,
+    component: "claim_card",
+    title,
   }));
 }
 
@@ -332,6 +352,25 @@ const wipes: PageBlok = {
       ],
     },
     // The 2010:900 revision ends after the application cards — no fiber rows.
+    //
+    // The claims grid is not in that frame. It repeats the sustainability
+    // page's `claim_grid` — same ruled heading, same tinted plates — with the
+    // claims this page states.
+    {
+      _uid: "w-claims",
+      component: "claim_grid",
+      heading: "claims",
+      items: claimCards("w", [
+        "gentle on skin",
+        "skin-friendly fibers",
+        "dermatologically tested",
+        "high quality standards",
+        "fragrance-free fibers",
+        "great wet strength",
+        "liquid management",
+        "totally chlorine-free fibers / TCF fibers",
+      ]),
+    },
   ],
 };
 
@@ -420,6 +459,27 @@ const hygiene: PageBlok = {
       ],
     },
     // The 2010:764 revision ends after the application cards — no fiber rows.
+    //
+    // The claims grid is not in that frame — see the note on the wipes page.
+    // Hygiene states two claims the other pages do not: "natural wearing
+    // comfort", second, and "premium European-made fibers" at the end.
+    {
+      _uid: "hy-claims",
+      component: "claim_grid",
+      heading: "claims",
+      items: claimCards("hy", [
+        "gentle on skin",
+        "natural wearing comfort",
+        "skin-friendly fibers",
+        "dermatologically tested",
+        "high quality standards",
+        "fragrance-free fibers",
+        "great wet strength",
+        "liquid management",
+        "totally chlorine-free fibers / TCF fibers",
+        "premium European-made fibers",
+      ]),
+    },
   ],
 };
 
@@ -497,6 +557,25 @@ const beauty: PageBlok = {
       ],
     },
     // The 2010:642 revision ends after the application cards — no fiber rows.
+    //
+    // The claims grid is not in that frame — see the note on the wipes page.
+    // Beauty closes on "premium European-made fibers" where wipes closes on the
+    // chlorine-free claim; the seven before it are the same.
+    {
+      _uid: "be-claims",
+      component: "claim_grid",
+      heading: "claims",
+      items: claimCards("be", [
+        "gentle on skin",
+        "skin-friendly fibers",
+        "dermatologically tested",
+        "high quality standards",
+        "fragrance-free fibers",
+        "great wet strength",
+        "liquid management",
+        "premium European-made fibers",
+      ]),
+    },
   ],
 };
 

@@ -3,7 +3,7 @@
  * Adds the claim cards that `lib/mock/pages.ts` has and a live Storyblok story
  * does not, leaving everything else in that story untouched.
  *
- *   npm run storyblok:merge-claims -- <spaceId> [slug…] [--dry-run]
+ *   npm run storyblok:merge-claims -- <spaceId> [slug…] [--add-sections] [--dry-run]
  *
  * Why this exists next to `storyblok:seed`: the seed builds a story *from* the
  * mock and upserts the whole thing, so it clears every field the mock does not
@@ -17,6 +17,14 @@
  * nothing. Cards already in the story are skipped, never rewritten — change
  * existing copy in the editor, not here, or the next run would quietly revert
  * it.
+ *
+ * `--add-sections` widens that to whole grids: a `claim_grid` the mock has at
+ * the top level of `body` and the live story lacks is appended to the end of
+ * the page. That is how the "claims" grids reached the wipes, hygiene and
+ * beauty stories, which had no claim section at all to merge cards into. It
+ * stays opt-in because a missing grid usually means the page structure has
+ * diverged, which is a call for a human rather than a default. A *nested* grid
+ * is still only reported: there is no obvious place to put one.
  *
  * New cards arrive without an `icon`, because the mock has none to give. The
  * script prints what it added so those can be attached in the Visual Editor.
@@ -65,15 +73,31 @@ export function collect(value, component, found = []) {
  * live story does not have is reported rather than created: that means the page
  * structure has diverged, which is a call for a human.
  */
-export function mergeClaimCards(liveContent, mockContent) {
+export function mergeClaimCards(liveContent, mockContent, { addSections = false } = {}) {
   const liveGrids = collect(liveContent, "claim_grid");
   const added = [];
+  const addedGrids = [];
   const missingGrids = [];
 
   for (const mockGrid of collect(mockContent, "claim_grid")) {
     const liveGrid = liveGrids.find((grid) => grid._uid === mockGrid._uid);
 
     if (!liveGrid) {
+      // A grid the mock keeps at the top level of `body` is a whole section the
+      // live page has yet to gain, and appending it is safe: it lands last and
+      // disturbs nothing already there. A nested grid has no such obvious home,
+      // so it stays a report for a human however the flag is set.
+      if (addSections && (mockContent.body ?? []).includes(mockGrid)) {
+        liveContent.body ??= [];
+        liveContent.body.push(structuredClone(mockGrid));
+        addedGrids.push({
+          uid: mockGrid._uid,
+          heading: mockGrid.heading,
+          cards: (mockGrid.items ?? []).length,
+        });
+        continue;
+      }
+
       missingGrids.push(mockGrid._uid);
       continue;
     }
@@ -88,7 +112,7 @@ export function mergeClaimCards(liveContent, mockContent) {
     }
   }
 
-  return { added, missingGrids };
+  return { added, addedGrids, missingGrids };
 }
 
 /* ------------------------------------------------------------------ *
@@ -98,6 +122,7 @@ export function mergeClaimCards(liveContent, mockContent) {
 async function main() {
   const argv = process.argv.slice(2);
   const dryRun = argv.includes("--dry-run");
+  const addSections = argv.includes("--add-sections");
   const positional = argv.filter((arg) => !arg.startsWith("--"));
 
   const spaceId = positional[0] ?? process.env.STORYBLOK_SPACE_ID;
@@ -187,20 +212,35 @@ async function main() {
 
       // The list endpoint omits content; the full story is a second request.
       const { story } = await api(`/stories/${match.id}`);
-      const { added, missingGrids } = mergeClaimCards(story.content, target.content);
+      const { added, addedGrids, missingGrids } = mergeClaimCards(story.content, target.content, {
+        addSections,
+      });
 
       for (const uid of missingGrids) {
-        console.warn(`WARNING  ${target.slug} — no claim_grid "${uid}" live; skipped`);
+        console.warn(
+          `WARNING  ${target.slug} — no claim_grid "${uid}" live; skipped` +
+            (addSections ? " (nested, so not appendable)" : " (--add-sections appends it)"),
+        );
       }
 
-      if (added.length === 0) {
+      if (added.length === 0 && addedGrids.length === 0) {
         console.log(`no change  ${target.slug} — every card already present`);
         continue;
       }
 
+      // Reported only once the write lands, so a failed PUT cannot read as done.
+      const report = (verb) => {
+        for (const grid of addedGrids) {
+          console.log(`${verb}  ${target.slug} — section "${grid.heading}" (${grid.cards} cards)`);
+        }
+        if (added.length > 0) {
+          console.log(`${verb}  ${target.slug} — ${added.length} card(s):`);
+          for (const card of added) console.log(`             ${card.uid}  ${card.title}`);
+        }
+      };
+
       if (dryRun) {
-        console.log(`would add  ${target.slug} — ${added.length} card(s):`);
-        for (const card of added) console.log(`             ${card.uid}  ${card.title}`);
+        report("would add");
         continue;
       }
 
@@ -211,8 +251,7 @@ async function main() {
         }),
       });
 
-      console.log(`added      ${target.slug} — ${added.length} card(s):`);
-      for (const card of added) console.log(`             ${card.uid}  ${card.title}`);
+      report("added    ");
     } catch (error) {
       failures += 1;
       console.error(`FAILED   ${target.slug}\n         ${error.message}`);
