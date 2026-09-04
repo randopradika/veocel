@@ -176,7 +176,8 @@ const fiberTypes: PageBlok = {
       _uid: "f-hero",
       component: "hero",
       headline: "explore VEOCEL™ fibers",
-      headline_highlight: "fibers",
+      // The pale blue plate on "fibers" is off for now; uncomment to bring it back.
+      // headline_highlight: "fibers",
       headline_size: "title",
       nav_cards: heroTabs("f"),
     },

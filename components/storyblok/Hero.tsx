@@ -217,7 +217,12 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           <h1 className={`font-bold ${headlineSize}`}>
             {lines.map((line, index) => (
               <span key={index} className="block md:whitespace-nowrap">
-                <HeadlineLine text={line} highlight={blok.headline_highlight} />
+                {/*
+                  The pale blue plate is off for now, whatever `headline_highlight`
+                  a story carries — only the fibers hero sets it. Restore the prop
+                  to bring the boxed word back.
+                */}
+                <HeadlineLine text={line} /* highlight={blok.headline_highlight} */ />
               </span>
             ))}
           </h1>
