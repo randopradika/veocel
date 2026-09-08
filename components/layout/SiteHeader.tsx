@@ -79,13 +79,20 @@ let isRetracted = false;
  * Whether the reader is mid-interaction with the bar, in which case it stays put:
  * a focused control has to remain visible, and an open language menu should not be
  * pulled off the screen half way through choosing from it.
+ *
+ * Keyboard focus only — `:focus-visible`, not whatever holds `activeElement`. A
+ * click leaves its target focused, so counting plain focus meant clicking in the
+ * bar pinned it to the screen for the rest of the visit: click the lockup to go
+ * home, scroll down, and the bar came along solid over the page, because the link
+ * it had just navigated from was still the focused element. A mouse user has no
+ * focus ring to lose when the bar leaves; a keyboard user does, and still keeps it.
  */
 function headerIsBusy(): boolean {
   const header = document.querySelector("[data-site-header]");
   if (!header) return false;
 
   return (
-    header.contains(document.activeElement) ||
+    header.querySelector(":focus-visible") !== null ||
     header.querySelector('[aria-expanded="true"]') !== null
   );
 }
