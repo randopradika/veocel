@@ -1189,6 +1189,8 @@ const articles: SbStory<ArticleBlok>[] = [
     "how to play an important role in reducing plastic pollution",
     {
       highlight: true,
+      // A day after the rest, so it is the newest and opens the slider.
+      date: "2026-09-09 00:00",
       seo_description:
         "Where the ocean's microplastics come from, and the everyday steps that help keep them out of the environment.",
       body: [
