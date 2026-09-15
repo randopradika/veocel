@@ -1317,12 +1317,12 @@
       },
       "category": {
         "type": "text",
-        "description": "Shown in the pill beside the date on the hub."
+        "description": "The article's tag, shown as a pill on the hub — beside the date in the banner, above the title in the list. Leave empty for no pill."
       },
       "date": {
         "type": "datetime",
         "disable_time": true,
-        "description": "Orders the hub, newest first. The newest article opens the hub as its banner."
+        "description": "Orders the hub, latest first. The list below the banner shows four to a page."
       },
       "image": {
         "type": "asset",
@@ -1330,6 +1330,10 @@
           "images"
         ],
         "description": "Opens the article, and stands for it on the hub. Landscape — every placement crops it wide."
+      },
+      "highlight": {
+        "type": "boolean",
+        "description": "Show it in the hub's banner slider instead of the list. The slider holds the two latest highlighted articles; a third stays in the list. With none ticked, the latest article opens the hub on its own."
       },
       "body": {
         "type": "bloks",

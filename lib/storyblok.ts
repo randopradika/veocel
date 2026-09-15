@@ -187,14 +187,13 @@ export async function getAllPageSlugs(): Promise<string[]> {
 }
 
 /**
- * Newest first by the article's own date. Articles sharing a date keep the order
- * they were first published in, earliest first, so a day's articles read in the
- * sequence they went out.
+ * Latest first: by the article's own date, then — for articles sharing a date —
+ * by when each was first published.
  */
 function newestFirst(a: SbStory<ArticleBlok>, b: SbStory<ArticleBlok>): number {
   const byDate = (b.content.date ?? "").localeCompare(a.content.date ?? "");
   if (byDate !== 0) return byDate;
-  return (a.first_published_at ?? "").localeCompare(b.first_published_at ?? "");
+  return (b.first_published_at ?? "").localeCompare(a.first_published_at ?? "");
 }
 
 /**

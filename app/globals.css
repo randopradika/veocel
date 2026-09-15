@@ -162,12 +162,21 @@
 /*
   Top padding for a page with no hero, from `md` up: clears the fixed header at
   its resting height — the frame's 70/1920 offset (fluid, as the header's is), the
-  56px lockup, 24px under it and the hairline — plus the 62/1920 gap the
-  #ItsInOurHands hub frame (2081:242) draws beneath the bar. 213px in all at 1920,
-  as drawn. Phones set their own, under the fixed 83px bar.
+  56px lockup, 24px under it and the hairline — plus a 62/1920 gap of white
+  beneath the bar, 213px in all at 1920. Search and 404 use it. Phones set their
+  own, under the fixed 83px bar.
 */
 @utility pt-header {
   padding-top: calc(min(3.65vw, 70px) + 81px + min(3.25vw, 62px));
+}
+
+/*
+  The header's resting height and nothing more, from `md` up — for a page whose
+  own ground starts right under the bar, with no white band between (the
+  #ItsInOurHands hub). Keep in step with `pt-header` above; phones use 83px.
+*/
+@utility pt-header-bar {
+  padding-top: calc(min(3.65vw, 70px) + 81px);
 }
 
 @keyframes marquee {

@@ -5,6 +5,7 @@ import { formatDate, isoDate } from "@/lib/date";
 import { focusPosition, naturalSize } from "@/lib/image";
 import type { ArticleBlok, ArticleImageBlok, ArticleTextBlok } from "@/lib/types";
 
+import { ArticleScrim } from "./ArticleParts";
 import { ArticleShare } from "./ArticleShare";
 import { editable } from "./editable";
 
@@ -77,19 +78,6 @@ export function Article({ blok }: { blok: ArticleBlok }) {
         ) : null}
       </Container>
     </article>
-  );
-}
-
-/**
- * The frame's shade on every article photograph, hub and article alike: clear
- * to 61% of the height, 20% black by 89%.
- */
-export function ArticleScrim() {
-  return (
-    <div
-      aria-hidden
-      className="absolute inset-0 bg-gradient-to-b from-transparent from-60% to-black/20 to-90%"
-    />
   );
 }
 

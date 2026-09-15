@@ -1145,9 +1145,9 @@ const partners: PageBlok = {
  * that has copy.
  *
  * The hub frame names four more articles. They exist so the hub renders as
- * drawn, but their bodies are still to be written. Every pill's "lorem ipsum"
- * and the one date all five share, 08/09/2026, are the frame's placeholders,
- * transcribed as drawn. Photographs live in Storyblok only, like the rest.
+ * drawn, but their bodies are still to be written. The "lorem ipsum" tag and the
+ * one date all five share, 08/09/2026, are the frame's placeholders, transcribed
+ * as drawn. Photographs live in Storyblok only, like the rest.
  */
 const ITSINOURHANDS = "itsinourhands";
 
@@ -1177,12 +1177,18 @@ function article(slug: string, title: string, fields: Partial<ArticleBlok> = {})
   });
 }
 
-/** In the hub frame's order. They share a date, so this is also the order they publish in. */
+/**
+ * In the hub frame's order. They share a date, so the live hub orders them by
+ * when each was first published, latest first; the mock, having no publish
+ * times, keeps this order. The first two are highlighted — the frame's banner
+ * article and its first row — so they slide in the banner.
+ */
 const articles: SbStory<ArticleBlok>[] = [
   article(
     "how-to-play-an-important-role-in-reducing-plastic-pollution",
     "how to play an important role in reducing plastic pollution",
     {
+      highlight: true,
       seo_description:
         "Where the ocean's microplastics come from, and the everyday steps that help keep them out of the environment.",
       body: [
@@ -1236,15 +1242,17 @@ const articles: SbStory<ArticleBlok>[] = [
   article(
     "take-the-test-how-much-do-you-know-about-plastic-pollution-in-the-oceans",
     "take the test: How much do you know about plastic pollution in the oceans?",
+    { highlight: true },
   ),
   article(
     "plastic-will-outweigh-all-fish-in-the-sea-by-2050",
     "plastic will outweigh all fish in the sea by 2050 - is ‘plastic soup’ already on the menu?",
   ),
-  // Cut off with an ellipsis in the frame; the full title is not drawn anywhere.
+  // The frame's German placeholder ("gemeinsam für den Wandel: die UN ruft zur
+  // weltweiten bekämpfung der ..."), put into English as dummy copy.
   article(
-    "gemeinsam-fuer-den-wandel",
-    "gemeinsam für den Wandel: die UN ruft zur weltweiten bekämpfung der ...",
+    "together-for-change",
+    "together for change: the UN calls for a worldwide fight against plastic pollution",
   ),
   article(
     "choose-plant-based-fibers-to-prevent-plastic-toxicity-in-our-food-chain",

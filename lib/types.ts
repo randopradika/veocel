@@ -522,12 +522,17 @@ export type BrandDirectoryBlok = SbBlock & {
 export type ArticleBlok = SbBlock & {
   component: "article";
   title: string;
-  /** The pill beside the date on the hub. */
+  /** The tag, shown as a pill on the hub: beside the date in the banner, above the title in the list. */
   category?: string;
-  /** Storyblok datetime, `YYYY-MM-DD HH:mm`. Only the date is shown. Orders the hub. */
+  /** Storyblok datetime, `YYYY-MM-DD HH:mm`. Only the date is shown. Orders the hub, latest first. */
   date?: string;
   /** Opens the article, and stands for it on the hub. */
   image?: StoryblokAsset;
+  /**
+   * In the hub's banner slider instead of its list. The slider holds the two
+   * latest highlighted articles; with none highlighted, the latest article.
+   */
+  highlight?: boolean;
   body?: (ArticleTextBlok | ArticleImageBlok)[];
   seo_title?: string;
   seo_description?: string;
