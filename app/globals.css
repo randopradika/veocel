@@ -159,6 +159,17 @@
   }
 }
 
+/*
+  Top padding for a page with no hero, from `md` up: clears the fixed header at
+  its resting height — the frame's 70/1920 offset (fluid, as the header's is), the
+  56px lockup, 24px under it and the hairline — plus the 62/1920 gap the
+  #ItsInOurHands hub frame (2081:242) draws beneath the bar. 213px in all at 1920,
+  as drawn. Phones set their own, under the fixed 83px bar.
+*/
+@utility pt-header {
+  padding-top: calc(min(3.65vw, 70px) + 81px + min(3.25vw, 62px));
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -184,7 +195,7 @@
   `SiteHeader` chooses its appearance by measuring the page — is a dark hero
   under it, and how far down has the reader scrolled — and the server can answer
   neither, so its markup is the resting one: shown, and solid white. Every page
-  but search and 404 opens on a dark hero, so that answer is wrong on almost
+  but search, 404 and the #ItsInOurHands hub opens on a dark hero, so that answer is wrong on almost
   every load, and it is the answer on screen for the whole gap between first
   paint and hydration. Throttled to a slow connection that gap measured about
   two seconds of white bar laid across the hero.

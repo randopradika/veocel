@@ -2,25 +2,10 @@ import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { formatDate } from "@/lib/date";
 import type { NewsItemBlok, NewsListBlok } from "@/lib/types";
 
 import { editable } from "./editable";
-
-/**
- * Formats `2026-05-14` as `14.05.2026`.
- *
- * Done by string split rather than `new Date()` on purpose: an ISO date-only
- * string is parsed as UTC, so formatting it in a negative-offset timezone shifts
- * it back a day — and server and browser would disagree. No parsing, no drift.
- * Anything that isn't a plain ISO date is passed through untouched.
- */
-function formatDate(value?: string): string {
-  if (!value) return "";
-  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!match) return value;
-  const [, year, month, day] = match;
-  return `${day}.${month}.${year}`;
-}
 
 /** "latest news" — heading left, supporting line right, then stacked rows. */
 export function NewsList({ blok }: { blok: NewsListBlok }) {
@@ -56,7 +41,7 @@ export function NewsList({ blok }: { blok: NewsListBlok }) {
 }
 
 function NewsRow({ blok }: { blok: NewsItemBlok }) {
-  const date = formatDate(blok.date);
+  const date = formatDate(blok.date, ".");
 
   return (
     <SmartLink

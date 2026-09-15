@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 import { altText } from "@/lib/image";
 import type { StoryblokAsset } from "@/lib/types";
@@ -34,7 +35,11 @@ type BlockImageProps = {
    * which of the two wins would depend on Tailwind's stylesheet order.
    */
   className?: string;
+  /** Wrapper styles that can't be classes — an aspect ratio read off the asset. */
+  style?: CSSProperties;
   imageClassName?: string;
+  /** Where a cover crop anchors — `focusPosition(asset)` to follow the editor's focal point. */
+  objectPosition?: string;
   /** Set on above-the-fold imagery only. */
   priority?: boolean;
   placeholderLabel?: string;
@@ -46,7 +51,9 @@ export function BlockImage({
   alt = "",
   sizes = "100vw",
   className = "",
+  style,
   imageClassName = "object-cover",
+  objectPosition,
   priority = false,
   placeholderLabel,
   placeholderTone = "sky",
@@ -57,6 +64,7 @@ export function BlockImage({
     return (
       <div
         className={`overflow-hidden bg-gradient-to-br ${TONE_CLASSES[placeholderTone]} ${className}`}
+        style={style}
         role="presentation"
       >
         {placeholderLabel ? (
@@ -69,7 +77,7 @@ export function BlockImage({
   }
 
   return (
-    <div className={`overflow-hidden ${className}`}>
+    <div className={`overflow-hidden ${className}`} style={style}>
       <Image
         src={filename}
         alt={altText(asset, alt)}
@@ -77,6 +85,7 @@ export function BlockImage({
         sizes={sizes}
         priority={priority}
         className={imageClassName}
+        style={objectPosition ? { objectPosition } : undefined}
       />
     </div>
   );

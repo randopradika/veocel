@@ -67,6 +67,23 @@ export function imageSrcSet(
     .join(", ");
 }
 
+/**
+ * CSS `object-position` for an asset's focal point, so a cover-cropped image
+ * keeps its subject in frame at whatever proportion it is placed. Storyblok
+ * stores the point as a pixel box, `"312x354:313x355"`, against the natural size
+ * in the asset path. `undefined` when either is missing — the centred default.
+ */
+export function focusPosition(asset?: StoryblokAsset): string | undefined {
+  const size = naturalSize(asset?.filename);
+  const match = asset?.focus?.match(/^(\d+)x(\d+):(\d+)x(\d+)$/);
+  if (!size || !match) return undefined;
+
+  const [x1, y1, x2, y2] = match.slice(1).map(Number);
+  const x = ((x1 + x2) / 2 / size.width) * 100;
+  const y = ((y1 + y2) / 2 / size.height) * 100;
+  return `${x.toFixed(1)}% ${y.toFixed(1)}%`;
+}
+
 /** Storyblok leaves `alt` empty more often than not; fall back to the title. */
 export function altText(asset?: StoryblokAsset, fallback = ""): string {
   return asset?.alt?.trim() || asset?.title?.trim() || fallback;

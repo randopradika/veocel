@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Container, Section } from "@/components/ui/Container";
 import { localePath } from "@/lib/i18n";
-import { searchStories } from "@/lib/storyblok";
+import { searchStories, storyPath } from "@/lib/storyblok";
 
 /**
  * Results for the footer's search form.
@@ -26,7 +26,7 @@ export default async function SearchPage({
   const results = await searchStories(term, lang);
 
   return (
-    <Section className="pt-40">
+    <Section className="pt-40 md:pt-header">
       <Container width="narrow">
         <h1 className="text-h2 font-bold text-brand md:text-h1">search</h1>
 
@@ -48,7 +48,7 @@ export default async function SearchPage({
             {results.map((story) => (
               <li key={story.uuid}>
                 <Link
-                  href={localePath(lang, story.full_slug === "home" ? "" : story.full_slug)}
+                  href={localePath(lang, storyPath(story))}
                   className="block py-6 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                 >
                   <span className="block text-base font-semibold text-brand">{story.name}</span>

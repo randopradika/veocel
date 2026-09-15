@@ -29,7 +29,8 @@
           "cta_panel",
           "process_diagram",
           "fiber_portfolio",
-          "brand_directory"
+          "brand_directory",
+          "article_hub"
         ]
       },
       "seo_title": {
@@ -1300,6 +1301,131 @@
       "values": {
         "type": "textarea",
         "description": "One value per line, matching the table's row labels line for line. Leave a line blank for an empty cell rather than skipping it."
+      }
+    }
+  },
+  {
+    "name": "article",
+    "display_name": "Article",
+    "is_root": true,
+    "is_nestable": false,
+    "description": "An #ItsInOurHands article. Create it in the itsinourhands folder; the hub lists it by date, newest first.",
+    "schema": {
+      "title": {
+        "type": "text",
+        "required": true
+      },
+      "category": {
+        "type": "text",
+        "description": "Shown in the pill beside the date on the hub."
+      },
+      "date": {
+        "type": "datetime",
+        "disable_time": true,
+        "description": "Orders the hub, newest first. The newest article opens the hub as its banner."
+      },
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Opens the article, and stands for it on the hub. Landscape — every placement crops it wide."
+      },
+      "body": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "article_text",
+          "article_image"
+        ]
+      },
+      "seo_title": {
+        "type": "text",
+        "description": "Used verbatim as the browser title. Include the brand — nothing is appended."
+      },
+      "seo_description": {
+        "type": "textarea",
+        "max_length": 160
+      }
+    }
+  },
+  {
+    "name": "article_text",
+    "display_name": "Article text",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "body": {
+        "type": "markdown",
+        "description": "Blank lines start a new paragraph."
+      },
+      "style": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Body — the running copy",
+            "value": "body"
+          },
+          {
+            "name": "Lead — a bold statement introducing what follows",
+            "value": "lead"
+          },
+          {
+            "name": "Note — small print: sources, references",
+            "value": "note"
+          }
+        ],
+        "default_value": "body"
+      }
+    }
+  },
+  {
+    "name": "article_image",
+    "display_name": "Article image",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Shown uncropped. For an infographic, write what it says into the asset's alt text — that is all a screen reader gets."
+      },
+      "caption": {
+        "type": "markdown",
+        "description": "Centred under the image — usually a source line."
+      },
+      "width": {
+        "type": "option",
+        "options": [
+          {
+            "name": "Full — spans the column",
+            "value": "full"
+          },
+          {
+            "name": "Inset — centred at a narrower measure",
+            "value": "inset"
+          }
+        ],
+        "default_value": "full"
+      }
+    }
+  },
+  {
+    "name": "article_hub",
+    "display_name": "Article hub",
+    "is_root": false,
+    "is_nestable": true,
+    "description": "Lists a folder's articles, newest first: the newest opens as a banner, the rest follow as rows. Publish an article in the folder and it appears.",
+    "schema": {
+      "heading": {
+        "type": "text",
+        "description": "The page heading for screen readers and search engines. The design draws none, so it is not shown. Falls back to \"#ItsInOurHands\"."
+      },
+      "folder": {
+        "type": "text",
+        "description": "Slug of the folder whose articles are listed. Falls back to \"itsinourhands\"."
       }
     }
   }

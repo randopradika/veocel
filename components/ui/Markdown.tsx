@@ -29,9 +29,13 @@ const PROSE =
  * `mt-5` apart.
  */
 const GAP = {
+  /** Lines set flush, one under the next — a list of sources. */
+  none: "",
   tight: "[&>*+*]:mt-3",
   default: "[&>*+*]:mt-4",
   loose: "[&>*+*]:mt-5",
+  /** A whole blank line of 32px leading, as the article body is drawn. */
+  line: "[&>*+*]:mt-8",
 } as const;
 
 export function Markdown({

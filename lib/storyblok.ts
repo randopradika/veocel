@@ -3,7 +3,7 @@ import { draftMode } from "next/headers";
 import { DEFAULT_LOCALE, storyblokLanguage } from "./i18n";
 import { mockConfig } from "./mock/config";
 import { mockStories } from "./mock/pages";
-import type { ConfigBlok, PageBlok, SbStory } from "./types";
+import type { ArticleBlok, ConfigBlok, SbStory, StoryContent } from "./types";
 
 /**
  * Content access layer.
@@ -27,6 +27,9 @@ const CDN = "https://api.storyblok.com/v2/cdn";
 const REVALIDATE_SECONDS = 3600;
 
 const CONFIG_SLUG = "config";
+
+/** Content types that render as a page of their own — see `StoryContent`. */
+const PAGE_TYPES = "page,article";
 
 function accessToken(): string | undefined {
   return process.env.STORYBLOK_ACCESS_TOKEN || undefined;
@@ -83,13 +86,24 @@ async function cdnGet<T>(
 }
 
 /**
+ * A story's in-app path: `itsinourhands/` → `itsinourhands`, and `home` → "".
+ *
+ * A folder's start page carries the folder's slug with a trailing slash, which
+ * would otherwise leak into URLs as a redirect.
+ */
+export function storyPath(story: Pick<SbStory, "full_slug">): string {
+  const path = story.full_slug.replace(/\/+$/, "");
+  return path === "home" ? "" : path;
+}
+
+/**
  * Fetches a single story by slug. `"home"` for the root page.
  * Returns `null` when the story genuinely does not exist.
  */
 export async function getStory(
   slug: string,
   locale: string = DEFAULT_LOCALE,
-): Promise<SbStory<PageBlok> | null> {
+): Promise<SbStory<StoryContent> | null> {
   const normalised = slug.replace(/^\/+|\/+$/g, "") || "home";
 
   if (!isStoryblokConfigured()) {
@@ -99,7 +113,8 @@ export async function getStory(
 
   const language = storyblokLanguage(locale);
   const draft = await isDraft();
-  const result = await cdnGet<{ story: SbStory<PageBlok> }>(
+  // A folder's start page (`itsinourhands/`) answers at its folder's slug too.
+  const result = await cdnGet<{ story: SbStory<StoryContent> }>(
     `stories/${normalised}`,
     { resolve_links: "url", ...(language ? { language } : {}) },
     draft,
@@ -114,7 +129,7 @@ export async function getStory(
 }
 
 /**
- * Full-text search across pages, backing the footer's search form.
+ * Full-text search across pages and articles, backing the footer's search form.
  *
  * Storyblok does the matching server-side via `search_term`. Without a token the
  * local mock is scanned instead, so search still works offline.
@@ -122,7 +137,7 @@ export async function getStory(
 export async function searchStories(
   term: string,
   locale: string = DEFAULT_LOCALE,
-): Promise<SbStory<PageBlok>[]> {
+): Promise<SbStory<StoryContent>[]> {
   const query = term.trim();
   if (!query) return [];
 
@@ -135,12 +150,12 @@ export async function searchStories(
 
   const language = storyblokLanguage(locale);
   const draft = await isDraft();
-  const result = await cdnGet<{ stories: SbStory<PageBlok>[] }>(
+  const result = await cdnGet<{ stories: SbStory<StoryContent>[] }>(
     "stories",
     {
       search_term: query,
       per_page: "25",
-      content_type: "page",
+      "filter_query[component][in]": PAGE_TYPES,
       ...(language ? { language } : {}),
     },
     draft,
@@ -155,7 +170,7 @@ export async function searchStories(
   return result.data.stories;
 }
 
-/** Slugs of every published page, for `generateStaticParams`. */
+/** Paths of every published page and article, for `generateStaticParams`. */
 export async function getAllPageSlugs(): Promise<string[]> {
   if (!isStoryblokConfigured()) {
     return Object.keys(mockStories).filter((slug) => slug !== "home");
@@ -163,14 +178,65 @@ export async function getAllPageSlugs(): Promise<string[]> {
 
   const result = await cdnGet<{ stories: { full_slug: string }[] }>(
     "stories",
-    { per_page: "100", excluding_slugs: "config", content_type: "page" },
+    { per_page: "100", excluding_slugs: "config", "filter_query[component][in]": PAGE_TYPES },
     false,
   );
 
   if (!result.ok) return [];
-  return result.data.stories
-    .map((story) => story.full_slug)
-    .filter((slug) => slug && slug !== "home");
+  return result.data.stories.map(storyPath).filter(Boolean);
+}
+
+/**
+ * Newest first by the article's own date. Articles sharing a date keep the order
+ * they were first published in, earliest first, so a day's articles read in the
+ * sequence they went out.
+ */
+function newestFirst(a: SbStory<ArticleBlok>, b: SbStory<ArticleBlok>): number {
+  const byDate = (b.content.date ?? "").localeCompare(a.content.date ?? "");
+  if (byDate !== 0) return byDate;
+  return (a.first_published_at ?? "").localeCompare(b.first_published_at ?? "");
+}
+
+/**
+ * Every article in a folder, for the `article_hub` block. The folder's start page
+ * — the hub itself — is a `page`, so it is never among them.
+ *
+ * Fails like `getStory` does: a hub rendered empty because the CDN blinked would
+ * be cached for an hour looking like a platform with nothing on it.
+ */
+export async function getArticles(
+  folder: string,
+  locale: string = DEFAULT_LOCALE,
+): Promise<SbStory<ArticleBlok>[]> {
+  const prefix = `${folder.replace(/^\/+|\/+$/g, "")}/`;
+
+  if (!isStoryblokConfigured()) {
+    return Object.values(mockStories)
+      .filter(
+        (story): story is SbStory<ArticleBlok> =>
+          story.content.component === "article" && story.full_slug.startsWith(prefix),
+      )
+      .sort(newestFirst);
+  }
+
+  const language = storyblokLanguage(locale);
+  const draft = await isDraft();
+  const result = await cdnGet<{ stories: SbStory<ArticleBlok>[] }>(
+    "stories",
+    {
+      starts_with: prefix,
+      content_type: "article",
+      per_page: "100",
+      ...(language ? { language } : {}),
+    },
+    draft,
+  );
+
+  if (!result.ok) {
+    throw new Error(`Storyblok articles under "${prefix}" failed with status ${result.status}`);
+  }
+
+  return result.data.stories.sort(newestFirst);
 }
 
 /**

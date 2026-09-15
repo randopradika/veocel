@@ -3,27 +3,43 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { StoryblokBridge } from "@/components/StoryblokBridge";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { getStory } from "@/lib/storyblok";
 
+import { Article } from "./Article";
 import { BlockRenderer } from "./BlockRenderer";
 
 /**
- * Renders one story by slug: fetch, 404 if missing, render its blocks, and attach
- * the Visual Editor bridge in draft mode only.
+ * Renders one story by slug: fetch, 404 if missing, render it, and attach the
+ * Visual Editor bridge in draft mode only.
+ *
+ * A `page` is its body of blocks; an `article` has a fixed shape of its own and
+ * renders through `Article`.
  *
  * Shared by `app/page.tsx` (the home story) and `app/[...slug]/page.tsx` so the
  * two routes can't drift apart.
  */
-export async function StoryView({ slug, locale }: { slug: string; locale?: string }) {
+export async function StoryView({
+  slug,
+  locale = DEFAULT_LOCALE,
+}: {
+  slug: string;
+  locale?: string;
+}) {
   const story = await getStory(slug, locale);
   if (!story) notFound();
 
   const { isEnabled: draft } = await draftMode();
+  const { content } = story;
 
   return (
     <>
       {draft ? <StoryblokBridge storyId={story.id} /> : null}
-      <BlockRenderer blocks={story.content.body} />
+      {content.component === "article" ? (
+        <Article blok={content} />
+      ) : (
+        <BlockRenderer blocks={content.body} locale={locale} />
+      )}
     </>
   );
 }

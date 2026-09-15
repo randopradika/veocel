@@ -1,7 +1,9 @@
 import type { ComponentType } from "react";
 
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import type { SbBlock } from "@/lib/types";
 
+import { ArticleHub } from "./ArticleHub";
 import { BrandDirectory } from "./BrandDirectory";
 import { BrandStrip } from "./BrandStrip";
 import { CategoryGrid } from "./CategoryGrid";
@@ -34,17 +36,25 @@ import { TextColumns } from "./TextColumns";
  */
 
 /**
+ * What every block is rendered with. Most read only `blok`; `locale` is there
+ * for the few that fetch content of their own — the article hub — since
+ * Storyblok links are stored without a language and a server component cannot
+ * read it off the URL the way `SmartLink` does.
+ */
+type BlockProps = { blok: SbBlock; locale: string };
+
+/**
  * Narrows a block component to the registry's uniform signature.
  *
  * Needed because `ComponentType` props are contravariant: a component that
  * requires `HeroBlok` is not directly assignable to one accepting any `SbBlock`.
  * The renderer guarantees the match by looking components up by `component` name.
  */
-function block<T extends SbBlock>(component: ComponentType<{ blok: T }>) {
-  return component as ComponentType<{ blok: SbBlock }>;
+function block<T extends SbBlock>(component: ComponentType<{ blok: T; locale: string }>) {
+  return component as ComponentType<BlockProps>;
 }
 
-const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
+const registry: Record<string, ComponentType<BlockProps>> = {
   // Home
   hero: block(Hero),
   intro_section: block(IntroSection),
@@ -77,10 +87,19 @@ const registry: Record<string, ComponentType<{ blok: SbBlock }>> = {
 
   // Partner
   cta_panel: block(CtaPanel),
+
+  // #ItsInOurHands
+  article_hub: block(ArticleHub),
 };
 
 /** Renders a story's `body` field in order. */
-export function BlockRenderer({ blocks }: { blocks?: SbBlock[] }) {
+export function BlockRenderer({
+  blocks,
+  locale = DEFAULT_LOCALE,
+}: {
+  blocks?: SbBlock[];
+  locale?: string;
+}) {
   if (!blocks || blocks.length === 0) return null;
 
   return (
@@ -88,7 +107,7 @@ export function BlockRenderer({ blocks }: { blocks?: SbBlock[] }) {
       {blocks.map((blok) => {
         const Component = registry[blok.component];
         if (!Component) return <UnknownBlock key={blok._uid} component={blok.component} />;
-        return <Component key={blok._uid} blok={blok} />;
+        return <Component key={blok._uid} blok={blok} locale={locale} />;
       })}
     </>
   );

@@ -45,6 +45,12 @@ type HeaderState = {
   /** Slid off the top because the reader has scrolled away from it. */
   retracted: boolean;
   /**
+   * Solid and scrolled down the page — which the bar only is while the reader
+   * holds it on screen (see `headerIsBusy`). Everywhere else, at rest at the
+   * top, it keeps its full height, hero or no hero.
+   */
+  compact: boolean;
+  /**
    * False while the markup on screen is still the server's guess at the two
    * above — see `SERVER_STATE`. The header carries it as `data-boot` so
    * `globals.css` can make that guess look right until the real measurement
@@ -111,12 +117,20 @@ function updateRetracted(): void {
  * read rather than pushed in from the listener, so the backgrounded-tab reasoning
  * above still holds.
  */
-let snapshot: HeaderState = { overlay: false, retracted: false, hydrated: true };
+let snapshot: HeaderState = { overlay: false, retracted: false, compact: false, hydrated: true };
 
 function readHeaderState(): HeaderState {
   const overlay = readOverlay();
-  if (overlay === snapshot.overlay && isRetracted === snapshot.retracted) return snapshot;
-  snapshot = { overlay, retracted: isRetracted, hydrated: true };
+  // Past the retract mark, so the bar never shrinks while it is still on its way out.
+  const compact = !overlay && window.scrollY > RETRACT_BEYOND;
+  if (
+    overlay === snapshot.overlay &&
+    isRetracted === snapshot.retracted &&
+    compact === snapshot.compact
+  ) {
+    return snapshot;
+  }
+  snapshot = { overlay, retracted: isRetracted, compact, hydrated: true };
   return snapshot;
 }
 
@@ -124,15 +138,29 @@ function readHeaderState(): HeaderState {
  * The server has no scroll position and no DOM, so it renders the resting state:
  * shown, and solid because it cannot see whether a dark hero is under it. Both
  * halves are a guess, and both are wrong often enough to matter — every page but
- * search and 404 opens on a dark hero — so the markup marks itself `data-boot`
+ * search, 404 and the #ItsInOurHands hub opens on a dark hero — so the markup marks itself `data-boot`
  * and `globals.css` corrects the appearance for the paint or two before this
  * component takes over.
  */
-const SERVER_STATE: HeaderState = { overlay: false, retracted: false, hydrated: false };
+const SERVER_STATE: HeaderState = {
+  overlay: false,
+  retracted: false,
+  compact: false,
+  hydrated: false,
+};
 const readServerHeaderState = (): HeaderState => SERVER_STATE;
+
+/** Each subscriber's way to take a fresh reading now, for `SiteHeader` to call on navigation. */
+const refreshers = new Set<() => void>();
 
 function subscribeToScroll(onChange: () => void): () => void {
   let frame = 0;
+
+  const refresh = () => {
+    updateRetracted();
+    onChange();
+  };
+  refreshers.add(refresh);
 
   // rAF here only throttles change notifications; `overlay` itself is read
   // synchronously above, so a suspended frame loop cannot leave it stale.
@@ -171,6 +199,7 @@ function subscribeToScroll(onChange: () => void): () => void {
   document.addEventListener("visibilitychange", schedule);
 
   return () => {
+    refreshers.delete(refresh);
     if (frame) window.cancelAnimationFrame(frame);
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
@@ -181,11 +210,21 @@ function subscribeToScroll(onChange: () => void): () => void {
 }
 
 export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: string }) {
-  const { overlay, retracted, hydrated } = useSyncExternalStore(
+  const { overlay, retracted, compact, hydrated } = useSyncExternalStore(
     subscribeToScroll,
     readHeaderState,
     readServerHeaderState,
   );
+
+  // The header stays mounted while client navigation swaps the page beneath it,
+  // and nothing scrolls when the reader was already at the top — so the bar
+  // kept the last page's appearance. Following the band's #ItsInOurHands link
+  // from the home page left white type over the hub's white header area. The
+  // effect runs once the new page is committed, so the reading is of that page.
+  const pathname = usePathname();
+  useEffect(() => {
+    for (const refresh of refreshers) refresh();
+  }, [pathname]);
 
   return (
     <header
@@ -193,9 +232,11 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // Dropped on the first client render, which is the point the appearance
       // stops being a guess. `globals.css` hangs the stand-in styling off it.
       data-boot={hydrated ? undefined : ""}
-      // Padding, not a fixed height: over the hero the content sits at the frame's
-      // 70/1920 offset (fluid, so it stays proportional at any width), then the bar
-      // compacts once it turns solid so it doesn't blanket the page while scrolled.
+      // Padding, not a fixed height: at rest the content sits at the frame's 70/1920
+      // offset (fluid, so it stays proportional at any width) — over a hero or, on a
+      // page without one, solid, which the #ItsInOurHands hub frame draws at the
+      // same offset. It compacts only when solid and held on screen part way down
+      // the page, so it doesn't blanket the page while scrolled.
       // On phones the mobile frame (2035:137) draws the lockup and the pill 26px
       // from the top, 1:1, so the offset is fixed below `md`.
       // The border is always present and only changes colour, so the switch never
@@ -204,10 +245,10 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // costs no layout and nothing underneath reflows as the bar comes and goes.
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding,transform] duration-300 motion-reduce:transition-none ${
         retracted ? "-translate-y-full" : "translate-y-0"
-      } ${
+      } ${compact ? "py-3" : "pt-[26px] pb-4 md:pt-[min(3.65vw,70px)] md:pb-6"} ${
         overlay
-          ? "border-transparent pt-[26px] pb-4 text-white md:pt-[min(3.65vw,70px)] md:pb-6"
-          : "border-hairline bg-white/95 py-3 text-brand backdrop-blur"
+          ? "border-transparent text-white"
+          : "border-hairline bg-white/95 text-brand backdrop-blur"
       }`}
     >
       {/* The frame top-aligns the lockup and the pill (both at y=70), not centres. */}

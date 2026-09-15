@@ -40,6 +40,8 @@ export type SbStory<T = PageBlok> = {
   content: T;
   published_at?: string | null;
   first_published_at?: string | null;
+  /** A folder's start page. Its `full_slug` is the folder's, with a trailing "/". */
+  is_startpage?: boolean;
 };
 
 /* ------------------------------------------------------------------ *
@@ -507,6 +509,63 @@ export type BrandDirectoryBlok = SbBlock & {
   brands?: BrandItemBlok[];
 };
 
+/* ------------------------------------------------------------------ *
+ * #ItsInOurHands
+ * ------------------------------------------------------------------ */
+
+/**
+ * One #ItsInOurHands article. A content type of its own rather than a `page`,
+ * because the hub lists articles by their fields — date, category, photograph —
+ * and a page body has nothing to list by. Articles live in the `itsinourhands`
+ * folder.
+ */
+export type ArticleBlok = SbBlock & {
+  component: "article";
+  title: string;
+  /** The pill beside the date on the hub. */
+  category?: string;
+  /** Storyblok datetime, `YYYY-MM-DD HH:mm`. Only the date is shown. Orders the hub. */
+  date?: string;
+  /** Opens the article, and stands for it on the hub. */
+  image?: StoryblokAsset;
+  body?: (ArticleTextBlok | ArticleImageBlok)[];
+  seo_title?: string;
+  seo_description?: string;
+};
+
+export type ArticleTextBlok = SbBlock & {
+  component: "article_text";
+  /** Markdown. Blank lines start a new paragraph. */
+  body?: string;
+  /**
+   *   body — the running copy
+   *   lead — a bold statement introducing what follows
+   *   note — small print: sources and references
+   */
+  style?: "body" | "lead" | "note";
+};
+
+export type ArticleImageBlok = SbBlock & {
+  component: "article_image";
+  image?: StoryblokAsset;
+  /** Markdown, centred under the image — usually a source line. */
+  caption?: string;
+  /** `inset` centres the image at a narrower measure; `full` spans the column. */
+  width?: "full" | "inset";
+};
+
+/** Lists a folder's articles: the newest as a banner, the rest as rows. */
+export type ArticleHubBlok = SbBlock & {
+  component: "article_hub";
+  /** The page heading for screen readers and search. The design draws none. */
+  heading?: string;
+  /** Slug of the folder whose articles are listed. Defaults to `itsinourhands`. */
+  folder?: string;
+};
+
+/** Every content type a story can have that renders as a page of its own. */
+export type StoryContent = PageBlok | ArticleBlok;
+
 /** Every block that can sit directly in a page body. Keep in step with the registry. */
 export type AnyBlok =
   | HeroBlok
@@ -529,4 +588,5 @@ export type AnyBlok =
   | CtaPanelBlok
   | ProcessDiagramBlok
   | FiberPortfolioBlok
-  | BrandDirectoryBlok;
+  | BrandDirectoryBlok
+  | ArticleHubBlok;

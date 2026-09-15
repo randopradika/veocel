@@ -1,10 +1,12 @@
 import type {
+  ArticleBlok,
   BrandItemBlok,
   ClaimCardBlok,
   FiberProductCardBlok,
   HeroNavCardBlok,
   PageBlok,
   SbStory,
+  StoryContent,
 } from "../types";
 
 /**
@@ -322,13 +324,23 @@ function brand(uid: string, name: string, category: string, url: string): BrandI
   };
 }
 
-function story(slug: string, name: string, content: PageBlok): SbStory<PageBlok> {
+/**
+ * A mock story at `path`. A start page stands for its folder: its `full_slug` is
+ * the folder's with a trailing slash, as Storyblok writes it.
+ */
+function story<T extends StoryContent>(
+  path: string,
+  name: string,
+  content: T,
+  { startpage = false }: { startpage?: boolean } = {},
+): SbStory<T> {
   return {
     id: 0,
-    uuid: `mock-${slug}`,
+    uuid: `mock-${path}`,
     name,
-    slug,
-    full_slug: slug,
+    slug: path.slice(path.lastIndexOf("/") + 1),
+    full_slug: startpage ? `${path}/` : path,
+    ...(startpage ? { is_startpage: true } : {}),
     content,
     published_at: null,
     first_published_at: null,
@@ -1126,7 +1138,121 @@ const partners: PageBlok = {
   ],
 };
 
-export const mockStories: Record<string, SbStory<PageBlok>> = {
+/*
+ * #ItsInOurHands — the social responsibility platform the band above the footer
+ * links to. The hub (frame 2081:242) is the start page of an `itsinourhands`
+ * folder and lists the articles in it; frame 2081:310 draws the one article
+ * that has copy.
+ *
+ * The hub frame names four more articles. They exist so the hub renders as
+ * drawn, but their bodies are still to be written. Every pill's "lorem ipsum"
+ * and the one date all five share, 08/09/2026, are the frame's placeholders,
+ * transcribed as drawn. Photographs live in Storyblok only, like the rest.
+ */
+const ITSINOURHANDS = "itsinourhands";
+
+const itsInOurHands: PageBlok = {
+  _uid: "iioh-page",
+  component: "page",
+  seo_description:
+    "Articles from #ItsInOurHands, the VEOCEL™ social responsibility platform, on plastic pollution and what each of us can do about it.",
+  body: [
+    {
+      _uid: "iioh-hub",
+      component: "article_hub",
+      heading: "#ItsInOurHands",
+      folder: ITSINOURHANDS,
+    },
+  ],
+};
+
+function article(slug: string, title: string, fields: Partial<ArticleBlok> = {}): SbStory<ArticleBlok> {
+  return story(`${ITSINOURHANDS}/${slug}`, title, {
+    _uid: `iioh-${slug}`,
+    component: "article",
+    title,
+    category: "lorem ipsum",
+    date: "2026-09-08 00:00",
+    ...fields,
+  });
+}
+
+/** In the hub frame's order. They share a date, so this is also the order they publish in. */
+const articles: SbStory<ArticleBlok>[] = [
+  article(
+    "how-to-play-an-important-role-in-reducing-plastic-pollution",
+    "how to play an important role in reducing plastic pollution",
+    {
+      seo_description:
+        "Where the ocean's microplastics come from, and the everyday steps that help keep them out of the environment.",
+      body: [
+        {
+          _uid: "iioh-plastic-1",
+          component: "article_text",
+          style: "body",
+          body:
+            "Globally, the use of plastics has shot up from around 5 million metric tons in the 1950s to more than 330 million metric tons in 2020. According to the World Bank, plastics comprise about 5–12% of the world’s total waste generation (20–30% by weight). There has been an alarming rise in the use of plastics despite the fact they can take hundreds or thousands of years to decompose and wreak havoc on the environment.\n\n" +
+            "On top of all this, one of the biggest challenges we face from plastic pollution is the rise in microplastics. A report by the Ellen MacArthur Foundation predicts that there will be an equal amount of microplastics in the oceans compared to fish by 2050.\n\n" +
+            "We have all heard of microplastics, but what exactly are they and how can we help to reduce plastic pollution?\n\n" +
+            "Microplastics come from a variety of sources, including from larger plastic debris that degrades into smaller and smaller pieces. In addition, microbeads, a type of microplastic, are very tiny pieces of manufactured polyethylene plastic that are added as exfoliants to health and beauty products.",
+        },
+        {
+          // The frame draws the second address with a space ("deep dive") and
+          // links it nowhere; the hyphenated page is the foundation's own.
+          _uid: "iioh-plastic-2",
+          component: "article_text",
+          style: "note",
+          body:
+            "<https://datatopics.worldbank.org/what-a-waste/trends_in_solid_waste_management.html>\n\n" +
+            "<https://www.ellenmacarthurfoundation.org/plastics-and-the-circular-economy-deep-dive#:~:text=A%20staggering%208%20million%20tonnes,we%20design%2C%20use%2C%20and%20reuse>",
+        },
+        {
+          _uid: "iioh-plastic-3",
+          component: "article_image",
+          width: "inset",
+          caption:
+            "Source: <https://www.statista.com/chart/17957/where-the-oceans-microplastics-come-from/>",
+        },
+        {
+          _uid: "iioh-plastic-4",
+          component: "article_text",
+          style: "lead",
+          body: "how can you help? we can do our part to reduce microplastic pollution in our daily lives by following the steps outlined in the infographic.",
+        },
+        {
+          _uid: "iioh-plastic-5",
+          component: "article_image",
+          width: "full",
+        },
+        {
+          _uid: "iioh-plastic-6",
+          component: "article_text",
+          style: "body",
+          body: "These simple steps can help to cut down on microplastics and keep them from entering the environment. #ItIsInOurHands to live a more sustainable life and bring about positive changes when it comes to plastics and protect the Earth. This can start today by raising awareness around how to reduce plastic pollution by sharing the infographic with friends and family.",
+        },
+      ],
+    },
+  ),
+  article(
+    "take-the-test-how-much-do-you-know-about-plastic-pollution-in-the-oceans",
+    "take the test: How much do you know about plastic pollution in the oceans?",
+  ),
+  article(
+    "plastic-will-outweigh-all-fish-in-the-sea-by-2050",
+    "plastic will outweigh all fish in the sea by 2050 - is ‘plastic soup’ already on the menu?",
+  ),
+  // Cut off with an ellipsis in the frame; the full title is not drawn anywhere.
+  article(
+    "gemeinsam-fuer-den-wandel",
+    "gemeinsam für den Wandel: die UN ruft zur weltweiten bekämpfung der ...",
+  ),
+  article(
+    "choose-plant-based-fibers-to-prevent-plastic-toxicity-in-our-food-chain",
+    "choose plant-based fibers to prevent plastic toxicity in our food chain",
+  ),
+];
+
+export const mockStories: Record<string, SbStory<StoryContent>> = {
   home: story("home", "Home", home),
   "fiber-types": story("fiber-types", "VEOCEL™ fibers", fiberTypes),
   wipes: story("wipes", "VEOCEL™ fibers for wipes", wipes),
@@ -1135,4 +1261,6 @@ export const mockStories: Record<string, SbStory<PageBlok>> = {
   "daily-care": story("daily-care", "where to buy", dailyCare),
   sustainability: story("sustainability", "sustainability", sustainability),
   partners: story("partners", "how to become a VEOCEL™ partner", partners),
+  [ITSINOURHANDS]: story(ITSINOURHANDS, "#ItsInOurHands", itsInOurHands, { startpage: true }),
+  ...Object.fromEntries(articles.map((entry) => [entry.full_slug, entry])),
 };
