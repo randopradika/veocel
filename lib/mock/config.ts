@@ -199,30 +199,31 @@ export const mockConfig: ConfigBlok = {
 
   copyright: "© VEOCEL™",
 
+  // The parent company's legal pages, as the live config links them.
   legal_links: [
     {
       _uid: "lg-1",
       component: "nav_item",
-      label: "privacy policy",
-      link: { cached_url: "privacy-policy", linktype: "story" },
+      label: "privacy notice",
+      link: { url: "https://www.lenzing.com/privacy-notice/", linktype: "url", target: "_blank" },
     },
     {
       _uid: "lg-2",
       component: "nav_item",
       label: "terms of use",
-      link: { cached_url: "terms-of-use", linktype: "story" },
+      link: { url: "https://www.lenzing.com/terms-of-use/", linktype: "url", target: "_blank" },
     },
     {
       _uid: "lg-3",
       component: "nav_item",
-      label: "imprint",
-      link: { cached_url: "imprint", linktype: "story" },
+      label: "GTC",
+      link: { url: "https://www.lenzing.com/gtc/", linktype: "url", target: "_blank" },
     },
     {
       _uid: "lg-4",
       component: "nav_item",
-      label: "cookie settings",
-      link: { cached_url: "cookie-settings", linktype: "story" },
+      label: "legal notice",
+      link: { url: "https://www.lenzing.com/legal-notice/", linktype: "url", target: "_blank" },
     },
   ],
 };
