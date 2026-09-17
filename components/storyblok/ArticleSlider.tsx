@@ -78,7 +78,8 @@ export function ArticleSlider({ slides }: { slides: ArticleSlide[] }) {
   };
 
   return (
-    // 80px of tint between the header and the photograph, as the frame draws it.
+    // 80px of tint above the photograph, as the frame draws it under the header —
+    // or under the banner, when the hub shows one.
     <Container width="wide" className="pt-8 md:pt-20">
       <section
         aria-roledescription="carousel"

@@ -171,9 +171,10 @@
 }
 
 /*
-  The header's resting height and nothing more, from `md` up — for a page whose
-  own ground starts right under the bar, with no white band between (the
-  #ItsInOurHands hub). Keep in step with `pt-header` above; phones use 83px.
+  The header's resting height and nothing more, from `md` up — for content that
+  has to clear the bar and no more: the #ItsInOurHands banner's headline, or with
+  the banner hidden the hub's own tint, so no white band shows under the bar.
+  Keep in step with `pt-header` above; phones use 83px.
 */
 @utility pt-header-bar {
   padding-top: calc(min(3.65vw, 70px) + 81px);
@@ -204,7 +205,8 @@
   `SiteHeader` chooses its appearance by measuring the page — is a dark hero
   under it, and how far down has the reader scrolled — and the server can answer
   neither, so its markup is the resting one: shown, and solid white. Every page
-  but search, 404 and the #ItsInOurHands hub opens on a dark hero, so that answer is wrong on almost
+  but search, 404 and a banner-less #ItsInOurHands hub opens on a dark hero,
+  so that answer is wrong on almost
   every load, and it is the answer on screen for the whole gap between first
   paint and hydration. Throttled to a slow connection that gap measured about
   two seconds of white bar laid across the hero.

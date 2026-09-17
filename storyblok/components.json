@@ -1421,11 +1421,20 @@
     "display_name": "Article hub",
     "is_root": false,
     "is_nestable": true,
-    "description": "Lists a folder's articles, newest first: the newest opens as a banner, the rest follow as rows. Publish an article in the folder and it appears.",
+    "description": "Opens on a photograph banner with the page heading (unless hidden), then lists a folder's articles, newest first: highlighted ones in a slider, the rest as rows. Publish an article in the folder and it appears.",
     "schema": {
       "heading": {
         "type": "text",
-        "description": "The page heading for screen readers and search engines. The design draws none, so it is not shown. Falls back to \"#ItsInOurHands\"."
+        "description": "The page heading, centred on the banner. Falls back to \"#ItsInOurHands\"."
+      },
+      "hide_banner": {
+        "type": "boolean",
+        "description": "Tick to take the banner off the page. The header then starts solid white over the articles, and the heading is kept for screen readers and search engines only."
+      },
+      "banner_image": {
+        "type": "asset",
+        "filetypes": ["images"],
+        "description": "The banner photograph at the top of the page, under the header. Drawn at 1920×540; set a focal point to steer the crop on narrower screens."
       },
       "folder": {
         "type": "text",

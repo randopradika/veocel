@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/date";
 import { localePath } from "@/lib/i18n";
 import { focusPosition } from "@/lib/image";
 import { getArticles, storyPath } from "@/lib/storyblok";
-import type { ArticleBlok, ArticleHubBlok, SbStory } from "@/lib/types";
+import type { ArticleBlok, ArticleHubBlok, SbStory, StoryblokAsset } from "@/lib/types";
 
 import { ArticlePager } from "./ArticlePager";
 import { ArticleDate, ArticlePill, ArticleScrim, STRETCHED_LINK } from "./ArticleParts";
@@ -25,8 +25,9 @@ const PAGE_SIZE = 4;
 const ROW_LIST = "mt-12 flex flex-col gap-12 md:mt-26 md:gap-13";
 
 /**
- * The #ItsInOurHands hub, frame 2082:359 (revised from 2081:242). The two
- * latest highlighted articles open the page in a banner slider — a photograph
+ * The #ItsInOurHands hub, frame 2082:359 (revised from 2081:242), under the
+ * banner from frame 2086:278. The two
+ * latest highlighted articles follow in a slider — a photograph
  * inset in the column with prev/next discs on its edges, tag, date and title
  * beneath, and a rule across the column — and every other article follows as a
  * row, four to a page: photograph left; tag and title right, the date at the
@@ -38,8 +39,12 @@ const ROW_LIST = "mt-12 flex flex-col gap-12 md:mt-26 md:gap-13";
  * list rather than dropping off the page, and with none highlighted the latest
  * article opens the hub on its own.
  *
- * The hub is tinted from the header's bottom edge down, with no white band
- * between them. Colours are the nearest tokens — the frame's `#e6f1f8` ground is
+ * `hide_banner` takes the banner off; the header then starts solid over the
+ * page, as it does on any page without a hero, and the heading stays for
+ * screen readers only. Either way the tint starts right under whatever is
+ * above it, banner or header, with no white band between.
+ *
+ * Colours are the nearest tokens — the frame's `#e6f1f8` ground is
  * `brand-100` — and type is 1:1: the banner title is the 64px section heading,
  * row titles 40px, dates 16px.
  */
@@ -55,12 +60,20 @@ export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; local
       </li>
     ));
 
+  const heading = blok.heading?.trim() || "#ItsInOurHands";
+  const banner = !blok.hide_banner;
+
   return (
-    // The padding sits behind the fixed header and is exactly its resting height
-    // (83px on phones), so the tint starts at the header's bottom edge with no
-    // white band between — while the translucent bar still sits on white.
-    <section {...editable(blok)} className="pt-[83px] md:pt-header-bar">
-      <h1 className="sr-only">{blok.heading?.trim() || "#ItsInOurHands"}</h1>
+    // With the banner hidden, the padding sits behind the fixed header and is
+    // exactly its resting height (83px on phones), so the tint starts at the
+    // header's bottom edge with no white band between — while the bar, solid
+    // with no hero under it, still sits on white.
+    <section {...editable(blok)} className={banner ? undefined : "pt-[83px] md:pt-header-bar"}>
+      {banner ? (
+        <HubBanner heading={heading} image={blok.banner_image} />
+      ) : (
+        <h1 className="sr-only">{heading}</h1>
+      )}
 
       <div className="bg-brand-100 pb-section-sm md:pb-section">
         {inSlider.length > 0 ? (
@@ -84,6 +97,48 @@ export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; local
         </Container>
       </div>
     </section>
+  );
+}
+
+/**
+ * Frame 2086:278: a full-bleed photograph with the page's name centred on it, in
+ * the section-hero type (128/140, -0.05em). It is marked as the hero, so the
+ * header sits transparent over it and leaves on scroll, as on the home page.
+ *
+ * 1920×540 in the frame, so from `md` it holds that proportion, growing only
+ * when the headline needs more. The top padding is the header's resting height;
+ * the bottom padding (111px at 1920) centres the headline where the frame draws
+ * it, 290px down. The frame sets 128px throughout, which only fits the column
+ * from `lg`; there is no phone frame, and below `md` the size follows the
+ * width, so the one word fits a 320px screen.
+ */
+function HubBanner({ heading, image }: { heading: string; image?: StoryblokAsset }) {
+  return (
+    <div
+      data-hero=""
+      className="relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 pt-[83px] pb-10 md:min-h-[28.125vw] md:pt-header-bar md:pb-[min(5.78vw,111px)]"
+    >
+      <BlockImage
+        asset={image}
+        alt=""
+        priority
+        sizes="100vw"
+        className="absolute inset-0 -z-10"
+        objectPosition={focusPosition(image)}
+        placeholderTone="brand"
+      />
+      {/* The home hero's scrim, which the frame repeats: clear, then 20% black by 82%. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(255,255,255,0),rgba(0,0,0,0.2)_82.212%)]"
+      />
+
+      <Container width="wide" className="text-center text-white">
+        <h1 className="text-[length:min(12vw,3rem)] leading-[1.09375] font-bold tracking-[-0.05em] md:text-h1 lg:text-hero">
+          {heading}
+        </h1>
+      </Container>
+    </div>
   );
 }
 

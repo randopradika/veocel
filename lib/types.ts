@@ -562,8 +562,12 @@ export type ArticleImageBlok = SbBlock & {
 /** Lists a folder's articles: the newest as a banner, the rest as rows. */
 export type ArticleHubBlok = SbBlock & {
   component: "article_hub";
-  /** The page heading for screen readers and search. The design draws none. */
+  /** The page heading, centred on the banner. Defaults to `#ItsInOurHands`. */
   heading?: string;
+  /** Takes the banner off; the heading is then for screen readers only. */
+  hide_banner?: boolean;
+  /** The banner's photograph, under the header. */
+  banner_image?: StoryblokAsset;
   /** Slug of the folder whose articles are listed. Defaults to `itsinourhands`. */
   folder?: string;
 };

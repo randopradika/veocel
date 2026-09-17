@@ -138,7 +138,8 @@ function readHeaderState(): HeaderState {
  * The server has no scroll position and no DOM, so it renders the resting state:
  * shown, and solid because it cannot see whether a dark hero is under it. Both
  * halves are a guess, and both are wrong often enough to matter — every page but
- * search, 404 and the #ItsInOurHands hub opens on a dark hero — so the markup marks itself `data-boot`
+ * search, 404 and a banner-less #ItsInOurHands hub opens on a dark hero — so
+ * the markup marks itself `data-boot`
  * and `globals.css` corrects the appearance for the paint or two before this
  * component takes over.
  */
@@ -218,9 +219,10 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
 
   // The header stays mounted while client navigation swaps the page beneath it,
   // and nothing scrolls when the reader was already at the top — so the bar
-  // kept the last page's appearance. Following the band's #ItsInOurHands link
-  // from the home page left white type over the hub's white header area. The
-  // effect runs once the new page is committed, so the reading is of that page.
+  // kept the last page's appearance: following the band's #ItsInOurHands link
+  // from the home page, with the hub's banner hidden, left white type over its
+  // white header area. The effect runs once the new page is committed, so the
+  // reading is of that page.
   const pathname = usePathname();
   useEffect(() => {
     for (const refresh of refreshers) refresh();
