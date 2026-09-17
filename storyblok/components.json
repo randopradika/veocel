@@ -1431,6 +1431,11 @@
         "type": "boolean",
         "description": "Tick to take the banner off the page. The header then starts solid white over the articles, and the heading is kept for screen readers and search engines only."
       },
+      "white_header": {
+        "type": "boolean",
+        "display_name": "White header background",
+        "description": "Tick to start the header solid white, with the banner photograph below it instead of behind it. Has no effect while the banner is hidden — the header is white then anyway."
+      },
       "banner_image": {
         "type": "asset",
         "filetypes": ["images"],

@@ -566,6 +566,11 @@ export type ArticleHubBlok = SbBlock & {
   heading?: string;
   /** Takes the banner off; the heading is then for screen readers only. */
   hide_banner?: boolean;
+  /**
+   * Starts the header solid white, with the banner below it rather than behind
+   * it. Nothing to do while the banner is hidden — the header is white then.
+   */
+  white_header?: boolean;
   /** The banner's photograph, under the header. */
   banner_image?: StoryblokAsset;
   /** Slug of the folder whose articles are listed. Defaults to `itsinourhands`. */

@@ -138,7 +138,8 @@ function readHeaderState(): HeaderState {
  * The server has no scroll position and no DOM, so it renders the resting state:
  * shown, and solid because it cannot see whether a dark hero is under it. Both
  * halves are a guess, and both are wrong often enough to matter — every page but
- * search, 404 and a banner-less #ItsInOurHands hub opens on a dark hero — so
+ * search, 404 and an #ItsInOurHands hub with no banner behind its header
+ * (`hide_banner` or `white_header`) opens on a dark hero — so
  * the markup marks itself `data-boot`
  * and `globals.css` corrects the appearance for the paint or two before this
  * component takes over.

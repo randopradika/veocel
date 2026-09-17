@@ -173,7 +173,8 @@
 /*
   The header's resting height and nothing more, from `md` up — for content that
   has to clear the bar and no more: the #ItsInOurHands banner's headline, or with
-  the banner hidden the hub's own tint, so no white band shows under the bar.
+  the header white the banner itself (or, hidden, the hub's own tint), so no
+  white band shows under the bar.
   Keep in step with `pt-header` above; phones use 83px.
 */
 @utility pt-header-bar {

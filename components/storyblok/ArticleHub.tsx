@@ -41,8 +41,10 @@ const ROW_LIST = "mt-12 flex flex-col gap-12 md:mt-26 md:gap-13";
  *
  * `hide_banner` takes the banner off; the header then starts solid over the
  * page, as it does on any page without a hero, and the heading stays for
- * screen readers only. Either way the tint starts right under whatever is
- * above it, banner or header, with no white band between.
+ * screen readers only. `white_header` keeps the banner but starts the header
+ * solid white too, with the banner below it instead of behind it. Either way
+ * the tint starts right under whatever is above it, banner or header, with no
+ * white band between.
  *
  * Colours are the nearest tokens — the frame's `#e6f1f8` ground is
  * `brand-100` — and type is 1:1: the banner title is the 64px section heading,
@@ -62,15 +64,20 @@ export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; local
 
   const heading = blok.heading?.trim() || "#ItsInOurHands";
   const banner = !blok.hide_banner;
+  const behindHeader = banner && !blok.white_header;
 
   return (
-    // With the banner hidden, the padding sits behind the fixed header and is
-    // exactly its resting height (83px on phones), so the tint starts at the
-    // header's bottom edge with no white band between — while the bar, solid
+    // Unless the banner runs behind it, the padding sits behind the fixed
+    // header and is exactly its resting height (83px on phones), so whatever
+    // opens the page — the banner, or with none the tint — starts at the
+    // header's bottom edge with no white band between, while the bar, solid
     // with no hero under it, still sits on white.
-    <section {...editable(blok)} className={banner ? undefined : "pt-[83px] md:pt-header-bar"}>
+    <section
+      {...editable(blok)}
+      className={behindHeader ? undefined : "pt-[83px] md:pt-header-bar"}
+    >
       {banner ? (
-        <HubBanner heading={heading} image={blok.banner_image} />
+        <HubBanner heading={heading} image={blok.banner_image} behindHeader={behindHeader} />
       ) : (
         <h1 className="sr-only">{heading}</h1>
       )}
@@ -111,12 +118,29 @@ export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; local
  * it, 290px down. The frame sets 128px throughout, which only fits the column
  * from `lg`; there is no phone frame, and below `md` the size follows the
  * width, so the one word fits a 320px screen.
+ *
+ * Unless `behindHeader`, which `white_header` turns off: then the banner is not
+ * marked, so the header starts solid, and it sits below the bar at the same
+ * size — the header's clearance moves to the section above it, and the
+ * headline centres in the photograph, since no frame draws this variant.
  */
-function HubBanner({ heading, image }: { heading: string; image?: StoryblokAsset }) {
+function HubBanner({
+  heading,
+  image,
+  behindHeader,
+}: {
+  heading: string;
+  image?: StoryblokAsset;
+  behindHeader: boolean;
+}) {
   return (
     <div
-      data-hero=""
-      className="relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 pt-[83px] pb-10 md:min-h-[28.125vw] md:pt-header-bar md:pb-[min(5.78vw,111px)]"
+      data-hero={behindHeader ? "" : undefined}
+      className={`relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 md:min-h-[28.125vw] ${
+        behindHeader
+          ? "pt-[83px] pb-10 md:pt-header-bar md:pb-[min(5.78vw,111px)]"
+          : "py-10 md:py-[min(5.78vw,111px)]"
+      }`}
     >
       <BlockImage
         asset={image}
