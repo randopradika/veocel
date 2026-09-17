@@ -182,6 +182,24 @@ function subscribeToScroll(onChange: () => void): () => void {
     onChange();
   };
 
+  // A refresh in place — the Visual Editor's, on every saved change — can add or
+  // drop the hero with no scroll and no navigation: ticking the hub's
+  // `hide_banner` left white type over the now-white top of the page until the
+  // reader scrolled. So watch for the hero itself coming and going (or a
+  // `PageHero` changing tone); every other change to the page is ignored.
+  let hero = document.querySelector("[data-hero]");
+  const observer = new MutationObserver(() => {
+    const next = document.querySelector("[data-hero]");
+    if (next === hero) return;
+    hero = next;
+    refresh();
+  });
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributeFilter: ["data-hero"],
+  });
+
   // Read the position once, here, rather than waiting for a scroll event: the
   // browser restores it on a refresh before this listener exists, so a reader
   // who reloads half way down the page produces no scroll at all — and the bar
@@ -201,6 +219,7 @@ function subscribeToScroll(onChange: () => void): () => void {
 
   return () => {
     refreshers.delete(refresh);
+    observer.disconnect();
     if (frame) window.cancelAnimationFrame(frame);
     window.removeEventListener("scroll", schedule);
     window.removeEventListener("resize", schedule);
