@@ -88,14 +88,21 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
       </div>
 
       {responsibility ? (
-        <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:py-12">
+        // A size container, so the platform name can be sized off the panel.
+        <div className="flex flex-col items-center bg-brand-100 px-6 py-7 [container-type:inline-size] md:py-12">
           <h2 className="text-2xl font-bold md:text-[1.75rem]">
             {config.responsibility_heading ?? "social responsibility platform"}
           </h2>
 
+          {/* The name is one unbreakable word, 307px wide at the frame's 48px,
+              and a third of a tablet leaves it 208px — it ran 25px off the page
+              at 768 and into the neighbouring panel until ~1065. From `md` it
+              therefore scales with its panel (14cqw keeps "ItsInOurHands" ~10%
+              inside it) and reaches 48px from ~1170. A longer label an editor
+              writes still breaks rather than overflows. */}
           <SmartLink
             link={config.responsibility_link}
-            className="mt-3 text-[2.25rem] font-normal italic md:text-[3rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            className="mt-3 max-w-full text-[2.25rem] font-normal italic [overflow-wrap:break-word] md:text-[length:min(3rem,14cqw)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           >
             {responsibility}
           </SmartLink>
