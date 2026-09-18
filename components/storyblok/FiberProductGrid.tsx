@@ -35,8 +35,9 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
             </h2>
           ) : null}
 
+          {/* Body size, as the intro copy is set on every other page (`TextColumns`). */}
           {blok.intro ? (
-            <p className="text-sm leading-relaxed text-ink-muted lg:mt-2 lg:max-w-[43%]">
+            <p className="text-base leading-[1.4] text-ink-muted md:text-xl lg:mt-2 lg:max-w-[43%]">
               {blok.intro}
             </p>
           ) : null}
