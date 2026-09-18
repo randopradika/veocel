@@ -254,20 +254,20 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // Dropped on the first client render, which is the point the appearance
       // stops being a guess. `globals.css` hangs the stand-in styling off it.
       data-boot={hydrated ? undefined : ""}
-      // Padding, not a fixed height: at rest the content sits at the frame's 70/1920
-      // offset (fluid, so it stays proportional at any width) — over a hero or, on a
-      // page without one, solid, which the #ItsInOurHands hub frame draws at the
-      // same offset. It compacts only when solid and held on screen part way down
-      // the page, so it doesn't blanket the page while scrolled.
+      // Padding, not a fixed height: at rest the content sits at `--header-top`,
+      // a fixed 52px from `md` so it zooms with the page (see globals.css) — over a hero
+      // or, on a page without one, solid, which the #ItsInOurHands hub frame draws
+      // at the same offset. It compacts only when solid and held on screen part
+      // way down the page, so it doesn't blanket the page while scrolled.
       // On phones the mobile frame (2035:137) draws the lockup and the pill 26px
-      // from the top, 1:1, so the offset is fixed below `md`.
+      // from the top, 1:1, which is the variable's value below `md`.
       // The border is always present and only changes colour, so the switch never
       // shifts content by a pixel.
       // Retracting is a transform rather than a height or `top` change, so leaving
       // costs no layout and nothing underneath reflows as the bar comes and goes.
       className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding,transform] duration-300 motion-reduce:transition-none ${
         retracted ? "-translate-y-full" : "translate-y-0"
-      } ${compact ? "py-3" : "pt-[26px] pb-4 md:pt-[min(3.65vw,70px)] md:pb-6"} ${
+      } ${compact ? "py-3" : "pt-(--header-top) pb-4 md:pb-6"} ${
         overlay
           ? "border-transparent text-white"
           : "border-hairline bg-white/95 text-brand backdrop-blur"

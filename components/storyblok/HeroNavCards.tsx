@@ -63,8 +63,17 @@ export function HeroNavCards({
         the fixed-size labels below onto a third line, so the cards wrap
         instead — four to a row from `md`, two below it — and stay separate
         cards. Only a touch screen under `xl` swaps them for the dropdown.
+
+        The tab is a fixed width, not a share of the row: `--tab` is the
+        label's box (the 8.23em it is capped at below) plus 34px of padding
+        and border, in the label's own size, which is set here on the strip —
+        166px. A share of the row kept the tabs the same size on screen while
+        zoom enlarged the type inside them; this way the tab and everything in
+        it scale together, and the row centres, 1220px wide seven across.
+        `minmax(0, …)` lets a tab give up a few pixels where a row is just
+        short — 1280, or 768 — rather than overflow.
       */}
-      <ul className="mx-auto grid max-w-[1565px] grid-cols-2 gap-2.5 pb-1 md:grid-cols-4 xl:grid-cols-7 max-xl:not-pointer-fine:hidden">
+      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
         {cards.map((card, index) => {
           const current = index === currentIndex;
           /*
@@ -104,21 +113,18 @@ export function HeroNavCards({
                     {index + 1}
                   </span>
                   {/*
-                    Two lines, in fixed sizes that zoom with the page.
+                    Two lines, in one fixed size that zooms with the page.
 
                     The size used to be a fraction of the tab (`cqw`). That held
                     the breaks at any width, but it also meant the labels never
                     grew under browser zoom, then jumped to the dropdown's 20px
-                    when zoom crossed `xl`. Now there are three fixed steps, each
-                    close to what the tab showed at 100% on the usual screens
-                    and small enough to keep two lines in the narrowest tab it
-                    gets: 16px (a 1440 laptop), 19px from `2xl`, and the design's
-                    22px from `3xl`, its own 1920 width. The two longest labels
-                    — the only ones over four words — go a step smaller, the
-                    design's device for keeping them on two lines (20px on nodes
-                    2053:1195 and 2053:1201 against 22px elsewhere), and a pixel
-                    further here: "daily care products" wants 184px at 20px and
-                    the tab gives it 181.
+                    when zoom crossed `xl`. It is 16px now at every width — what
+                    a 1440 laptop showed at 100% — against the design's 22px at
+                    1920 (chosen 2026-09-18: size steps by width were tried, and
+                    zoom crossed a step and shrank the labels). The two longest
+                    labels — the only ones over four words — go a step smaller,
+                    to 14px, the design's device for keeping them on two lines
+                    (20px on nodes 2053:1195 and 2053:1201 against 22px).
 
                     The breaks are held the way the fraction held them, as a
                     ratio: the label is capped at the width the design gives it
@@ -139,8 +145,8 @@ export function HeroNavCards({
                   <span
                     className={`flex min-h-[2.5455em] flex-col justify-end leading-[1.2727] font-bold ${
                       long
-                        ? "max-w-[9.53em] text-sm 2xl:text-base 3xl:text-[1.1875rem]"
-                        : "max-w-[8.23em] text-base 2xl:text-[1.1875rem] 3xl:text-h3"
+                        ? "max-w-[9.53em] text-sm"
+                        : "max-w-[8.23em]" // the strip's 16px
                     }`}
                   >
                     {card.label}

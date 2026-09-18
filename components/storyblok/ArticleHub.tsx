@@ -112,10 +112,12 @@ export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; local
  * the section-hero type (128/140, -0.05em). It is marked as the hero, so the
  * header sits transparent over it and leaves on scroll, as on the home page.
  *
- * 1920×540 in the frame, so from `md` it holds that proportion, growing only
- * when the headline needs more. The top padding is the header's resting height;
- * the bottom padding (111px at 1920) centres the headline where the frame draws
- * it, 290px down. The frame sets 128px throughout, which only fits the column
+ * 1920×540 in the frame. From `md` the height and the bottom padding (which
+ * centres the headline where the frame draws it) are fixed at what the frame's
+ * proportion gives a 1440 laptop, 400px and 84px, rather than following the
+ * viewport: a `vw` height held the band still under browser zoom while the
+ * headline in it grew. It still grows when the headline needs more. The top
+ * padding is the header's resting height. The frame sets 128px throughout, which only fits the column
  * from `lg`; there is no phone frame, and below `md` the size follows the
  * width, so the one word fits a 320px screen.
  *
@@ -136,10 +138,10 @@ function HubBanner({
   return (
     <div
       data-hero={behindHeader ? "" : undefined}
-      className={`relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 md:min-h-[28.125vw] ${
+      className={`relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 md:min-h-[25rem] ${
         behindHeader
-          ? "pt-[83px] pb-10 md:pt-header-bar md:pb-[min(5.78vw,111px)]"
-          : "py-10 md:py-[min(5.78vw,111px)]"
+          ? "pt-[83px] pb-10 md:pt-header-bar md:pb-[5.25rem]"
+          : "py-10 md:py-[5.25rem]"
       }`}
     >
       <BlockImage

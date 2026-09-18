@@ -27,7 +27,7 @@ import { HeroNavCards } from "./HeroNavCards";
  */
 
 const HEADLINE_SIZE = {
-  display: "text-display-fluid",
+  display: "hero-display",
   title: "text-h1 md:text-hero",
 } as const;
 
@@ -199,7 +199,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           is side bearings, not an indent).
 
           Neither headline is held to one line the way the frames draw them: at
-          the sizes in `text-display-fluid` the wrap falls where the design puts
+          the sizes in `hero-display` the wrap falls where the design puts
           it anyway — after "begins" on the phone, nowhere on the desktop — and
           letting it happen naturally is what keeps a longer translation readable.
         */}
@@ -252,11 +252,10 @@ export function Hero({ blok }: { blok: HeroBlok }) {
 
           Not the shared `Container`: that caps at 1440px, which leaves the
           seven tabs 187px wide against the design's 215px and costs every
-          label a third line. The strip keeps the site's 40px gutter but caps
-          at its own drawn width (`max-w-[1565px]` in HeroNavCards), which at
-          1920 centres it as the design does (node 2053:1192), unchanged.
-          The margin is not a percentage below that: the labels are fixed sizes
-          now, and every pixel of tab width is what keeps them on two lines.
+          label a third line. The strip keeps the site's 40px gutter and
+          centres tabs of a fixed width (see HeroNavCards), 1220px seven
+          across — narrower than the design's 1565 at 1920 (node 2053:1192),
+          the price of a strip that zooms with the page.
         */
         <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8">
           <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />

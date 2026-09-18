@@ -100,7 +100,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
                   <li
                     key={step._uid}
                     {...editable(step)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold tracking-[-0.05em] whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-xl lg:text-2xl"
+                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold tracking-[-0.05em] whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-2xl"
                     style={{
                       left: `${WHEEL_LABELS[index][0]}%`,
                       top: `${WHEEL_LABELS[index][1]}%`,
