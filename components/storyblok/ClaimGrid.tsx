@@ -3,6 +3,7 @@ import { Container, Section } from "@/components/ui/Container";
 import { Markdown } from "@/components/ui/Markdown";
 import type { ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
 
+import { ClaimDetails } from "./ClaimDetails";
 import { editable } from "./editable";
 
 /**
@@ -14,8 +15,12 @@ import { editable } from "./editable";
  * its caption is a field of its own so it can be translated per language, with
  * "proof:" — the design's word — as the fallback.
  *
- * Cards are static. The design shows every claim in full, so there is nothing
- * to fold away — this is not another `feature_accordion` arrangement.
+ * Each card opens on its icon, title and the claim's first paragraph, with an
+ * arrow in the corner; the footnotes and proof list fold away behind it (see
+ * `ClaimDetails`). The design draws every claim in full, and the cards were
+ * static to match until the arrow was asked back for on 2026-09-18. Cards open
+ * independently — not another `feature_accordion` arrangement, which keeps one
+ * item open at a time and hides the whole body.
  */
 
 /**
@@ -27,6 +32,20 @@ import { editable } from "./editable";
  */
 function escapeFootnotes(body?: string): string | undefined {
   return body?.replace(/^\*(?=\s)/gm, "\\*");
+}
+
+/**
+ * The body's first paragraph, which stays on the folded card, and the rest —
+ * the footnotes, on the cards that have them. Paragraphs are split on a blank
+ * line, as Markdown splits them.
+ */
+function splitBody(body?: string): { lead?: string; rest?: string } {
+  const text = body?.replace(/\r\n/g, "\n").trim();
+  if (!text) return {};
+
+  const at = text.search(/\n\s*\n/);
+  if (at < 0) return { lead: text };
+  return { lead: text.slice(0, at), rest: text.slice(at).trim() };
 }
 
 /** One proof entry per line; blank lines are skipped. */
@@ -55,8 +74,16 @@ export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
           </>
         ) : null}
 
+        {/*
+          Cards in a row stretch to one height at rest. Once one is open, its
+          partner in the row — the next card after an odd one, the one before
+          an even one — drops back to its own height, rather than growing an
+          empty plate beside the open card. Two columns only, so from `md`.
+        */}
         {items.length > 0 ? (
-          <div className={`${blok.heading ? "mt-10 " : ""}grid gap-6 md:grid-cols-2 md:gap-10`}>
+          <div
+            className={`${blok.heading ? "mt-10 " : ""}grid gap-6 md:grid-cols-2 md:gap-10 md:[&>:nth-child(odd):has([aria-expanded=true])+*]:self-start md:[&>:nth-child(odd):has(+*_[aria-expanded=true])]:self-start`}
+          >
             {items.map((item) => (
               <ClaimCard key={item._uid} blok={item} />
             ))}
@@ -69,9 +96,33 @@ export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
 
 function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
   const proof = lines(blok.proof);
+  const { lead, rest } = splitBody(escapeFootnotes(blok.body));
+
+  const details =
+    rest || proof.length > 0 ? (
+      <>
+        <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+          {rest}
+        </Markdown>
+
+        {proof.length > 0 ? (
+          <>
+            <p className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+              {blok.proof_label || "proof:"}
+            </p>
+            <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+              {proof.map((entry, index) => (
+                <li key={index}>{entry}</li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+      </>
+    ) : null;
 
   return (
-    <div {...editable(blok)} className="rounded-panel bg-brand-100 p-8 md:p-14">
+    // `relative` for the arrow in the corner (see ClaimDetails).
+    <div {...editable(blok)} className="relative rounded-panel bg-brand-100 p-8 md:p-14">
       {blok.icon?.filename ? (
         <BlockImage
           asset={blok.icon}
@@ -82,29 +133,22 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
         />
       ) : null}
 
-      {/* The mark sits above the title; with no mark the title leads the plate. */}
+      {/*
+        The mark sits above the title; with no mark the title leads the plate,
+        level with the corner arrow, and keeps clear of it.
+      */}
       <h3
-        className={`${blok.icon?.filename ? "mt-8 " : ""}font-display text-2xl font-bold tracking-[-0.05em] text-brand`}
+        className={`${blok.icon?.filename ? "mt-8 " : details ? "pr-12 md:pr-4 " : ""}font-display text-2xl font-bold tracking-[-0.05em] text-brand`}
       >
         {blok.title}
       </h3>
 
       <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
-        {escapeFootnotes(blok.body)}
+        {lead}
       </Markdown>
 
-      {proof.length > 0 ? (
-        <>
-          <p className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
-            {blok.proof_label || "proof:"}
-          </p>
-          <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-brand-800/80">
-            {proof.map((entry, index) => (
-              <li key={index}>{entry}</li>
-            ))}
-          </ul>
-        </>
-      ) : null}
+      {/* A card with nothing past its first paragraph gets no arrow to press. */}
+      {details ? <ClaimDetails title={blok.title}>{details}</ClaimDetails> : null}
     </div>
   );
 }
