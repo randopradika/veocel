@@ -265,7 +265,9 @@ export function SiteHeader({ locales, locale }: { locales: Locale[]; locale: str
       // shifts content by a pixel.
       // Retracting is a transform rather than a height or `top` change, so leaving
       // costs no layout and nothing underneath reflows as the bar comes and goes.
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[color,background-color,border-color,padding,transform] duration-300 motion-reduce:transition-none ${
+      // `mx-auto max-w-page`: fixed, it is placed against the window, so it takes
+      // the page's 1920 cap itself rather than inheriting it from the body.
+      className={`fixed inset-x-0 top-0 z-50 mx-auto max-w-page border-b transition-[color,background-color,border-color,padding,transform] duration-300 motion-reduce:transition-none ${
         retracted ? "-translate-y-full" : "translate-y-0"
       } ${compact ? "py-3" : "pt-(--header-top) pb-4 md:pb-6"} ${
         overlay

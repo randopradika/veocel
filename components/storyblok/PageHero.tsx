@@ -20,7 +20,9 @@ export function PageHero({ blok }: { blok: PageHeroBlok }) {
       // Only a dark hero can sit under a transparent header; a light one would
       // leave the header's white type invisible.
       data-hero={dark ? "" : undefined}
-      className={`relative isolate flex min-h-[58svh] items-end overflow-hidden ${
+      // A share of the screen, capped at the same share of the 1080px frame so
+      // it shrinks with the page once the page stops at 1920 (as `Hero`).
+      className={`relative isolate flex min-h-[min(58svh,calc(1080px*0.58))] items-end overflow-hidden ${
         dark ? "bg-brand-700" : "bg-brand-100"
       }`}
     >

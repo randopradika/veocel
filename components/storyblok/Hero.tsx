@@ -159,7 +159,10 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       {...editable(blok)}
       // Read by SiteHeader to decide when to switch out of transparent mode.
       data-hero=""
-      className="relative isolate flex min-h-[92svh] flex-col justify-center overflow-hidden bg-brand-800"
+      // Fills the screen, but no taller than 92% of the 1920×1080 frame: once
+      // the page stops at 1920 (a wide screen, or zooming out), a screen-tall
+      // hero would stay screen-tall while everything else shrank.
+      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800"
     >
       <BlockImage
         asset={blok.background_image}

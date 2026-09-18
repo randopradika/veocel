@@ -42,9 +42,12 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // The body is capped at the design's width and centred (`max-w-page`), so
+  // past 1920 — a wider screen, or zooming out — the page shrinks as one piece.
+  // The fixed header carries the same cap: it is placed against the window.
   return (
     <html className={circular.variable}>
-      <body className="flex min-h-svh flex-col">{children}</body>
+      <body className="mx-auto flex min-h-svh w-full max-w-page flex-col">{children}</body>
     </html>
   );
 }

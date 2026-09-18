@@ -62,6 +62,15 @@
   --text-h3: 1.375rem; /* 22px — hero nav card label, node 2053:1231 */
   --text-h3--line-height: 1.2727;
 
+  /*
+    The widest the page gets: the design's 1920 frame. Past it — a wider
+    monitor, or zooming out — the whole page stops growing and sits centred on
+    white, full-bleed photography included, so zooming out shrinks everything
+    together instead of leaving the heroes stretched edge to edge
+    (`max-w-page`, on the body and the fixed header).
+  */
+  --container-page: 120rem;
+
   /* Generous corners on every card. */
   --radius-card: 0.875rem;
   --radius-panel: 1.25rem;
