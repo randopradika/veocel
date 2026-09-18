@@ -248,15 +248,15 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           The mobile frame pins its dropdown 40px above the hero's bottom edge;
           the desktop strip keeps its 32px.
 
-          Not the shared `Container`: that caps at 1440px with a fixed gutter,
-          which leaves the seven tabs 187px wide against the design's 215px and
-          costs every label a third line. The strip runs on the design's own
-          gutters instead — 172px inside a 1920 frame (node 2053:1192), kept as
-          a percentage so the tab width stays a fixed fraction of the viewport.
-          That is what lets the labels hold their line breaks under zoom; see
-          HeroNavCards.
+          Not the shared `Container`: that caps at 1440px, which leaves the
+          seven tabs 187px wide against the design's 215px and costs every
+          label a third line. The strip keeps the site's 40px gutter but caps
+          at its own drawn width (`max-w-[1565px]` in HeroNavCards), which at
+          1920 centres it as the design does (node 2053:1192), unchanged.
+          The margin is not a percentage below that: the labels are fixed sizes
+          now, and every pixel of tab width is what keeps them on two lines.
         */
-        <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8 xl:px-[8.958%]">
+        <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8">
           <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />
         </div>
       ) : null}

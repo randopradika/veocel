@@ -20,11 +20,18 @@ import { editable } from "./editable";
  * the same strip is repeated across every page in a section, so a flag would have
  * to be re-pointed on each copy and would go stale the moment a slug changed.
  *
- * Below `xl` seven cards cannot sit side by side, so the strip collapses into
- * the mobile frame's dropdown (2035:137 / 2035:211): one pill naming the page
- * you are on — or inviting you to "select destination" where no card matches,
- * as on the home page — that opens the same list of links. It used to scroll
- * sideways there, which left five of the seven destinations off-screen.
+ * On a phone or tablet the strip collapses into the mobile frame's dropdown
+ * (2035:137 / 2035:211): one pill naming the page you are on — or inviting you
+ * to "select destination" where no card matches, as on the home page — that
+ * opens the same list of links. It used to scroll sideways there, which left
+ * five of the seven destinations off-screen.
+ *
+ * A mouse or trackpad keeps the cards at every width. Browser zoom narrows the
+ * CSS viewport — Cmd + to 125% puts a 1440 laptop at 1152 — so a width
+ * breakpoint alone swapped the cards for the pill as soon as a desktop reader
+ * zoomed in. Width cannot tell a zoomed laptop from a tablet; the pointer can.
+ * `pointer: fine` is a mouse or trackpad, the kind of screen that zooms by
+ * resizing the viewport, where a pinch on a phone leaves the layout alone.
  */
 export function HeroNavCards({
   cards,
@@ -52,14 +59,12 @@ export function HeroNavCards({
         `gap-2.5` is the design's 10px between tabs (nodes 2053:1230 and
         2053:1224 sit 225px apart on a 215px card).
 
-        Seven across only from `xl`, where it used to be `lg`. The label sizing
-        below is a fixed fraction of the tab, which is what holds the two lines
-        steady, but it also means a narrow strip buys narrow type: at 1024 the
-        tabs are 111px and the labels land near 11px. The dropdown is the
-        design's own answer at that width, so it now covers everything under
-        1280 rather than everything under 1024.
+        Seven across from `xl`. Narrower than that, seven tabs would squeeze
+        the fixed-size labels below onto a third line, so the cards wrap
+        instead — four to a row from `md`, two below it — and stay separate
+        cards. Only a touch screen under `xl` swaps them for the dropdown.
       */}
-      <ul className="mx-auto hidden max-w-[1565px] gap-2.5 pb-1 xl:grid xl:grid-cols-7">
+      <ul className="mx-auto grid max-w-[1565px] grid-cols-2 gap-2.5 pb-1 md:grid-cols-4 xl:grid-cols-7 max-xl:not-pointer-fine:hidden">
         {cards.map((card, index) => {
           const current = index === currentIndex;
           /*
@@ -82,7 +87,7 @@ export function HeroNavCards({
                   thing across the strip: the page you are on, or the one you are
                   about to open.
                 */
-                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 [container-type:inline-size] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                   current ? "bg-brand-200 text-brand" : "text-white hover:bg-brand-200 hover:text-brand"
                 }`}
               >
@@ -99,41 +104,43 @@ export function HeroNavCards({
                     {index + 1}
                   </span>
                   {/*
-                    Two lines, always, and pinned to the same place at every
-                    zoom level.
+                    Two lines, in fixed sizes that zoom with the page.
 
-                    The size is a fraction of the tab rather than a px value:
-                    `container-type: inline-size` on the tab makes `cqw` 1% of
-                    its content box, and the design's ratio is 22px of type in a
-                    176px label box (12.5%). Holding that ratio is what fixes
-                    the line breaks — the browser wraps on the type-to-box
-                    ratio, so keeping it constant keeps the break identical at
-                    any tab width. Zooming changes the CSS viewport, which would
-                    otherwise re-wrap a px-sized label; here it cannot, because
-                    the gutters on the strip are a percentage too.
+                    The size used to be a fraction of the tab (`cqw`). That held
+                    the breaks at any width, but it also meant the labels never
+                    grew under browser zoom, then jumped to the dropdown's 20px
+                    when zoom crossed `xl`. Now there are three fixed steps, each
+                    close to what the tab showed at 100% on the usual screens
+                    and small enough to keep two lines in the narrowest tab it
+                    gets: 16px (a 1440 laptop), 19px from `2xl`, and the design's
+                    22px from `3xl`, its own 1920 width. The two longest labels
+                    — the only ones over four words — go a step smaller, the
+                    design's device for keeping them on two lines (20px on nodes
+                    2053:1195 and 2053:1201 against 22px elsewhere), and a pixel
+                    further here: "daily care products" wants 184px at 20px and
+                    the tab gives it 181.
 
-                    Deliberately a bare ratio, with no `clamp()` around it.
-                    Any bound on the type re-wraps the label the moment it
-                    binds: a lower bound pinned the type while the tab kept
-                    shrinking and pushed a third line at 1280, and an upper one
-                    pinned it while the tab kept growing, which moved the break
-                    to "explore VEOCEL™ / fibers" by 2560. The size is bounded
-                    by the strip's own `max-w-[1565px]` instead — the design's
-                    width at 1920 — so past that width nothing moves at all,
-                    and below it the ratio holds. 22px is the ceiling either
-                    way, and the break never shifts.
+                    The breaks are held the way the fraction held them, as a
+                    ratio: the label is capped at the width the design gives it
+                    in ems — its 181px box over 22px, or over 19px for the long
+                    pair — so it wraps where the 1920 frame does in any tab at
+                    least that wide. Left to fill a wider tab it wraps late
+                    ("explore VEOCEL™ / fibers"), and `text-wrap: balance`
+                    splits "VEOCEL™ / fibers for wipes" even at 1920.
 
-                    `h-[2.5455em]` is two lines at the design's 28/22 leading,
-                    which reserves the second line even for the one-word tab —
-                    the design does the same with an empty first line on node
-                    2053:1207 — so all seven labels sit on a common baseline.
-                    `justify-end` is what puts that lone word on the lower line.
+                    `min-h-[2.5455em]` is two lines at the design's 28/22
+                    leading, which reserves the second line even for the one-word
+                    tab — the design does the same with an empty first line on
+                    node 2053:1207 — so all seven labels sit on a common
+                    baseline, and `justify-end` puts that lone word on the lower
+                    line. A minimum rather than a height, so a longer label
+                    grows the tab instead of losing its third line.
                   */}
                   <span
-                    className={`flex h-[2.5455em] flex-col justify-end overflow-hidden leading-[1.2727] font-bold ${
+                    className={`flex min-h-[2.5455em] flex-col justify-end leading-[1.2727] font-bold ${
                       long
-                        ? "text-[10.4cqw]"
-                        : "text-[12.2cqw]"
+                        ? "max-w-[9.53em] text-sm 2xl:text-base 3xl:text-[1.1875rem]"
+                        : "max-w-[8.23em] text-base 2xl:text-[1.1875rem] 3xl:text-h3"
                     }`}
                   >
                     {card.label}
@@ -149,7 +156,7 @@ export function HeroNavCards({
 }
 
 /**
- * The phone-width form of the strip: a 64px pill (20px radius, white hairline)
+ * The touch-screen form of the strip, under `xl`: a 64px pill (20px radius, white hairline)
  * with a 40px chevron disc, drawn as the frame does — outlined in white with
  * white type when nothing is selected, the strip's pale plate with blue type
  * and a filled disc when the page is in the list. The pill is drawn 1:1 from
@@ -200,7 +207,7 @@ function HeroNavDropdown({
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative xl:hidden">
+    <div ref={containerRef} className="relative hidden max-xl:not-pointer-fine:block">
       <button
         ref={buttonRef}
         type="button"
