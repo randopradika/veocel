@@ -209,14 +209,16 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           ) : null}
 
           {/*
-            A block per line, held to one line from `md` so the drawn break is
-            the only break. Below `md` they are allowed to wrap again: no
-            section hero has a mobile frame, and at 64px "with VEOCEL™ fibers"
-            measures 578px, wider than the phone the design does draw.
+            A block per line, so the drawn break is the only break wherever a
+            line fits — which at 100% is every width from `md`. A line that no
+            longer fits wraps rather than running off the page: the title is a
+            fixed 128px, and browser zoom narrows the page under it. Held to one
+            line, "with VEOCEL™ fibers" (1150px) was cut off at 125% zoom on a
+            1440 laptop.
           */}
           <h1 className={`font-bold ${headlineSize}`}>
             {lines.map((line, index) => (
-              <span key={index} className="block md:whitespace-nowrap">
+              <span key={index} className="block">
                 {/*
                   The pale blue plate is off for now, whatever `headline_highlight`
                   a story carries — only the fibers hero sets it. Restore the prop
