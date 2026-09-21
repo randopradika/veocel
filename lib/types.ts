@@ -397,6 +397,8 @@ export type FiberProductGridBlok = SbBlock & {
 export type CertificationItemBlok = SbBlock & {
   component: "certification_item";
   logo?: StoryblokAsset;
+  /** Shown in a pop-up when the mark is clicked — the certificate itself, say. */
+  detail_image?: StoryblokAsset;
   label?: string;
   /** Qualifier under the label — scope, certificate number, product class. */
   note?: string;

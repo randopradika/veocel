@@ -1136,6 +1136,13 @@
         ],
         "description": "The certification mark. Transparent PNG or SVG; it sits on white."
       },
+      "detail_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Opens in a pop-up when the mark is clicked, such as the certificate itself. Leave empty and the mark keeps its link, if it has one."
+      },
       "label": {
         "type": "text",
         "description": "The certificate's name, exactly as the issuing body writes it."

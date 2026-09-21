@@ -1,8 +1,7 @@
-import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
-import { SmartLink } from "@/components/ui/SmartLink";
-import type { CertificationGridBlok, CertificationItemBlok } from "@/lib/types";
+import type { CertificationGridBlok } from "@/lib/types";
 
+import { CertificationTile } from "./CertificationTile";
 import { editable } from "./editable";
 
 /**
@@ -63,41 +62,5 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
         </ul>
       </Container>
     </Section>
-  );
-}
-
-function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
-  return (
-    <SmartLink
-      link={blok.link}
-      className="group block rounded-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-    >
-      <span {...editable(blok)} className="block">
-        <BlockImage
-          asset={blok.logo}
-          alt={blok.label ?? ""}
-          sizes="(max-width: 640px) 50vw, 20vw"
-          className="relative block h-24 rounded-card border border-hairline bg-white transition-colors duration-200 group-hover:border-brand-300"
-          imageClassName="object-contain p-4"
-          placeholderTone="neutral"
-        />
-
-        {/*
-          Both lines stay on `ink-muted`. The note is secondary by size alone —
-          dropping it to `ink-faint` at this size would put it under 3:1 on white.
-        */}
-        {blok.label ? (
-          <span className="mt-2.5 block text-center text-base font-bold leading-[2] text-ink-muted">
-            {blok.label}
-          </span>
-        ) : null}
-
-        {blok.note ? (
-          <span className="mt-0.5 block text-center text-sm leading-snug text-ink-muted">
-            {blok.note}
-          </span>
-        ) : null}
-      </span>
-    </SmartLink>
   );
 }
