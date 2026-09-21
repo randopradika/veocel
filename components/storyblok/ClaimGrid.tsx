@@ -1,6 +1,6 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
-import { Markdown } from "@/components/ui/Markdown";
+import { KeepLastWords, Markdown } from "@/components/ui/Markdown";
 import type { ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
 
 import { ClaimDetails } from "./ClaimDetails";
@@ -101,7 +101,10 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
   const details =
     rest || proof.length > 0 ? (
       <>
-        <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+        <Markdown
+          className="mt-4 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80"
+          keepLastWords
+        >
           {rest}
         </Markdown>
 
@@ -110,9 +113,11 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
             <p className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
               {blok.proof_label || "proof:"}
             </p>
-            <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+            <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80">
               {proof.map((entry, index) => (
-                <li key={index}>{entry}</li>
+                <li key={index}>
+                  <KeepLastWords text={entry} />
+                </li>
               ))}
             </ul>
           </>
@@ -143,7 +148,10 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
         {blok.title}
       </h3>
 
-      <Markdown className="mt-4 text-[0.9375rem] leading-[1.6] text-brand-800/80">
+      <Markdown
+        className="mt-4 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80"
+        keepLastWords
+      >
         {lead}
       </Markdown>
 

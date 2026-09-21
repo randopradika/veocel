@@ -119,9 +119,11 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
       </button>
 
       <div id={panelId} hidden={!open}>
+        {/* Held to a narrower column than the card so the copy sits in the middle. */}
         <Markdown
-          className="mt-3 px-4 text-center text-[0.9375rem] leading-relaxed text-brand-800/80"
+          className="mx-auto mt-2 max-w-[27rem] px-4 text-center text-[0.9375rem] leading-[1.8] text-pretty text-brand-800/80"
           gap="tight"
+          keepLastWords
         >
           {blok.body}
         </Markdown>
@@ -160,8 +162,9 @@ function AccordionRow({ blok, open, onToggle }: ItemProps) {
 
       <div id={panelId} hidden={!open}>
         <Markdown
-          className="mt-5 max-w-4xl text-[0.9375rem] leading-relaxed text-brand-800/80"
+          className="mt-5 max-w-4xl text-[0.9375rem] leading-relaxed text-pretty text-brand-800/80"
           gap="loose"
+          keepLastWords
         >
           {blok.body}
         </Markdown>
@@ -231,7 +234,10 @@ function AccordionTile({
       </button>
 
       <div id={panelId} hidden={!open}>
-        <Markdown className="mt-4 text-[0.9375rem] leading-relaxed text-brand-800/80">
+        <Markdown
+          className="mt-4 text-[0.9375rem] leading-relaxed text-pretty text-brand-800/80"
+          keepLastWords
+        >
           {blok.body}
         </Markdown>
       </div>
