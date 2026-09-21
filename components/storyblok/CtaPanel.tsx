@@ -28,7 +28,7 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
           ) : null}
 
           <Markdown
-            className="mx-auto mt-5 max-w-3xl text-sm leading-relaxed text-ink-muted"
+            className="mx-auto mt-5 max-w-3xl text-base leading-[1.4] text-ink-muted md:text-xl"
             gap="loose"
           >
             {blok.body}

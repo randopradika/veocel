@@ -117,7 +117,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mt-4 max-w-xl text-center text-[0.9375rem] leading-relaxed text-ink-muted">
+          <p className="mx-auto mt-4 max-w-xl text-center text-base leading-[1.4] text-ink-muted md:text-xl">
             {blok.intro}
           </p>
         ) : null}

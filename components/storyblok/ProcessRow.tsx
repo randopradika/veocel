@@ -161,7 +161,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
 
           <div>
             {blok.heading ? (
-              <h2 className="text-h2 font-bold text-brand">
+              <h2 className="text-h2 font-bold text-brand md:text-h1">
                 {blok.heading}
               </h2>
             ) : null}
