@@ -168,7 +168,7 @@ export function FiberProductCard({
               ))}
 
               {specs.length > 0 ? (
-                <dl className="mt-10 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:mt-auto md:px-8 md:py-6">
+                <dl className="mt-8 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:px-8 md:py-6">
                   {specs.map(([label, value]) => (
                     <div key={label} className="flex items-baseline justify-between gap-4 md:gap-6">
                       <dt className="font-bold whitespace-nowrap text-ink">{label}</dt>
