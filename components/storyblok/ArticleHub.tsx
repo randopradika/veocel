@@ -16,7 +16,7 @@ import { editable } from "./editable";
 
 const DEFAULT_FOLDER = "itsinourhands";
 
-/** How many highlighted articles slide in the banner. */
+/** How many of the latest articles slide in the banner. */
 const IN_SLIDER = 2;
 
 /** Rows to a page below the banner. */
@@ -27,17 +27,17 @@ const ROW_LIST = "mt-12 flex flex-col gap-12 md:mt-26 md:gap-13";
 /**
  * The #ItsInOurHands hub, frame 2082:359 (revised from 2081:242), under the
  * banner from frame 2086:278. The two
- * latest highlighted articles follow in a slider — a photograph
+ * latest articles follow in a slider — a photograph
  * inset in the column with prev/next discs on its edges, tag, date and title
  * beneath, and a rule across the column — and every other article follows as a
  * row, four to a page: photograph left; tag and title right, the date at the
  * foot of a ruled column.
  *
- * Nothing is authored on the hub. Articles are read from the folder, latest
- * first (see `getArticles`); ticking `highlight` on one moves it out of the
- * list and into the slider. A highlighted article beyond the two stays in the
- * list rather than dropping off the page, and with none highlighted the latest
- * article opens the hub on its own.
+ * Nothing is authored on the hub. Articles are read from the folder and run by
+ * their date, latest on top, from the slider down through the list (see
+ * `getArticles`). Until 2026-09-18 ticking `highlight` moved an article into
+ * the slider whatever its date, which put older articles above newer ones; the
+ * field is still in the schema but no longer places anything.
  *
  * `hide_banner` takes the banner off; the header then starts solid over the
  * page, as it does on any page without a hero, and the heading stays for
@@ -52,8 +52,9 @@ const ROW_LIST = "mt-12 flex flex-col gap-12 md:mt-26 md:gap-13";
  */
 export async function ArticleHub({ blok, locale }: { blok: ArticleHubBlok; locale: string }) {
   const articles = await getArticles(blok.folder?.trim() || DEFAULT_FOLDER, locale);
-  const highlighted = articles.filter((story) => story.content.highlight).slice(0, IN_SLIDER);
-  const inSlider = highlighted.length > 0 ? highlighted : articles.slice(0, 1);
+  // By date, latest on top: the newest two slide in the banner, and the list
+  // carries on from the third.
+  const inSlider = articles.slice(0, IN_SLIDER);
   const rows = articles
     .filter((story) => !inSlider.includes(story))
     .map((story) => (

@@ -3,8 +3,9 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { StoryblokBridge } from "@/components/StoryblokBridge";
-import { DEFAULT_LOCALE } from "@/lib/i18n";
-import { getStory } from "@/lib/storyblok";
+import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
+import { getNextArticle, getStory, storyPath } from "@/lib/storyblok";
+import type { ArticleBlok, SbStory } from "@/lib/types";
 
 import { Article } from "./Article";
 import { BlockRenderer } from "./BlockRenderer";
@@ -32,11 +33,23 @@ export async function StoryView({
   const { isEnabled: draft } = await draftMode();
   const { content } = story;
 
+  // An article's two buttons: back to the hub it sits in — its folder's start
+  // page, /itsinourhands — and on to the next article there.
+  const next =
+    content.component === "article"
+      ? await getNextArticle(story as SbStory<ArticleBlok>, locale)
+      : null;
+  const hub = story.full_slug.replace(/\/+$/, "").split("/").slice(0, -1).join("/");
+
   return (
     <>
       {draft ? <StoryblokBridge storyId={story.id} /> : null}
       {content.component === "article" ? (
-        <Article blok={content} />
+        <Article
+          blok={content}
+          backHref={localePath(locale, hub)}
+          next={next ? { href: localePath(locale, storyPath(next)), title: next.content.title } : null}
+        />
       ) : (
         <BlockRenderer blocks={content.body} locale={locale} />
       )}

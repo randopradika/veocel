@@ -529,8 +529,10 @@ export type ArticleBlok = SbBlock & {
   /** Opens the article, and stands for it on the hub. */
   image?: StoryblokAsset;
   /**
-   * In the hub's banner slider instead of its list. The slider holds the two
-   * latest highlighted articles; with none highlighted, the latest article.
+   * Unused since 2026-09-18. It moved an article into the hub's banner slider
+   * whatever its date; the hub now runs strictly by date, latest on top, and
+   * the slider holds the two latest articles. Kept so stories that set it
+   * still validate.
    */
   highlight?: boolean;
   body?: (ArticleTextBlok | ArticleImageBlok)[];

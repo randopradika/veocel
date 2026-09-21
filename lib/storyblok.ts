@@ -239,6 +239,28 @@ export async function getArticles(
 }
 
 /**
+ * The article after this one in its folder, in the hub's order — latest first —
+ * for the article's "next article" button. Wraps from the oldest back to the
+ * newest, so the button always leads somewhere; `null` when the folder holds
+ * nothing else.
+ */
+export async function getNextArticle(
+  story: Pick<SbStory<ArticleBlok>, "full_slug" | "uuid">,
+  locale: string = DEFAULT_LOCALE,
+): Promise<SbStory<ArticleBlok> | null> {
+  const folder = story.full_slug.replace(/\/+$/, "").split("/").slice(0, -1).join("/");
+  if (!folder) return null;
+
+  const articles = await getArticles(folder, locale);
+  if (!articles.some((article) => article.uuid !== story.uuid)) return null;
+
+  // Missing from the list (a draft the CDN does not list yet) is index -1, which
+  // leads to the newest, as the oldest wrapping round does.
+  const index = articles.findIndex((article) => article.uuid === story.uuid);
+  return articles[(index + 1) % articles.length];
+}
+
+/**
  * Site-wide chrome (navigation, footer, newsletter). Always resolves —
  * a failure here degrades to the local mock rather than breaking every page.
  */
