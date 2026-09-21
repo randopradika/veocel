@@ -161,7 +161,7 @@ function HubBanner({
       />
 
       <Container width="wide" className="text-center text-white">
-        <h1 className="text-[length:min(12vw,3rem)] leading-[1.09375] font-bold tracking-[-0.05em] md:text-h1 lg:text-hero">
+        <h1 className="text-[length:min(9vw,2.25rem)] leading-[1.09375] font-bold tracking-[-0.05em] md:text-[3rem] lg:text-hero">
           {heading}
         </h1>
       </Container>

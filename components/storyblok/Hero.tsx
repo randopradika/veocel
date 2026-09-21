@@ -28,7 +28,7 @@ import { HeroNavCards } from "./HeroNavCards";
 
 const HEADLINE_SIZE = {
   display: "hero-display",
-  title: "text-h1 md:text-hero",
+  title: "text-[3rem] leading-[1.09375] tracking-[-0.05em] md:text-hero",
 } as const;
 
 /**
@@ -186,7 +186,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       {/*
         `wide`, not the default column: the design centres the headline on the
         whole 1920 frame, and its longest drawn line — "with VEOCEL™ fibers" on
-        node 2053:385 — measures 1156px at 128px. The 1200px column leaves 1120px
+        node 2053:385 — measures 1156px at the design's 128px. The 1200px column leaves 1120px
         of it, which is what pushed that headline onto a third line.
       */}
       <Container
@@ -215,9 +215,9 @@ export function Hero({ blok }: { blok: HeroBlok }) {
             A block per line, so the drawn break is the only break wherever a
             line fits — which at 100% is every width from `md`. A line that no
             longer fits wraps rather than running off the page: the title is a
-            fixed 128px, and browser zoom narrows the page under it. Held to one
-            line, "with VEOCEL™ fibers" (1150px) was cut off at 125% zoom on a
-            1440 laptop.
+            fixed 96px, and browser zoom narrows the page under it. Held to one
+            line at the design's 128px, "with VEOCEL™ fibers" (1150px) was cut
+            off at 125% zoom on a 1440 laptop.
           */}
           <h1 className={`font-bold ${headlineSize}`}>
             {lines.map((line, index) => (

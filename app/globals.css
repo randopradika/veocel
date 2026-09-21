@@ -50,7 +50,7 @@
   --text-display: 8.75rem; /* 140px — home hero, node 2053:1190 */
   --text-display--line-height: 1.0625;
   --text-display--letter-spacing: -0.05em;
-  --text-hero: 8rem; /* 128px — section-page hero, nodes 2053:782 and 2053:517 */
+  --text-hero: 6rem; /* 96px — section-page hero; the design's 128px (nodes 2053:782 and 2053:517) cut by a quarter */
   --text-hero--line-height: 1.09375;
   --text-hero--letter-spacing: -0.05em;
   --text-h1: 4rem; /* 64px — section heading, nodes 2053:718 and 2053:503 */
