@@ -6,7 +6,6 @@ import { useEffect, useId, useRef, useState } from "react";
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { resolveHref, SmartLink } from "@/components/ui/SmartLink";
-import { naturalSize } from "@/lib/image";
 import type { CertificationItemBlok, SbBlock } from "@/lib/types";
 
 /**
@@ -30,11 +29,13 @@ const TILE =
   "group block w-full rounded-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand";
 
 /**
- * Height the pop-up spends on everything but the image — its padding, the name
- * and note, and the margin around the dialog — so a tall certificate is sized to
- * fit the screen whole instead of scrolling.
+ * One size for every certificate pop-up, whatever its image: 56rem × 44rem, or
+ * the screen less a 1rem margin where that is smaller. The image takes whatever
+ * height the name, note and link leave and scales to fit inside it, so the
+ * dialog never scrolls and a landscape certificate opens in the same box as a
+ * square logo.
  */
-const CHROME = "16rem";
+const DIALOG_SIZE = "h-[min(100dvh_-_2rem,44rem)] w-[min(100vw_-_2rem,56rem)]";
 
 export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
   const detail = blok.detail_image?.filename ? blok.detail_image : null;
@@ -96,13 +97,6 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
     );
   }
 
-  // The image box takes the picture's own proportions, and no wider than lets
-  // its height fit the screen; the dialog then shrinks to it, so a portrait
-  // certificate does not sit in a landscape panel.
-  const size = naturalSize(detail.filename);
-  const ratio = size ? size.width / size.height : 4 / 3;
-  const fitWidth = `calc((100dvh - ${CHROME}) * ${ratio})`;
-
   return (
     <>
       <button
@@ -130,10 +124,9 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
             event.clientY <= box.bottom;
           if (!inside) setOpen(false);
         }}
-        style={{ width: `min(100% - 2rem, 60rem, ${fitWidth} + 6rem)` }}
-        className="m-auto max-h-[calc(100dvh_-_2rem)] overflow-y-auto rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70"
+        className={`m-auto ${DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
       >
-        <div className="relative px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-12">
+        <div className="relative flex h-full flex-col px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-10">
           <button
             type="button"
             onClick={() => setOpen(false)}
@@ -150,14 +143,11 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
           ) : null}
           {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
 
-          <div
-            className={`relative mx-auto w-full ${blok.label || blok.note ? "mt-6" : ""}`}
-            style={{ aspectRatio: String(ratio), maxWidth: fitWidth }}
-          >
+          <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
             <BlockImage
               asset={detail}
               alt={blok.label ?? ""}
-              sizes="(max-width: 768px) 100vw, 60rem"
+              sizes="(max-width: 768px) 100vw, 56rem"
               className="absolute inset-0"
               imageClassName="object-contain"
               placeholderTone="neutral"
@@ -176,7 +166,7 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
             disappearing.
           */}
           {resolveHref(blok.link) ? (
-            <p className="mt-4 text-center text-sm">
+            <p className="mt-4 shrink-0 text-center text-sm">
               <SmartLink link={blok.link} className="text-brand underline underline-offset-2">
                 verify at the issuer’s site
               </SmartLink>
