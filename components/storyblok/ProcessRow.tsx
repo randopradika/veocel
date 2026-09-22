@@ -240,7 +240,7 @@ function StepCard({ blok }: { blok: ProcessStepBlok }) {
         {blok.title}
       </h3>
       {blok.description ? (
-        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink">{blok.description}</p>
+        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted">{blok.description}</p>
       ) : null}
     </li>
   );
