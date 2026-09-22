@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState } from "react";
 
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
-import { SmartLink } from "@/components/ui/SmartLink";
+import { resolveHref, SmartLink } from "@/components/ui/SmartLink";
 import { naturalSize } from "@/lib/image";
 import type { CertificationItemBlok, SbBlock } from "@/lib/types";
 
@@ -161,8 +161,27 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
               className="absolute inset-0"
               imageClassName="object-contain"
               placeholderTone="neutral"
+              // A right-click or a drag both hand a visitor the file underneath
+              // the pop-up in one step; the wall's other marks don't carry a
+              // document worth saving, so only this view needs the guard.
+              onContextMenu={(event) => event.preventDefault()}
+              draggable={false}
             />
           </div>
+
+          {/*
+            The mark's own `link` — the issuer's page, set whether or not this
+            pop-up has a detail image — still has somewhere to go once the
+            image takes over the click: it moves down here rather than
+            disappearing.
+          */}
+          {resolveHref(blok.link) ? (
+            <p className="mt-4 text-center text-sm">
+              <SmartLink link={blok.link} className="text-brand underline underline-offset-2">
+                verify at the issuer’s site
+              </SmartLink>
+            </p>
+          ) : null}
         </div>
       </dialog>
     </>

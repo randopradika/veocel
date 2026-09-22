@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, MouseEventHandler } from "react";
 
 import { altText } from "@/lib/image";
 import type { StoryblokAsset } from "@/lib/types";
@@ -44,6 +44,15 @@ type BlockImageProps = {
   priority?: boolean;
   placeholderLabel?: string;
   placeholderTone?: keyof typeof TONE_CLASSES;
+  /**
+   * A soft deterrent against the one-click ways of lifting the image out of the
+   * page — the browser's own "save image" on right-click and its built-in
+   * drag-to-desktop. Neither stops a screenshot, which no code can; only for
+   * the certificate pop-up (`CertificationTile`), where that's worth doing
+   * anyway.
+   */
+  draggable?: boolean;
+  onContextMenu?: MouseEventHandler<HTMLImageElement>;
 };
 
 export function BlockImage({
@@ -57,6 +66,8 @@ export function BlockImage({
   priority = false,
   placeholderLabel,
   placeholderTone = "sky",
+  draggable,
+  onContextMenu,
 }: BlockImageProps) {
   const filename = asset?.filename;
 
@@ -86,6 +97,8 @@ export function BlockImage({
         priority={priority}
         className={imageClassName}
         style={objectPosition ? { objectPosition } : undefined}
+        draggable={draggable}
+        onContextMenu={onContextMenu}
       />
     </div>
   );
