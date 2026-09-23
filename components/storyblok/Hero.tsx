@@ -26,9 +26,16 @@ import { HeroNavCards } from "./HeroNavCards";
  * the fibers page boxes its last word that way.
  */
 
+/**
+ * `title` is the `--text-hero` token (48/96) taken down an eighth to 42/84,
+ * asked for on 2026-09-23 across every section page. The sizes are written out
+ * here rather than folded into the token, because `--text-hero` is also what
+ * `PageHero` and the `#ItsInOurHands` banner read, and those keep the drawn
+ * size. Leading and tracking are the token's, spelled out alongside.
+ */
 const HEADLINE_SIZE = {
   display: "hero-display",
-  title: "text-[3rem] leading-[1.09375] tracking-[-0.05em] md:text-hero",
+  title: "text-[2.625rem] leading-[1.09375] tracking-[-0.05em] md:text-[5.25rem]",
 } as const;
 
 /**
