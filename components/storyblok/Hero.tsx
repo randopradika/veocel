@@ -155,11 +155,13 @@ export function Hero({ blok }: { blok: HeroBlok }) {
   const size = resolveHeadlineSize(blok.headline_size);
   const headlineSize = HEADLINE_SIZE[size];
   /*
-    Only the section headline is broken in two. The home headline is one line at
-    140px in the design (node 2053:1190) and balancing it would read "care /
-    begins within."
+    Only the section headline is broken in two. The home headline is one line in
+    the design (node 2053:1190), and still one line at the title size it was set
+    to on 2026-09-23 — balancing it would read "care begins / within." The home
+    hero is the left-aligned one, with the subline hanging from its edge.
   */
-  const lines = size === "title" ? headlineLines(blok.headline) : [blok.headline];
+  const lines =
+    size === "title" && !left ? headlineLines(blok.headline) : [blok.headline];
 
   return (
     <section
