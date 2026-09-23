@@ -279,6 +279,28 @@
         ],
         "default_value": "center"
       },
+      "headline_horizontal": {
+        "type": "option",
+        "display_name": "Headline position — horizontal",
+        "description": "Where the headline sits across the photo. Centre is the design's layout.",
+        "options": [
+          { "name": "Left", "value": "left" },
+          { "name": "Centre", "value": "center" },
+          { "name": "Right", "value": "right" }
+        ],
+        "default_value": "center"
+      },
+      "headline_vertical": {
+        "type": "option",
+        "display_name": "Headline position — vertical",
+        "description": "Where the headline sits down the photo. Middle is the design's layout.",
+        "options": [
+          { "name": "Top", "value": "top" },
+          { "name": "Middle", "value": "middle" },
+          { "name": "Bottom", "value": "bottom" }
+        ],
+        "default_value": "middle"
+      },
       "nav_cards": {
         "type": "bloks",
         "restrict_components": true,

@@ -49,6 +49,32 @@ function resolveHeadlineSize(size: HeroBlok["headline_size"]): keyof typeof HEAD
 }
 
 /**
+ * Where the headline block sits in the hero, picked per page in Storyblok
+ * (added on request 2026-09-23). The defaults — centre, middle — are the layout
+ * every frame draws, so a story that never sets them is unchanged.
+ *
+ * `x` places the block and aligns its lines to the same side; `text` is the
+ * alignment the block's own lines take. Centre leaves both to the `align` field,
+ * which is what hangs the home subline from the headline's left edge.
+ */
+const HEADLINE_X = {
+  center: { block: "", text: "text-center" },
+  left: { block: "mr-auto w-fit max-w-full", text: "text-left" },
+  right: { block: "ml-auto w-fit max-w-full", text: "text-right" },
+} as const;
+
+const HEADLINE_Y = {
+  middle: "justify-center",
+  top: "justify-start",
+  bottom: "justify-end",
+} as const;
+
+/** As `resolveHeadlineSize`: Storyblok's `""` and anything unknown fall back. */
+function resolveOption<T extends object>(map: T, value: string | undefined, fallback: keyof T): keyof T {
+  return value && value in map ? (value as keyof T) : fallback;
+}
+
+/**
  * Where the section headline breaks.
  *
  * Every section hero in the design is two lines with the break drawn in, not
@@ -162,6 +188,9 @@ export function Hero({ blok }: { blok: HeroBlok }) {
   */
   const lines =
     size === "title" && !left ? headlineLines(blok.headline) : [blok.headline];
+  const x = resolveOption(HEADLINE_X, blok.headline_horizontal, "center");
+  const y = resolveOption(HEADLINE_Y, blok.headline_vertical, "middle");
+  const placed = x !== "center";
 
   return (
     <section
@@ -198,9 +227,13 @@ export function Hero({ blok }: { blok: HeroBlok }) {
         node 2053:385 — measures 1156px at the design's 128px. The 1200px column leaves 1120px
         of it, which is what pushed that headline onto a third line.
       */}
+      {/*
+        A headline placed left or right takes the header's column instead, so it
+        ranges with the logo or the language pill rather than the window edge.
+      */}
       <Container
-        width="wide"
-        className="flex flex-1 flex-col justify-center pt-32 pb-10 text-center text-white md:pt-40"
+        width={placed ? "default" : "wide"}
+        className={`flex flex-1 flex-col ${HEADLINE_Y[y]} pt-32 pb-10 ${HEADLINE_X[x].text} text-white md:pt-40`}
       >
         {/*
           Both frames centre the headline; they part company under it. The phone
@@ -215,7 +248,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
           it anyway — after "begins" on the phone, nowhere on the desktop — and
           letting it happen naturally is what keeps a longer translation readable.
         */}
-        <div className={left ? "md:mx-auto md:w-fit" : undefined}>
+        <div className={placed ? HEADLINE_X[x].block : left ? "md:mx-auto md:w-fit" : undefined}>
           {blok.eyebrow ? (
             <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
           ) : null}
@@ -243,13 +276,22 @@ export function Hero({ blok }: { blok: HeroBlok }) {
 
           {blok.subline ? (
             <p
-              className={
+              className={`${
                 left
                   ? // `hero-subline` carries the size, measure and clearance the
                     // two frames give it; only the alignment differs between them.
-                    "hero-subline mx-auto text-center font-normal text-white md:mx-0 md:text-left"
-                  : "mx-auto mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl"
-              }
+                    "hero-subline font-normal text-white"
+                  : "mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl"
+              } ${
+                // A placed block takes its side for the subline too.
+                x === "left"
+                  ? "mr-auto"
+                  : x === "right"
+                    ? "ml-auto"
+                    : left
+                      ? "mx-auto text-center md:mx-0 md:text-left"
+                      : "mx-auto"
+              }`}
             >
               {blok.subline}
             </p>

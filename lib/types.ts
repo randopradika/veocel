@@ -146,6 +146,10 @@ export type HeroBlok = SbBlock & {
    * right — the home revision's arrangement. Default is centred.
    */
   align?: "center" | "left";
+  /** Where the headline block sits across the hero. Default `center`. */
+  headline_horizontal?: "left" | "center" | "right";
+  /** Where the headline block sits down the hero. Default `middle`. */
+  headline_vertical?: "top" | "middle" | "bottom";
   /** Numbered shortcut cards pinned along the bottom edge of the hero. */
   nav_cards?: HeroNavCardBlok[];
   /**
