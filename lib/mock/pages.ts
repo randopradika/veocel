@@ -366,6 +366,9 @@ const home: PageBlok = {
       _uid: "h-hero",
       component: "hero",
       headline: "care begins within.",
+      // Set as the section pages' title (42/84) rather than the poster display
+      // size, on request 2026-09-23.
+      headline_size: "title",
       subline: "with the fiber, inside the product, with choices we make.",
       align: "left",
       nav_cards: heroTabs("h"),
