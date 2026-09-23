@@ -415,6 +415,9 @@ export type CertificationGridBlok = SbBlock & {
    */
   align?: "center" | "left";
   items?: CertificationItemBlok[];
+  /** A button centred under the marks. It only renders when a label is set. */
+  link_label?: string;
+  link?: StoryblokLink;
 };
 
 export type ClaimCardBlok = SbBlock & {

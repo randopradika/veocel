@@ -1048,6 +1048,13 @@
         "component_whitelist": [
           "certification_item"
         ]
+      },
+      "link_label": {
+        "type": "text",
+        "description": "Button text, centred under the marks — \"view all claims & certificates\" on the sustainability page. The button only renders when this is set."
+      },
+      "link": {
+        "type": "multilink"
       }
     }
   },

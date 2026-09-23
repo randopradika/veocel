@@ -1,6 +1,7 @@
 import type {
   ArticleBlok,
   BrandItemBlok,
+  CertificationItemBlok,
   ClaimCardBlok,
   FiberProductCardBlok,
   HeroNavCardBlok,
@@ -52,7 +53,8 @@ function heroTabs(prefix: string): HeroNavCardBlok[] {
 
 /**
  * Every claim VEOCEL™ states, with the copy, footnotes and proof list behind
- * it. The sustainability page shows the full set; the product pages restate a
+ * it. The claims & certifications page shows the full set; the sustainability
+ * page its first four, and the product pages restate a
  * subset through `claimCards()`, so a claim is worded and evidenced identically
  * wherever it appears and is edited here once.
  *
@@ -981,86 +983,144 @@ const sustainability: PageBlok = {
       _uid: "su-claims",
       component: "claim_grid",
       heading: "environmental responsibility claims",
-      items: CLAIMS,
+      // The frame shows the four environmental claims; the full set is on the
+      // claims & certifications page the button below leads to.
+      items: CLAIMS.slice(0, 4),
     },
     {
       _uid: "su-certificates",
       component: "certification_grid",
       heading: "product certificates",
       align: "left",
-      items: [
-        {
-          _uid: "su-cert-1",
-          component: "certification_item",
-          label: "FSC (Chain of Custody)",
-        },
-        {
-          _uid: "su-cert-2",
-          component: "certification_item",
-          label: "PEFC (Chain of Custody)",
-        },
-        {
-          _uid: "su-cert-3",
-          component: "certification_item",
-          label: "The EU Ecolabel (Chain of Custody)",
-        },
-        {
-          _uid: "su-cert-4",
-          component: "certification_item",
-          label: "USDA Certified Biobased Product",
-        },
-        {
-          _uid: "su-cert-5",
-          component: "certification_item",
-          label: "OK biodegradable SOIL",
-        },
-        {
-          _uid: "su-cert-6",
-          component: "certification_item",
-          label: "OK biodegradable WATER",
-        },
-        {
-          _uid: "su-cert-7",
-          component: "certification_item",
-          label: "OK biodegradable MARINE",
-        },
-        {
-          _uid: "su-cert-8",
-          component: "certification_item",
-          label: "OK biodegradable INDUSTRIAL",
-        },
-        {
-          _uid: "su-cert-9",
-          component: "certification_item",
-          label: "OK biodegradable HOME",
-        },
-        {
-          _uid: "su-cert-10",
-          component: "certification_item",
-          label: "ISEGA (No. 68954)",
-          note: "(Applying to LENZING™ Lyocell fibers)",
-        },
-        {
-          _uid: "su-cert-11",
-          component: "certification_item",
-          label: "ISEGA (No. 59063)",
-          note: "(Applying to LENZING™ Viscose fibers)",
-        },
-        {
-          _uid: "su-cert-12",
-          component: "certification_item",
-          label: "STANDARD 100 by OEKO-TEX",
-          note: "(Annex 6, product class 1)",
-        },
-        {
-          _uid: "su-cert-13",
-          component: "certification_item",
-          label: "Medically Tested - Tested for Toxins",
-        },
-      ],
+      items: certificates("su"),
+      link_label: "view all claims & certificates",
+      link: { cached_url: "claims-and-certifications", linktype: "story" },
     },
   ],
 };
+
+/*
+ * Claims & certifications — Figma frame 2097:116, "[NEW] Claims &
+ * Certifications", reached from the sustainability page's button. The
+ * sustainability intro, every claim, then the certificate wall, under the
+ * plain header: the frame draws no hero.
+ *
+ * The frame heads the certificates "environmental responsibility claims" a
+ * second time, which reads as a copy-paste slip; they keep the sustainability
+ * page's "product certificates" here.
+ */
+const claimsAndCertifications: PageBlok = {
+  _uid: "mock-claims-and-certifications",
+  component: "page",
+  seo_title: "claims & certifications | VEOCEL™",
+  seo_description:
+    "Every claim VEOCEL™ fibers make, the proof behind each one, and the product certificates that back them.",
+  body: [
+    {
+      _uid: "cc-intro",
+      component: "text_columns",
+      align: "split",
+      heading: "we take regulations and green claims seriously",
+      body:
+        "Adhering to regulations is key in the fast-changing and complex environment " +
+        "for claims. That’s why we have a process in place, factoring in " +
+        "rapidly-evolving regulatory requirements when developing and updating the " +
+        "claims. With our QR-coded claims and updated webpage, we provide more " +
+        "clarity on what our fibers offer to conscious consumers.",
+    },
+    {
+      _uid: "cc-claims",
+      component: "claim_grid",
+      heading: "environmental responsibility claims",
+      items: claimCards("cc", CLAIMS.map((claim) => claim.title ?? "")),
+    },
+    {
+      _uid: "cc-certificates",
+      component: "certification_grid",
+      heading: "product certificates",
+      align: "left",
+      items: certificates("cc"),
+    },
+  ],
+};
+
+/**
+ * The product certificates, shared by the sustainability page and the claims
+ * & certifications page. `prefix` keeps uids unique across stories.
+ */
+function certificates(prefix: string): CertificationItemBlok[] {
+  const items: CertificationItemBlok[] = [
+    {
+      _uid: "su-cert-1",
+      component: "certification_item",
+      label: "FSC (Chain of Custody)",
+    },
+    {
+      _uid: "su-cert-2",
+      component: "certification_item",
+      label: "PEFC (Chain of Custody)",
+    },
+    {
+      _uid: "su-cert-3",
+      component: "certification_item",
+      label: "The EU Ecolabel (Chain of Custody)",
+    },
+    {
+      _uid: "su-cert-4",
+      component: "certification_item",
+      label: "USDA Certified Biobased Product",
+    },
+    {
+      _uid: "su-cert-5",
+      component: "certification_item",
+      label: "OK biodegradable SOIL",
+    },
+    {
+      _uid: "su-cert-6",
+      component: "certification_item",
+      label: "OK biodegradable WATER",
+    },
+    {
+      _uid: "su-cert-7",
+      component: "certification_item",
+      label: "OK biodegradable MARINE",
+    },
+    {
+      _uid: "su-cert-8",
+      component: "certification_item",
+      label: "OK biodegradable INDUSTRIAL",
+    },
+    {
+      _uid: "su-cert-9",
+      component: "certification_item",
+      label: "OK biodegradable HOME",
+    },
+    {
+      _uid: "su-cert-10",
+      component: "certification_item",
+      label: "ISEGA (No. 68954)",
+      note: "(Applying to LENZING™ Lyocell fibers)",
+    },
+    {
+      _uid: "su-cert-11",
+      component: "certification_item",
+      label: "ISEGA (No. 59063)",
+      note: "(Applying to LENZING™ Viscose fibers)",
+    },
+    {
+      _uid: "su-cert-12",
+      component: "certification_item",
+      label: "STANDARD 100 by OEKO-TEX",
+      note: "(Annex 6, product class 1)",
+    },
+    {
+      _uid: "su-cert-13",
+      component: "certification_item",
+      label: "Medically Tested - Tested for Toxins",
+    },
+  ];
+  return items.map((item, index) => ({ ...item, _uid: `${prefix}-cert-${index + 1}` }));
+}
 
 /*
  * The partner page — Figma frame 2039:549 on the "Desktop Dev" page, the
@@ -1270,6 +1330,11 @@ export const mockStories: Record<string, SbStory<StoryContent>> = {
   beauty: story("beauty", "VEOCEL™ fibers for beauty", beauty),
   "daily-care": story("daily-care", "where to buy", dailyCare),
   sustainability: story("sustainability", "sustainability", sustainability),
+  "claims-and-certifications": story(
+    "claims-and-certifications",
+    "claims & certifications",
+    claimsAndCertifications,
+  ),
   partners: story("partners", "how to become a VEOCEL™ partner", partners),
   [ITSINOURHANDS]: story(ITSINOURHANDS, "#ItsInOurHands", itsInOurHands, { startpage: true }),
   ...Object.fromEntries(articles.map((entry) => [entry.full_slug, entry])),

@@ -1,4 +1,5 @@
 import { Container, Section } from "@/components/ui/Container";
+import { SmartLink } from "@/components/ui/SmartLink";
 import type { CertificationGridBlok } from "@/lib/types";
 
 import { CertificationTile } from "./CertificationTile";
@@ -60,6 +61,22 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
             </li>
           ))}
         </ul>
+
+        {/*
+          The sustainability frame (2097:278) closes the wall on a centred pill
+          — 68px, 24px Medium on #0f7ab8 — into the full claims page, drawn as
+          the article pager's buttons are.
+        */}
+        {blok.link_label ? (
+          <div className="mt-12 text-center md:mt-16">
+            <SmartLink
+              link={blok.link}
+              className="inline-flex h-12 items-center justify-center rounded-full bg-brand px-6 text-base font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-[68px] md:px-10 md:text-2xl"
+            >
+              {blok.link_label}
+            </SmartLink>
+          </div>
+        ) : null}
       </Container>
     </Section>
   );

@@ -92,6 +92,9 @@ const registry: Record<string, ComponentType<BlockProps>> = {
   article_hub: block(ArticleHub),
 };
 
+/** Blocks that open a page and clear the fixed header themselves. */
+const OPENERS = new Set(["hero", "page_hero", "article_hub"]);
+
 /** Renders a story's `body` field in order. */
 export function BlockRenderer({
   blocks,
@@ -104,6 +107,13 @@ export function BlockRenderer({
 
   return (
     <>
+      {/*
+        The header is fixed, so a page that opens on copy rather than a hero —
+        the claims & certifications page — starts below the bar at rest.
+      */}
+      {OPENERS.has(blocks[0].component) ? null : (
+        <div aria-hidden className="h-[83px] md:h-auto md:pt-header-bar" />
+      )}
       {blocks.map((blok) => {
         const Component = registry[blok.component];
         if (!Component) return <UnknownBlock key={blok._uid} component={blok.component} />;
