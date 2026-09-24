@@ -200,7 +200,12 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       // Fills the screen, but no taller than 92% of the 1920×1080 frame: once
       // the page stops at 1920 (a wide screen, or zooming out), a screen-tall
       // hero would stay screen-tall while everything else shrank.
-      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800"
+      //
+      // On a desktop screen it is a picture instead: the frame's proportions at
+      // any width, so the photograph and the stage over it (`.hero-stage`)
+      // scale as one under browser zoom. `min-h-auto` lets a long translation
+      // grow it rather than spill. It is also the container the stage measures.
+      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
     >
       <BlockImage
         asset={blok.background_image}
@@ -231,90 +236,97 @@ export function Hero({ blok }: { blok: HeroBlok }) {
         A headline placed left or right takes the header's column instead, so it
         ranges with the logo or the language pill rather than the window edge.
       */}
-      <Container
-        width={placed ? "default" : "wide"}
-        className={`flex flex-1 flex-col ${HEADLINE_Y[y]} pt-32 pb-10 ${HEADLINE_X[x].text} text-white md:pt-40`}
-      >
-        {/*
-          Both frames centre the headline; they part company under it. The phone
-          frame centres the subline too, so below `md` this is an ordinary centred
-          column. From `md` the block shrinks to the headline, which is what lets
-          the subline hang from the headline's own left edge rather than sit
-          centred under it (nodes 2053:1190 and 2053:1189 begin 10px apart, which
-          is side bearings, not an indent).
-
-          Neither headline is held to one line the way the frames draw them: at
-          the sizes in `hero-display` the wrap falls where the design puts
-          it anyway — after "begins" on the phone, nowhere on the desktop — and
-          letting it happen naturally is what keeps a longer translation readable.
-        */}
-        <div className={placed ? HEADLINE_X[x].block : left ? "md:mx-auto md:w-fit" : undefined}>
-          {blok.eyebrow ? (
-            <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
-          ) : null}
-
+      {/*
+        Everything over the photograph, as one stage: a pass-through column on
+        phones and tablets, laid out at 1440 and zoomed to fit on a desktop
+        screen (`.hero-stage` in globals.css).
+      */}
+      <div className="hero-stage flex flex-1 flex-col">
+        <Container
+          width={placed ? "default" : "wide"}
+          className={`flex flex-1 flex-col ${HEADLINE_Y[y]} pt-32 pb-10 ${HEADLINE_X[x].text} text-white md:pt-40`}
+        >
           {/*
-            A block per line, so the drawn break is the only break wherever a
-            line fits — which at 100% is every width from `md`. A line that no
-            longer fits wraps rather than running off the page: the title is a
-            fixed 96px, and browser zoom narrows the page under it. Held to one
-            line at the design's 128px, "with VEOCEL™ fibers" (1150px) was cut
-            off at 125% zoom on a 1440 laptop.
+            Both frames centre the headline; they part company under it. The phone
+            frame centres the subline too, so below `md` this is an ordinary centred
+            column. From `md` the block shrinks to the headline, which is what lets
+            the subline hang from the headline's own left edge rather than sit
+            centred under it (nodes 2053:1190 and 2053:1189 begin 10px apart, which
+            is side bearings, not an indent).
+
+            Neither headline is held to one line the way the frames draw them: at
+            the sizes in `hero-display` the wrap falls where the design puts
+            it anyway — after "begins" on the phone, nowhere on the desktop — and
+            letting it happen naturally is what keeps a longer translation readable.
           */}
-          <h1 className={`font-bold ${headlineSize}`}>
-            {lines.map((line, index) => (
-              <span key={index} className="block">
-                {/*
-                  The pale blue plate is off for now, whatever `headline_highlight`
-                  a story carries — only the fibers hero sets it. Restore the prop
-                  to bring the boxed word back.
-                */}
-                <HeadlineLine text={line} /* highlight={blok.headline_highlight} */ />
-              </span>
-            ))}
-          </h1>
+          <div className={placed ? HEADLINE_X[x].block : left ? "md:mx-auto md:w-fit" : undefined}>
+            {blok.eyebrow ? (
+              <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
+            ) : null}
 
-          {blok.subline ? (
-            <p
-              className={`${
-                left
-                  ? // `hero-subline` carries the size, measure and clearance the
-                    // two frames give it; only the alignment differs between them.
-                    "hero-subline font-normal text-white"
-                  : "mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl"
-              } ${
-                // A placed block takes its side for the subline too.
-                x === "left"
-                  ? "mr-auto"
-                  : x === "right"
-                    ? "ml-auto"
-                    : left
-                      ? "mx-auto text-center md:mx-0 md:text-left"
-                      : "mx-auto"
-              }`}
-            >
-              {blok.subline}
-            </p>
-          ) : null}
-        </div>
-      </Container>
+            {/*
+              A block per line, so the drawn break is the only break wherever a
+              line fits — which at 100% is every width from `md`. A line that no
+              longer fits wraps rather than running off the page: the title is a
+              fixed 96px, and browser zoom narrows the page under it. Held to one
+              line at the design's 128px, "with VEOCEL™ fibers" (1150px) was cut
+              off at 125% zoom on a 1440 laptop.
+            */}
+            <h1 className={`font-bold ${headlineSize}`}>
+              {lines.map((line, index) => (
+                <span key={index} className="block">
+                  {/*
+                    The pale blue plate is off for now, whatever `headline_highlight`
+                    a story carries — only the fibers hero sets it. Restore the prop
+                    to bring the boxed word back.
+                  */}
+                  <HeadlineLine text={line} /* highlight={blok.headline_highlight} */ />
+                </span>
+              ))}
+            </h1>
 
-      {cards.length > 0 ? (
-        /*
-          The mobile frame pins its dropdown 40px above the hero's bottom edge;
-          the desktop strip keeps its 32px.
+            {blok.subline ? (
+              <p
+                className={`${
+                  left
+                    ? // `hero-subline` carries the size, measure and clearance the
+                      // two frames give it; only the alignment differs between them.
+                      "hero-subline font-normal text-white"
+                    : "mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl"
+                } ${
+                  // A placed block takes its side for the subline too.
+                  x === "left"
+                    ? "mr-auto"
+                    : x === "right"
+                      ? "ml-auto"
+                      : left
+                        ? "mx-auto text-center md:mx-0 md:text-left"
+                        : "mx-auto"
+                }`}
+              >
+                {blok.subline}
+              </p>
+            ) : null}
+          </div>
+        </Container>
 
-          Not the shared `Container`: that caps at 1440px, which leaves the
-          seven tabs 187px wide against the design's 215px and costs every
-          label a third line. The strip keeps the site's 40px gutter and
-          centres tabs of a fixed width (see HeroNavCards), 1220px seven
-          across — narrower than the design's 1565 at 1920 (node 2053:1192),
-          the price of a strip that zooms with the page.
-        */
-        <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8">
-          <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />
-        </div>
-      ) : null}
+        {cards.length > 0 ? (
+          /*
+            The mobile frame pins its dropdown 40px above the hero's bottom edge;
+            the desktop strip keeps its 32px.
+
+            Not the shared `Container`: that caps at 1440px, which leaves the
+            seven tabs 187px wide against the design's 215px and costs every
+            label a third line. The strip keeps the site's 40px gutter and
+            centres tabs of a fixed width (see HeroNavCards), 1220px seven
+            across — narrower than the design's 1565 at 1920 (node 2053:1192),
+            the price of a strip that zooms with the page.
+          */
+          <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8">
+            <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />
+          </div>
+        ) : null}
+      </div>
     </section>
   );
 }

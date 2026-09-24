@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 /*
+  A desktop screen: `md` and up, driven by a mouse or trackpad. Browser zoom
+  narrows the viewport on a laptop, so width alone would hand a zoomed laptop
+  the tablet layout; a touch tablet has a coarse pointer at any width.
+*/
+@custom-variant desktop (@media (width >= 48rem) and (pointer: fine));
+
+/*
   VEOCEL design tokens, read off the home + beauty/skincare mockups.
   Everything downstream references these — change a value here, not in a component.
 */
@@ -164,6 +171,27 @@
       font-size: 2.5rem;
       max-width: 14.65em;
       margin-top: 0.79em;
+    }
+  }
+
+  /*
+    The desktop hero as one picture (asked for on 2026-09-24).
+
+    On a `desktop` screen everything over the photograph is laid out on a 1440px
+    stage — the width the desktop hero was tuned on — and the stage is zoomed to
+    the hero's width. Headline, subline and tabs keep their size and place
+    relative to the photograph at any window width and any browser zoom, the way
+    an image would, instead of growing under Cmd + while the photograph stayed
+    put and the tabs wrapped over it.
+
+    `tan(atan2(a, b))` is `a / b` as a plain number, which `zoom` needs and
+    dividing two lengths does not give. `100cqw` is the hero's own width
+    (`Hero` makes it the container). Phones and touch tablets never match, and
+    keep the fixed type above.
+  */
+  .hero-stage {
+    @variant desktop {
+      zoom: tan(atan2(100cqw, 1440px));
     }
   }
 

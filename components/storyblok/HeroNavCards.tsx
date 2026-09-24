@@ -62,7 +62,9 @@ export function HeroNavCards({
         Seven across from `xl`. Narrower than that, seven tabs would squeeze
         the fixed-size labels below onto a third line, so the cards wrap
         instead — four to a row from `md`, two below it — and stay separate
-        cards. Only a touch screen under `xl` swaps them for the dropdown.
+        cards. Only a touch screen under `xl` swaps them for the dropdown. On a
+        desktop screen the strip sits on the hero's 1440 stage, which always
+        has room, so it is seven across there whatever the window.
 
         The tab is a fixed width, not a share of the row: `--tab` is the
         label's box (the 8.23em it is capped at below) plus 34px of padding
@@ -73,7 +75,7 @@ export function HeroNavCards({
         `minmax(0, …)` lets a tab give up a few pixels where a row is just
         short — 1280, or 768 — rather than overflow.
       */}
-      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
+      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] desktop:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
         {cards.map((card, index) => {
           const current = index === currentIndex;
           /*
