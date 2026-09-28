@@ -249,10 +249,10 @@ function CategoryButton({
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className="group flex w-16 flex-col items-center gap-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+      className="group flex w-16 flex-col items-center gap-2.5 md:w-20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
     >
       <span
-        className={`flex h-12 w-12 items-center justify-center rounded-full border transition-colors duration-200 ${
+        className={`flex h-14 w-14 items-center justify-center rounded-full border md:h-16 md:w-16 transition-colors duration-200 ${
           active
             ? "border-brand bg-brand text-white"
             : "border-hairline bg-white text-brand group-hover:border-brand-300"
@@ -262,8 +262,8 @@ function CategoryButton({
           <BlockImage
             asset={blok.icon}
             alt=""
-            sizes="24px"
-            className="relative h-5 w-5"
+            sizes="36px"
+            className="relative h-7 w-7 md:h-9 md:w-9"
             /*
               The icon artwork is a dark glyph. On the filled active circle it
               would stay dark, so invert it to white there — the raster can't
@@ -276,8 +276,8 @@ function CategoryButton({
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={1.3}
-            className="h-5 w-5"
+            strokeWidth={1.2}
+            className="h-7 w-7 md:h-9 md:w-9"
             aria-hidden
           >
             <rect x="4" y="4" width="7" height="7" rx="1.5" />
