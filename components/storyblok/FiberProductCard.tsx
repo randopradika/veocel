@@ -42,6 +42,27 @@ function paragraphs(body?: string): string[] {
     .filter(Boolean);
 }
 
+/**
+ * The abbreviations the spec values use, spelled out in small print under the
+ * spec plate as the design does ("*TCF: Total Chlorine Free"). Each pop-up
+ * lists only the ones its own values contain, in the order they first appear,
+ * so the key can't drift from the plate when a value is edited. A new
+ * abbreviation in the content needs a line here to be explained.
+ */
+const ABBREVIATIONS: { term: string; pattern: RegExp; meaning: string }[] = [
+  { term: "AHP", pattern: /\bAHP\b/, meaning: "Absorbent Hygiene Product Core" },
+  { term: "EC", pattern: /\bEC\b/, meaning: "Enhanced Cleaning" },
+  { term: "MTT", pattern: /\bMTTs?\b/, meaning: "Moist Toilette Tissue" },
+  { term: "TCF", pattern: /\bTCF\b/, meaning: "Total Chlorine Free" },
+];
+
+/** The abbreviations used in `text`, in order of first appearance. */
+function abbreviationsIn(text: string) {
+  return ABBREVIATIONS.map((entry) => ({ ...entry, at: text.search(entry.pattern) }))
+    .filter((entry) => entry.at >= 0)
+    .sort((a, b) => a.at - b.at);
+}
+
 const NAME_FOCUS =
   "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand";
 /** The design underlines every name; here only a name that does something earns it. */
@@ -62,6 +83,7 @@ export function FiberProductCard({
     ] as Array<[string, string | undefined]>
   ).filter((row): row is [string, string] => Boolean(row[1]));
   const description = paragraphs(blok.description);
+  const abbreviations = abbreviationsIn(specs.map(([, value]) => value).join("\n"));
   const href = resolveHref(blok.link);
   const hasPopup = !href && (description.length > 0 || specs.length > 0);
 
@@ -176,6 +198,16 @@ export function FiberProductCard({
                     </div>
                   ))}
                 </dl>
+              ) : null}
+
+              {abbreviations.length > 0 ? (
+                <ul className="mt-3 text-xs leading-[1.5] text-ink-muted md:px-1">
+                  {abbreviations.map(({ term, meaning }) => (
+                    <li key={term}>
+                      *{term}: {meaning}
+                    </li>
+                  ))}
+                </ul>
               ) : null}
             </div>
           </div>
