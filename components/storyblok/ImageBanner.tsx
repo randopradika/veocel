@@ -28,7 +28,6 @@ export function ImageBanner({ blok }: { blok: ImageBannerBlok }) {
             className="absolute inset-0 -z-10"
             placeholderTone="brand"
           />
-          <div className="absolute inset-0 -z-10 bg-black/25" aria-hidden />
 
           <div className="px-8 py-20 text-center text-white">
             {blok.title ? (

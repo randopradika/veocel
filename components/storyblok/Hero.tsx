@@ -217,14 +217,11 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       />
 
       {/*
-        The scrim the design draws over the photograph: nothing at the top, easing
-        to 20% black by 82% of the way down, so it weights the bottom edge where
-        the nav cards sit and leaves the picture alone up top. Both frames use it.
+        No scrim over the photograph. The design drew one (clear at the top,
+        20% black by 82% down) and it was taken out on 2026-09-29 because it
+        dulled the picture's colour — so the photograph itself has to carry
+        enough contrast for the headline.
       */}
-      <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(255,255,255,0),rgba(0,0,0,0.2)_82.212%)]"
-        aria-hidden
-      />
 
       {/*
         `wide`, not the default column: the design centres the headline on the
