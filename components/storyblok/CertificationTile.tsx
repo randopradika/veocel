@@ -1,7 +1,7 @@
 "use client";
 
 import { storyblokEditable, type SbBlokData } from "@storyblok/react";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
@@ -15,6 +15,9 @@ import type { CertificationItemBlok, SbBlock } from "@/lib/types";
  * say — on the same native `<dialog>` as the fiber pop-up (`FiberProductCard`):
  * focus trapping, Escape and an inert page for free, and a click on the scrim
  * closes it. Without one the mark keeps its `link`, if it has one.
+ *
+ * The pop-up itself is `CertificateDialog`, shared with `CertificateLink` —
+ * the same certificate opened from a claim card's proof list.
  *
  * A client component for the open flag alone; the wall around it renders on the
  * server. Imports `storyblokEditable` from the root entry rather than the shared
@@ -40,25 +43,6 @@ const DIALOG_SIZE = "h-[min(100dvh_-_2rem,44rem)] w-[min(100vw_-_2rem,56rem)]";
 export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
   const detail = blok.detail_image?.filename ? blok.detail_image : null;
   const [open, setOpen] = useState(false);
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const titleId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    if (!open && dialog.open) dialog.close();
-  }, [open]);
-
-  // `showModal()` makes the page inert but still lets it scroll behind the scrim.
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
 
   const face = (
     <span {...editableAttrs(blok)} className="block">
@@ -109,71 +93,136 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
         {face}
       </button>
 
-      <dialog
-        ref={dialogRef}
-        aria-labelledby={blok.label ? titleId : undefined}
-        aria-label={blok.label ? undefined : "certificate"}
-        onClose={() => setOpen(false)}
-        onClick={(event) => {
-          // A click outside the panel's box lands on the scrim.
-          const box = event.currentTarget.getBoundingClientRect();
-          const inside =
-            event.clientX >= box.left &&
-            event.clientX <= box.right &&
-            event.clientY >= box.top &&
-            event.clientY <= box.bottom;
-          if (!inside) setOpen(false);
-        }}
-        className={`m-auto ${DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
-      >
-        <div className="relative flex h-full flex-col px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-10">
-          <button
-            type="button"
-            onClick={() => setOpen(false)}
-            aria-label="close"
-            className="group absolute top-5 right-5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
-          >
-            <ArrowMarker icon="close" tone="brand" size="md" />
-          </button>
-
-          {blok.label ? (
-            <h2 id={titleId} className="text-2xl font-bold tracking-[-0.02em] text-brand">
-              {blok.label}
-            </h2>
-          ) : null}
-          {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
-
-          <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
-            <BlockImage
-              asset={detail}
-              alt={blok.label ?? ""}
-              sizes="(max-width: 768px) 100vw, 56rem"
-              className="absolute inset-0"
-              imageClassName="object-contain"
-              placeholderTone="neutral"
-              // A right-click or a drag both hand a visitor the file underneath
-              // the pop-up in one step; the wall's other marks don't carry a
-              // document worth saving, so only this view needs the guard.
-              onContextMenu={(event) => event.preventDefault()}
-              draggable={false}
-            />
-          </div>
-
-          {/*
-            The mark's own `link` — the issuer's page, set whether or not this
-            pop-up has a detail image — still has somewhere to go once the
-            image takes over the click: it moves down here rather than
-            disappearing.
-          */}
-          {resolveHref(blok.link) ? (
-            <p className="mt-4 shrink-0 text-center text-sm">
-              <SmartLink link={blok.link} className="text-brand underline underline-offset-2">
-                verify at the issuer’s site
-              </SmartLink>
-            </p>
-          ) : null}
-        </div>
-      </dialog>
+      <CertificateDialog blok={blok} open={open} onClose={() => setOpen(false)} />
     </>
+  );
+}
+
+/**
+ * A certificate named inside running text — a claim card's proof entry — that
+ * opens the same pop-up as its mark on the wall. Without a `detail_image` it
+ * is plain text: there is nothing to open.
+ */
+export function CertificateLink({
+  blok,
+  children,
+}: {
+  blok: CertificationItemBlok;
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  if (!blok.detail_image?.filename) return <>{children}</>;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        className="cursor-pointer text-left text-brand underline decoration-brand/40 underline-offset-2 transition-colors hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        {children}
+      </button>
+      <CertificateDialog blok={blok} open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}
+
+function CertificateDialog({
+  blok,
+  open,
+  onClose,
+}: {
+  blok: CertificationItemBlok;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  // `showModal()` makes the page inert but still lets it scroll behind the scrim.
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [open]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={blok.label ? titleId : undefined}
+      aria-label={blok.label ? undefined : "certificate"}
+      onClose={onClose}
+      onClick={(event) => {
+        // A click outside the panel's box lands on the scrim.
+        const box = event.currentTarget.getBoundingClientRect();
+        const inside =
+          event.clientX >= box.left &&
+          event.clientX <= box.right &&
+          event.clientY >= box.top &&
+          event.clientY <= box.bottom;
+        if (!inside) onClose();
+      }}
+      className={`m-auto ${DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
+    >
+      <div className="relative flex h-full flex-col px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-10">
+        <button
+          type="button"
+          onClick={() => onClose()}
+          aria-label="close"
+          className="group absolute top-5 right-5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
+        >
+          <ArrowMarker icon="close" tone="brand" size="md" />
+        </button>
+
+        {blok.label ? (
+          <h2 id={titleId} className="text-2xl font-bold tracking-[-0.02em] text-brand">
+            {blok.label}
+          </h2>
+        ) : null}
+        {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
+
+        <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
+          <BlockImage
+            asset={blok.detail_image}
+            alt={blok.label ?? ""}
+            sizes="(max-width: 768px) 100vw, 56rem"
+            className="absolute inset-0"
+            imageClassName="object-contain"
+            placeholderTone="neutral"
+            // A right-click or a drag both hand a visitor the file underneath
+            // the pop-up in one step; the wall's other marks don't carry a
+            // document worth saving, so only this view needs the guard.
+            onContextMenu={(event) => event.preventDefault()}
+            draggable={false}
+          />
+        </div>
+
+        {/*
+          The mark's own `link` — the issuer's page, set whether or not this
+          pop-up has a detail image — still has somewhere to go once the
+          image takes over the click: it moves down here rather than
+          disappearing.
+        */}
+        {resolveHref(blok.link) ? (
+          <p className="mt-4 shrink-0 text-center text-sm">
+            <SmartLink link={blok.link} className="text-brand underline underline-offset-2">
+              verify at the issuer’s site
+            </SmartLink>
+          </p>
+        ) : null}
+      </div>
+    </dialog>
   );
 }

@@ -1,8 +1,9 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
 import { KeepLastWords, Markdown } from "@/components/ui/Markdown";
-import type { ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
+import type { CertificationItemBlok, ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
 
+import { CertificateLink } from "./CertificationTile";
 import { ClaimDetails } from "./ClaimDetails";
 import { editable } from "./editable";
 
@@ -48,6 +49,51 @@ function splitBody(body?: string): { lead?: string; rest?: string } {
   return { lead: text.slice(0, at), rest: text.slice(at).trim() };
 }
 
+/**
+ * The certificates a proof entry can name, and how to recognise each: `text`
+ * finds the words in the entry, `label` the mark on the page's certificates
+ * wall whose pop-up they open. The words are the proof copy's own, which
+ * doesn't repeat the marks' labels — "USDA biobased product" against "USDA
+ * Certified Biobased Product" — hence a table rather than a match on the label.
+ *
+ * FSC and PEFC take their certificate number with them when the entry gives
+ * one, so the whole "FSC® (FSC-C041246)" is the link. The TÜV AUSTRIA entry
+ * has no row: it stands for the five OK biodegradable marks at once, and says
+ * those certificates are available on request.
+ */
+const PROOF_CERTIFICATES: { text: RegExp; label: RegExp }[] = [
+  { text: /USDA biobased product/i, label: /^USDA\b/i },
+  { text: /FSC®?(?:\s*\(FSC-[^)]*\))?/, label: /^FSC\b/ },
+  { text: /PEFC(?:\s*\(PEFC\/[^)]*\))?/, label: /^PEFC\b/ },
+  { text: /EU Ecolabel/i, label: /EU Ecolabel/i },
+];
+
+/**
+ * A proof entry cut into plain runs and the certificates it names, each paired
+ * with its mark on the page. A name whose mark isn't on the page stays text.
+ */
+function linkProof(
+  entry: string,
+  certificates: CertificationItemBlok[],
+): (string | { text: string; certificate: CertificationItemBlok })[] {
+  const matches = PROOF_CERTIFICATES.flatMap(({ text, label }) => {
+    const certificate = certificates.find((item) => label.test(item.label ?? ""));
+    const match = certificate ? text.exec(entry) : null;
+    return match && certificate ? [{ at: match.index, text: match[0], certificate }] : [];
+  }).sort((a, b) => a.at - b.at);
+
+  const parts: (string | { text: string; certificate: CertificationItemBlok })[] = [];
+  let from = 0;
+  for (const match of matches) {
+    if (match.at < from) continue;
+    if (match.at > from) parts.push(entry.slice(from, match.at));
+    parts.push({ text: match.text, certificate: match.certificate });
+    from = match.at + match.text.length;
+  }
+  if (from < entry.length) parts.push(entry.slice(from));
+  return parts;
+}
+
 /** One proof entry per line; blank lines are skipped. */
 function lines(value?: string): string[] {
   return (value ?? "")
@@ -57,7 +103,17 @@ function lines(value?: string): string[] {
     .filter(Boolean);
 }
 
-export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
+/**
+ * `certificates` are the marks on the page's certificates wall, which the
+ * proof entries link into (see `PROOF_CERTIFICATES`).
+ */
+export function ClaimGrid({
+  blok,
+  certificates = [],
+}: {
+  blok: ClaimGridBlok;
+  certificates?: CertificationItemBlok[];
+}) {
   const items = blok.items ?? [];
   if (!blok.heading && items.length === 0) return null;
 
@@ -85,7 +141,7 @@ export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
             className={`${blok.heading ? "mt-10 " : ""}grid gap-6 md:grid-cols-2 md:gap-10 md:[&>:nth-child(odd):has([aria-expanded=true])+*]:self-start md:[&>:nth-child(odd):has(+*_[aria-expanded=true])]:self-start`}
           >
             {items.map((item) => (
-              <ClaimCard key={item._uid} blok={item} />
+              <ClaimCard key={item._uid} blok={item} certificates={certificates} />
             ))}
           </div>
         ) : null}
@@ -94,7 +150,13 @@ export function ClaimGrid({ blok }: { blok: ClaimGridBlok }) {
   );
 }
 
-function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
+function ClaimCard({
+  blok,
+  certificates,
+}: {
+  blok: ClaimCardBlok;
+  certificates: CertificationItemBlok[];
+}) {
   const proof = lines(blok.proof);
   const { lead, rest } = splitBody(escapeFootnotes(blok.body));
 
@@ -116,7 +178,15 @@ function ClaimCard({ blok }: { blok: ClaimCardBlok }) {
             <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80">
               {proof.map((entry, index) => (
                 <li key={index}>
-                  <KeepLastWords text={entry} />
+                  {linkProof(entry, certificates).map((part, at) =>
+                    typeof part === "string" ? (
+                      <KeepLastWords key={at} text={part} />
+                    ) : (
+                      <CertificateLink key={at} blok={part.certificate}>
+                        {part.text}
+                      </CertificateLink>
+                    ),
+                  )}
                 </li>
               ))}
             </ul>

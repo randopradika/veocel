@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
 import { DEFAULT_LOCALE } from "@/lib/i18n";
-import type { SbBlock } from "@/lib/types";
+import type { CertificationGridBlok, CertificationItemBlok, SbBlock } from "@/lib/types";
 
 import { ArticleHub } from "./ArticleHub";
 import { BrandDirectory } from "./BrandDirectory";
@@ -39,9 +39,10 @@ import { TextColumns } from "./TextColumns";
  * What every block is rendered with. Most read only `blok`; `locale` is there
  * for the few that fetch content of their own — the article hub — since
  * Storyblok links are stored without a language and a server component cannot
- * read it off the URL the way `SmartLink` does.
+ * read it off the URL the way `SmartLink` does. `certificates` are the marks on
+ * the page's certificates wall, for the claim cards' proof entries to open.
  */
-type BlockProps = { blok: SbBlock; locale: string };
+type BlockProps = { blok: SbBlock; locale: string; certificates?: CertificationItemBlok[] };
 
 /**
  * Narrows a block component to the registry's uniform signature.
@@ -50,7 +51,9 @@ type BlockProps = { blok: SbBlock; locale: string };
  * requires `HeroBlok` is not directly assignable to one accepting any `SbBlock`.
  * The renderer guarantees the match by looking components up by `component` name.
  */
-function block<T extends SbBlock>(component: ComponentType<{ blok: T; locale: string }>) {
+function block<T extends SbBlock>(
+  component: ComponentType<{ blok: T; locale: string; certificates?: CertificationItemBlok[] }>,
+) {
   return component as ComponentType<BlockProps>;
 }
 
@@ -105,6 +108,10 @@ export function BlockRenderer({
 }) {
   if (!blocks || blocks.length === 0) return null;
 
+  const certificates = blocks
+    .filter((blok): blok is CertificationGridBlok => blok.component === "certification_grid")
+    .flatMap((grid) => grid.items ?? []);
+
   return (
     <>
       {/*
@@ -117,7 +124,9 @@ export function BlockRenderer({
       {blocks.map((blok) => {
         const Component = registry[blok.component];
         if (!Component) return <UnknownBlock key={blok._uid} component={blok.component} />;
-        return <Component key={blok._uid} blok={blok} locale={locale} />;
+        return (
+          <Component key={blok._uid} blok={blok} locale={locale} certificates={certificates} />
+        );
       })}
     </>
   );
