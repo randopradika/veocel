@@ -14,6 +14,11 @@ import { editable } from "./editable";
 export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
   const centered = blok.align === "center";
 
+  // Left empty in the CMS, the block would still take a full section's padding
+  // and push whatever follows — the sustainability page's claims and
+  // certificates — a screen's worth down the page. Empty, it takes no space.
+  if (!blok.heading?.trim() && !blok.body?.trim()) return null;
+
   return (
     <Section {...editable(blok)} spacing="default">
       <Container>
