@@ -981,6 +981,10 @@
       },
       "features": {
         "type": "text"
+      },
+      "footnotes": {
+        "type": "textarea",
+        "description": "Small print under the spec box, one line each: the abbreviations the rows use, e.g. *TCF: Total Chlorine Free. Leave empty to show nothing."
       }
     }
   },

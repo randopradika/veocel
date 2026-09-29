@@ -385,6 +385,11 @@ export type FiberProductCardBlok = SbBlock & {
   /** The applications the fiber serves — the middle spec row. */
   applications?: string;
   features?: string;
+  /**
+   * Small print under the spec plate — the abbreviations the rows use, one per
+   * line ("*TCF: Total Chlorine Free"). Empty, nothing shows.
+   */
+  footnotes?: string;
 };
 
 export type FiberProductGridBlok = SbBlock & {

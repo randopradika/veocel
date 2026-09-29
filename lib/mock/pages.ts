@@ -426,10 +426,16 @@ const home: PageBlok = {
  * card labelled its key-applications row "fiber features", and Vicostar
  * Core's features read "triobal" for "trilobal".
  */
+const TCF = "*TCF: Total Chlorine Free";
+const EC = "*EC: Enhanced Cleaning";
+const MTT = "*MTT: Moist Toilette Tissue";
+const AHP = "*AHP: Absorbent Hygiene Product Core";
+
+/** `footnotes` is the small print under the spec plate, one line each. */
 function fiberCard(
   uid: string,
   name: string,
-  specs?: { diameter: string; applications: string; features: string },
+  specs?: { diameter: string; applications: string; features: string; footnotes?: string },
   description?: string,
 ): FiberProductCardBlok {
   return {
@@ -470,6 +476,7 @@ const fiberTypes: PageBlok = {
           diameter: "standard, fine, coarse",
           applications: "wipes, industrial",
           features: "crimp, TCF, EC",
+          footnotes: [TCF, EC].join("\n"),
         }),
         fiberCard(
           "f-ly-2",
@@ -478,6 +485,7 @@ const fiberTypes: PageBlok = {
             diameter: "standard, fine, coarse",
             applications: "sanitary pads, wipes, technical",
             features: "hydrophobic, TCF",
+            footnotes: TCF,
           },
           "Lyocell Dry fibers achieve liquid-controlling properties with a performance " +
             "enhancing treatment. Consumers can experience impeccable dryness and " +
@@ -487,11 +495,13 @@ const fiberTypes: PageBlok = {
           diameter: "standard, micro",
           applications: "MTTs, wipes",
           features: "translucency",
+          footnotes: MTT,
         }),
         fiberCard("f-ly-4", "VEOCEL™ Lyocell Shortcut", {
           diameter: "standard, fine",
           applications: "MTTs, wipes",
           features: "dispersibility, special cut, antistat",
+          footnotes: MTT,
         }),
         // New in 2039:961. The frame gives it a photograph and a name, nothing
         // else, so until specs or copy arrive the name stays plain text.
@@ -509,16 +519,19 @@ const fiberTypes: PageBlok = {
           diameter: "standard, fine, coarse",
           applications: "wipes, AHP, industrial",
           features: "TCF, absorbency",
+          footnotes: [AHP, TCF].join("\n"),
         }),
         fiberCard("f-vi-2", "VEOCEL™ Tampon, Viscostar", {
           diameter: "coarse",
           applications: "tampons",
           features: "TCF, trilobal, bright, high absorbency",
+          footnotes: [AHP, TCF].join("\n"),
         }),
         fiberCard("f-vi-3", "VEOCEL™ Viscostar Core", {
           diameter: "coarse",
           applications: "AHP core",
           features: "trilobal, absorbency, liquid spread",
+          footnotes: AHP,
         }),
       ],
     },
