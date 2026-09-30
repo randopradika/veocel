@@ -33,21 +33,23 @@ export function SiteFooter({
   const legal = config.legal_links ?? [];
 
   return (
-    <footer className="bg-brand-50 text-brand-800">
-      {/* The design's column: lockup at 242, search button ending at 1682 (2053:749, 2053:747). */}
+    // From `md` the desktop frame (2053:732) as drawn: its #e6f1f8 ground, a 263px
+    // lockup and 68px search pills from 242 to 1682, the Lenzing mark 100px under
+    // them, then a full-bleed rule and a 16px legal row.
+    <footer className="bg-brand-50 text-brand-800 md:bg-[#e6f1f8]">
       <Container width="design">
         {/*
           Column-reversed on phones so the search row leads, as the frame draws
           it; the DOM keeps the lockup first on every width.
         */}
-        <div className="flex flex-col-reverse gap-8 pt-10 pb-12 md:flex-row md:items-center md:justify-between md:py-12">
+        <div className="flex flex-col-reverse gap-8 pt-10 pb-12 md:flex-row md:items-center md:justify-between md:pt-11 md:pb-0">
           <div className="flex flex-wrap items-center gap-8">
             <Link
               href={localePath(locale, "")}
-              className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+              className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:flex"
               aria-label="VEOCEL — home"
             >
-              <Logo />
+              <Logo height="h-14 md:h-[72px]" />
             </Link>
 
             {config.secondary_logo?.filename ? (
@@ -65,13 +67,15 @@ export function SiteFooter({
 
           {/*
             48px controls with 20px type on phones — the frame's 240 + 108 pills
-            with a 6px gap — stepping down to the desktop sizes at `md`.
+            with a 6px gap — and the desktop frame's 336 + 151 pills, 68px tall
+            and 8px apart, from `lg` (2053:744, 2053:747). Between the two the
+            pills stay compact, or they would squeeze the 263px lockup.
           */}
           <form
             action={localePath(locale, "search")}
             method="get"
             role="search"
-            className="flex items-center gap-1.5 md:gap-3"
+            className="flex items-center gap-1.5 md:gap-3 lg:gap-2"
           >
             <label htmlFor="site-search" className="sr-only">
               Search this site
@@ -81,11 +85,11 @@ export function SiteFooter({
               type="search"
               name="q"
               placeholder={config.search_placeholder ?? "search …"}
-              className="h-12 w-full min-w-0 rounded-full border border-hairline bg-white px-5 text-xl text-ink italic placeholder:text-ink-faint focus:border-brand focus:outline-none md:h-auto md:w-72 md:py-2.5 md:text-sm"
+              className="h-12 w-full min-w-0 rounded-full border border-hairline bg-white px-5 text-xl text-ink italic placeholder:text-ink-faint focus:border-brand focus:outline-none md:h-auto md:w-72 md:border-[#afcee0] md:bg-[#f8f8f8] md:py-2.5 md:text-sm md:placeholder:text-[#7c7c7c] lg:h-[68px] lg:w-[336px] lg:px-[34px] lg:py-0 lg:text-xl"
             />
             <button
               type="submit"
-              className="h-12 rounded-full bg-brand px-6 text-2xl font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-auto md:py-2.5 md:text-sm md:font-semibold"
+              className="h-12 rounded-full bg-brand px-6 text-2xl font-medium text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-auto md:bg-[#0f7ab8] md:py-2.5 md:text-sm md:font-semibold lg:h-[68px] lg:w-[151px] lg:px-0 lg:py-0 lg:text-2xl lg:font-medium"
             >
               search
             </button>
@@ -118,48 +122,53 @@ export function SiteFooter({
         ) : null}
 
         {config.parent_logo?.filename ? (
-          // Left-set at the frame's 145×46 on phones, right-set at 0.75 from `md`.
-          <div className="flex justify-start pb-10 md:justify-end">
+          // The frame's 145×46 at every width: left-set on phones, right-set from
+          // `md`, where it ends 6px short of the search button (2053:741).
+          <div className="flex justify-start pb-10 md:justify-end md:pt-[100px] md:pr-1.5 md:pb-[29px]">
             <SmartLink link={config.parent_logo_link} ariaLabel="Parent company">
               <BlockImage
                 asset={config.parent_logo}
                 alt="Lenzing"
-                sizes="(min-width: 768px) 140px, 150px"
-                className="relative h-[46px] w-[145px] md:h-9 md:w-32"
+                sizes="150px"
+                className="relative h-[46px] w-[145px]"
                 imageClassName="object-contain object-left md:object-right"
               />
             </SmartLink>
           </div>
         ) : null}
-
-        {/*
-          The rule runs edge to edge on phones (negative gutter margins), inside
-          the gutters from `md`. The copyright is last and centred on phones,
-          first and left-set from `md`; it stays first in the DOM.
-        */}
-        <div className="-mx-6 flex flex-col gap-7 border-t border-brand-800/15 px-6 py-7 text-base md:mx-0 md:flex-row md:items-center md:justify-between md:gap-4 md:px-0 md:py-6 md:text-sm">
-          {config.copyright ? (
-            <p className="order-last text-center font-bold text-ink md:order-none md:text-left md:font-normal md:text-inherit md:opacity-70">
-              {config.copyright}
-            </p>
-          ) : null}
-
-          {legal.length > 0 ? (
-            <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-8">
-              {legal.map((item) => (
-                <li key={item._uid}>
-                  <SmartLink
-                    link={item.link}
-                    className="underline underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                  >
-                    {item.label}
-                  </SmartLink>
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
       </Container>
+
+      {/*
+        The rule runs edge to edge at every width, as both frames draw it
+        (2053:740 spans the full 1920). The copyright is last and centred on
+        phones, first and left-set from `md`; it stays first in the DOM.
+      */}
+      <div className="border-t border-brand-800/15 md:border-[#afcee0]">
+        <Container width="design">
+          <div className="flex flex-col gap-7 py-7 text-base md:flex-row md:items-center md:justify-between md:gap-4 md:pt-7 md:pb-8 md:leading-5">
+            {config.copyright ? (
+              <p className="order-last text-center font-bold text-ink md:order-none md:text-left md:text-black">
+                {config.copyright}
+              </p>
+            ) : null}
+
+            {legal.length > 0 ? (
+              <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-10 md:text-[#299dc1]">
+                {legal.map((item) => (
+                  <li key={item._uid}>
+                    <SmartLink
+                      link={item.link}
+                      className="underline underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    >
+                      {item.label}
+                    </SmartLink>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        </Container>
+      </div>
     </footer>
   );
 }
