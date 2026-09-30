@@ -102,7 +102,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
               writes still breaks rather than overflows. */}
           <SmartLink
             link={config.responsibility_link}
-            className="mt-3 max-w-full text-[2.25rem] font-normal italic [overflow-wrap:break-word] md:text-[length:min(3rem,14cqw)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            className="mt-3 max-w-full text-[2.25rem] font-normal italic underline decoration-[0.05em] underline-offset-[0.15em] transition-opacity [overflow-wrap:break-word] hover:opacity-75 md:text-[length:min(3rem,14cqw)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           >
             {responsibility}
           </SmartLink>
