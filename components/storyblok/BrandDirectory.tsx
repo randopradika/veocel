@@ -110,7 +110,13 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
   }
 
   return (
-    <Section {...editableAttrs(blok)} spacing="tight" className="bg-brand-50">
+    <Section
+      {...editableAttrs(blok)}
+      spacing="tight"
+      // Desktop rhythm from the "dev" board (2053:170): 100px under the hero tabs, 124px to the band (where to buy 2053:367). No padding below,
+      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      className="bg-brand-50 xl:pt-[100px] xl:pb-0 xl:last:pb-[124px]"
+    >
       <Container>
         {blok.heading ? (
           <h2 className="text-center text-h2 font-bold text-brand md:text-h1">{blok.heading}</h2>

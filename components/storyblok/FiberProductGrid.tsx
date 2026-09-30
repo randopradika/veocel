@@ -29,7 +29,13 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
   };
 
   return (
-    <Section {...editable(blok)} spacing="tight">
+    <Section
+      {...editable(blok)}
+      spacing="tight"
+      // Desktop rhythm from the "dev" board (2053:170): 111px under the hero tabs and to the band, 106 between the two grids (2053:659) — 111 here. No padding below,
+      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      className="xl:pt-[111px] xl:pb-0 xl:last:pb-[111px]"
+    >
       <Container width="design">
         {/*
           Side by side only from `xl`: the heading's longer line is ~675px at

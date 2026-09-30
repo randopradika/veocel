@@ -18,7 +18,13 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
   if (!blok.heading && !blok.body && !blok.link_label) return null;
 
   return (
-    <Section {...editable(blok)} spacing="tight" className="bg-brand-50">
+    <Section
+      {...editable(blok)}
+      spacing="tight"
+      // Desktop rhythm from the "dev" board (2053:170): 136px under the hero tabs and to the band (partners 2053:247). No padding below,
+      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      className="bg-brand-50 xl:pt-[136px] xl:pb-0 xl:last:pb-[136px]"
+    >
       <Container width="design">
         <div className="rounded-panel border border-hairline bg-white px-8 py-12 text-center md:px-16 md:py-16">
           {blok.heading ? (

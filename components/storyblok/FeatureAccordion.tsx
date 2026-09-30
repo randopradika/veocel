@@ -33,7 +33,7 @@ function editableAttrs(blok: SbBlock) {
 
 const GRID = {
   tiles: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3",
-  cards: "grid gap-5 md:grid-cols-2",
+  cards: "grid gap-5 md:grid-cols-2 xl:gap-[21px]", // 21px apart in 2053:1040
   rows: "flex flex-col gap-5",
 } as const;
 
@@ -48,7 +48,13 @@ export function FeatureAccordion({ blok }: { blok: FeatureAccordionBlok }) {
     layout === "cards" ? AccordionCard : layout === "rows" ? AccordionRow : AccordionTile;
 
   return (
-    <Section {...editableAttrs(blok)} spacing={layout === "tiles" ? "default" : "tight"}>
+    <Section
+      {...editableAttrs(blok)}
+      spacing={layout === "tiles" ? "default" : "tight"}
+      // Desktop rhythm from the "dev" board (2053:170): the cards 80px under the copy above, 96px to the band (2053:1040). No padding below,
+      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      className={layout === "cards" ? "xl:pt-20 xl:pb-0 xl:last:pb-24" : ""}
+    >
       <Container width="design">
         {blok.heading ? (
           <h2 className="text-center text-h2 font-bold text-brand md:text-h1">{blok.heading}</h2>
