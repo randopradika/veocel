@@ -72,10 +72,17 @@ export function HeroNavCards({
         166px. A share of the row kept the tabs the same size on screen while
         zoom enlarged the type inside them; this way the tab and everything in
         it scale together, and the row centres, 1220px wide seven across.
+
+        On the desktop stage the row is 1182px, so at 1920 (x4/3) its edges land
+        on the design's 172px (2053:710). The design's own 215px tabs 10px
+        apart sit 5px off centre; this keeps the row centred and gets there
+        with the design's ~14px side padding at stage scale (19px on 2053:711)
+        in place of 16, which leaves the label box its 8.23em, plus 8.35px
+        gaps: 7 x 161.7 + 6 x 8.35 = 1182.
         `minmax(0, …)` lets a tab give up a few pixels where a row is just
         short — 1280, or 768 — rather than overflow.
       */}
-      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] desktop:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
+      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] desktop:gap-[8.35px] desktop:[--tab:calc(8.23em+30px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] desktop:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
         {cards.map((card, index) => {
           const current = index === currentIndex;
           /*
@@ -98,7 +105,7 @@ export function HeroNavCards({
                   thing across the strip: the page you are on, or the one you are
                   about to open.
                 */
-                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors desktop:px-3.5 duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
                   current ? "bg-brand-200 text-brand" : "text-white hover:bg-brand-200 hover:text-brand"
                 }`}
               >
