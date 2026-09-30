@@ -87,15 +87,20 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
     (steps.length === 0 || steps.length === WHEEL_LABELS.length);
 
   return (
-    <Section {...editable(blok)} spacing="default">
-      <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
+    // From `xl` the home frame (2053:1175) as drawn at 1920: the wheel 633px wide
+    // from 280, 101px under the hero; heading and copy 616px wide from 1000, 87px
+    // beside it, the heading 40px below the wheel's top; 112px to the footer
+    // band. The grid sits on the design column with 40px/64px insets, which is
+    // where 280 and 1616 fall.
+    <Section {...editable(blok)} spacing="default" className="xl:pt-[101px] xl:pb-[112px]">
+      <Container width="design">
+        <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-20 xl:grid-cols-[633fr_616fr] xl:items-start xl:gap-[87px] xl:pr-16 xl:pl-10">
           {wheel ? (
-            <figure className="relative mx-auto w-full max-w-[570px]">
+            <figure className="relative mx-auto w-full max-w-[570px] xl:max-w-none">
               <BlockImage
                 asset={blok.diagram_image}
                 alt=""
-                sizes="(min-width: 1024px) 570px, 100vw"
+                sizes="(min-width: 1280px) 633px, (min-width: 1024px) 570px, 100vw"
                 className="relative aspect-square w-full"
                 imageClassName="object-contain"
               />
@@ -165,15 +170,17 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
             </>
           ) : null}
 
-          <div>
+          <div className="xl:pt-10">
+            {/* 48px on two lines in the frame (2053:1177), not the 64px section size. */}
             {blok.heading ? (
-              <h2 className="text-h2 font-bold text-brand md:text-h1">
+              <h2 className="text-h2 font-bold text-brand md:text-h1 lg:text-h2">
                 {blok.heading}
               </h2>
             ) : null}
 
+            {/* 20/28 copy 47px under the heading, a blank 28px line between paragraphs (2053:1176). */}
             <Markdown
-              className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl"
+              className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-[47px] xl:leading-7 xl:[&>*+*]:mt-7"
               gap="loose"
             >
               {blok.body}
