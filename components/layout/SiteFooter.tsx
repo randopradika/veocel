@@ -34,7 +34,8 @@ export function SiteFooter({
 
   return (
     <footer className="bg-brand-50 text-brand-800">
-      <Container>
+      {/* The design's column: lockup at 242, search button ending at 1682 (2053:749, 2053:747). */}
+      <Container width="design">
         {/*
           Column-reversed on phones so the search row leads, as the frame draws
           it; the DOM keeps the lockup first on every width.
