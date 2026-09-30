@@ -51,8 +51,9 @@ export function FeatureAccordion({ blok }: { blok: FeatureAccordionBlok }) {
     <Section
       {...editableAttrs(blok)}
       spacing={layout === "tiles" ? "default" : "tight"}
-      // Desktop rhythm from the "dev" board (2053:170): the cards 80px under the copy above, 96px to the band (2053:1040). No padding below,
-      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      // Desktop rhythm from the "dev" board (2053:170): the cards 80px under the copy
+      // above, 96px to the band (2053:1040). No padding below, or neighbours would stack;
+      // the last block on a page keeps the gap to the band.
       className={layout === "cards" ? "xl:pt-20 xl:pb-0 xl:last:pb-24" : ""}
     >
       <Container width="design">

@@ -23,8 +23,9 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
     <Section
       {...editable(blok)}
       spacing="default"
-      // Desktop rhythm from the "dev" board (2053:170): 80px under the hero tabs, 96px to the band (wipes 2053:1040). No padding below,
-      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      // Desktop rhythm from the "dev" board (2053:170): 80px under the hero tabs, 96px to
+      // the band (wipes 2053:1040). No padding below, or neighbours would stack; the last
+      // block on a page keeps the gap to the band.
       className={centered ? "" : "xl:pt-20 xl:pb-0 xl:last:pb-24"}
     >
       <Container width="design">

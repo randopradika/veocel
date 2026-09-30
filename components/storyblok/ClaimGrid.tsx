@@ -121,8 +121,9 @@ export function ClaimGrid({
     <Section
       {...editable(blok)}
       spacing="default"
-      // Desktop rhythm from the "dev" board (2053:170): 90px above, 94px to the band (sustainability 2053:474). No padding below,
-      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      // Desktop rhythm from the "dev" board (2053:170): 90px above, 94px to the band
+      // (sustainability 2053:474). No padding below, or neighbours would stack; the last
+      // block on a page keeps the gap to the band.
       className="xl:pt-[90px] xl:pb-0 xl:last:pb-[94px]"
     >
       <Container width="design">

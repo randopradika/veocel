@@ -210,8 +210,9 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
     <Section
       {...editable(blok)}
       spacing="tight"
-      // Desktop rhythm from the "dev" board (2053:170): the cards 60px under the Lenzing Pro panel, 136px to the band (2053:247). No padding below,
-      // or neighbours would stack; the last block on a page keeps the gap to the band.
+      // Desktop rhythm from the "dev" board (2053:170): the cards 60px under the Lenzing
+      // Pro panel, 136px to the band (2053:247). No padding below, or neighbours would
+      // stack; the last block on a page keeps the gap to the band.
       className="bg-brand-50 xl:pt-[60px] xl:pb-0 xl:last:pb-[136px]"
     >
       <Container width="design">
