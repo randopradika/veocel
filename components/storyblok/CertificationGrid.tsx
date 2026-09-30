@@ -23,7 +23,7 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
 
   return (
     <Section {...editable(blok)} spacing="tight">
-      <Container>
+      <Container width="design">
         {/*
           The left arrangement matches the sustainability frame, where the
           heading ranges with the page's other section headings — at their size,

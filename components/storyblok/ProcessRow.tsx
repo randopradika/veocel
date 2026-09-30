@@ -195,7 +195,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
 function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStepBlok[] }) {
   return (
     <Section {...editable(blok)} spacing="tight" className="bg-brand-50">
-      <Container>
+      <Container width="design">
         {blok.heading ? (
           <h2
             className={`text-h2 font-bold text-brand md:text-h1 ${

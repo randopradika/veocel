@@ -49,7 +49,7 @@ export function FeatureAccordion({ blok }: { blok: FeatureAccordionBlok }) {
 
   return (
     <Section {...editableAttrs(blok)} spacing={layout === "tiles" ? "default" : "tight"}>
-      <Container>
+      <Container width="design">
         {blok.heading ? (
           <h2 className="text-center text-h2 font-bold text-brand md:text-h1">{blok.heading}</h2>
         ) : null}

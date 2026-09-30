@@ -16,10 +16,12 @@ const WIDTHS = {
   /** Edge-to-edge blocks that still want gutters on mobile. */
   wide: "max-w-[1440px]",
   /**
-   * The design's own column: 1446px of content between 234px and 240px margins
-   * at 1920 (the fibers portfolio, 2053:718 to 2053:715), plus the 40px gutters.
+   * The design's own column: 1440px of content between 240px margins at 1920,
+   * plus the 40px gutters. Every section page below the hero tabs sits on it
+   * (wipes 2053:1040, hygiene 2053:904, beauty 2053:783, sustainability
+   * 2053:474, partners 2053:247, fibers 2053:659), and so does the footer.
    */
-  design: "max-w-[1526px]",
+  design: "max-w-[1520px]",
 } as const;
 
 export function Container({

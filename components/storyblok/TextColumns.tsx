@@ -21,7 +21,7 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
 
   return (
     <Section {...editable(blok)} spacing="default">
-      <Container>
+      <Container width="design">
         {centered ? (
           <>
             {blok.heading ? (
@@ -34,7 +34,10 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
             </Markdown>
           </>
         ) : (
-          <div className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-16">
+          // From `xl` the frames' split: heading 240–747, body 847–1679 at 1920,
+          // 100px apart (wipes 2053:1040, hygiene 2053:904, beauty 2053:783). The
+          // heading column holds 464px below that, so "VEOCEL™ fibers" keeps a line.
+          <div className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-16 xl:grid-cols-[minmax(29rem,507fr)_832fr] xl:gap-[100px]">
             {blok.heading ? (
               <h2 className="text-h2 font-bold text-brand md:text-h1">
                 {blok.heading}

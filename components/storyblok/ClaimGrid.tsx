@@ -119,7 +119,7 @@ export function ClaimGrid({
 
   return (
     <Section {...editable(blok)} spacing="default">
-      <Container>
+      <Container width="design">
         {blok.heading ? (
           <>
             <h2 className="text-h2 font-bold text-brand md:text-h1">
