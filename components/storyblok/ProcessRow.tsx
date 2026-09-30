@@ -80,7 +80,11 @@ const WHEEL_LABELS: ReadonlyArray<readonly [number, number]> = [
 function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStepBlok[] }) {
   // The wheel artwork has exactly five wedges; with any other step count the
   // titles would land on the wrong photograph, so fall back to the circles.
-  const wheel = Boolean(blok.diagram_image?.filename) && steps.length === WHEEL_LABELS.length;
+  // With no steps at all the artwork stands alone — deleting the labels in
+  // Storyblok must not take the picture with them.
+  const wheel =
+    Boolean(blok.diagram_image?.filename) &&
+    (steps.length === 0 || steps.length === WHEEL_LABELS.length);
 
   return (
     <Section {...editable(blok)} spacing="default">
@@ -95,21 +99,23 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
                 className="relative aspect-square w-full"
                 imageClassName="object-contain"
               />
-              <ol className="absolute inset-0">
-                {steps.map((step, index) => (
-                  <li
-                    key={step._uid}
-                    {...editable(step)}
-                    className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold tracking-[-0.05em] whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-2xl"
-                    style={{
-                      left: `${WHEEL_LABELS[index][0]}%`,
-                      top: `${WHEEL_LABELS[index][1]}%`,
-                    }}
-                  >
-                    {step.title}
-                  </li>
-                ))}
-              </ol>
+              {steps.length > 0 ? (
+                <ol className="absolute inset-0">
+                  {steps.map((step, index) => (
+                    <li
+                      key={step._uid}
+                      {...editable(step)}
+                      className="absolute -translate-x-1/2 -translate-y-1/2 text-center text-base font-bold tracking-[-0.05em] whitespace-nowrap text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)] sm:text-2xl"
+                      style={{
+                        left: `${WHEEL_LABELS[index][0]}%`,
+                        top: `${WHEEL_LABELS[index][1]}%`,
+                      }}
+                    >
+                      {step.title}
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </figure>
           ) : null}
 
