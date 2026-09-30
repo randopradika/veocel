@@ -1,4 +1,7 @@
+import { Fragment } from "react";
+
 import { Container, Section } from "@/components/ui/Container";
+import { headlineLines } from "@/lib/headlineLines";
 import type { FiberProductGridBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -28,16 +31,35 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
   return (
     <Section {...editable(blok)} spacing="tight">
       <Container>
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+        {/*
+          Side by side only from `xl`: the heading's longer line is ~675px at
+          64px, and below 1280 that leaves the intro a sliver beside it.
+        */}
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between xl:gap-16">
           {blok.heading ? (
-            <h2 className="max-w-3xl text-h2 font-bold text-brand md:text-h1">
-              {blok.heading}
+            /*
+              Two lines with the break drawn in, as the design sets it (2053:718,
+              2053:730) — "VEOCEL™ Lyocell Fibers / Nonwoven Portfolio". From `md`
+              each line holds together, since the 688px column there already
+              fits the longer one; on phones the heading wraps as it must.
+            */
+            <h2 className="text-h2 font-bold text-brand md:text-h1 xl:shrink-0">
+              {headlineLines(blok.heading).map((line, i) => (
+                <Fragment key={i}>
+                  {i > 0 ? " " : null}
+                  <span className="md:block md:whitespace-nowrap">{line}</span>
+                </Fragment>
+              ))}
             </h2>
           ) : null}
 
-          {/* Body size, as the intro copy is set on every other page (`TextColumns`). */}
+          {/*
+            Body size, as the intro copy is set on every other page (`TextColumns`).
+            One width for both grids, so the Lyocell and Viscose intros line up
+            as they do in the design (2053:719, 2053:731) whatever the heading.
+          */}
           {blok.intro ? (
-            <p className="text-base leading-[1.4] text-ink-muted md:text-xl lg:mt-2 lg:max-w-[43%]">
+            <p className="text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-2 xl:w-[34%]">
               {blok.intro}
             </p>
           ) : null}
