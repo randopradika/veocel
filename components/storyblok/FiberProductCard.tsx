@@ -99,11 +99,12 @@ export function FiberProductCard({
         asset={blok.image}
         alt=""
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        className="relative aspect-[2/1] w-full rounded-card"
+        className="relative aspect-[457/235] w-full rounded-card"
         placeholderTone="sky"
       />
 
-      <h3 className="mt-5 text-center text-base font-bold text-brand md:text-lg">
+      {/* 24px at -0.02em in the design (2053:720), once the cards run three across. */}
+      <h3 className="mt-5 text-center text-base font-bold text-brand md:text-lg lg:text-2xl lg:tracking-[-0.02em]">
         {href ? (
           <SmartLink link={blok.link} className={NAME_ACTIVE}>
             {blok.name}

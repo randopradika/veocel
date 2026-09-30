@@ -15,6 +15,11 @@ const WIDTHS = {
   narrow: "max-w-[900px]",
   /** Edge-to-edge blocks that still want gutters on mobile. */
   wide: "max-w-[1440px]",
+  /**
+   * The design's own column: 1446px of content between 234px and 240px margins
+   * at 1920 (the fibers portfolio, 2053:718 to 2053:715), plus the 40px gutters.
+   */
+  design: "max-w-[1526px]",
 } as const;
 
 export function Container({

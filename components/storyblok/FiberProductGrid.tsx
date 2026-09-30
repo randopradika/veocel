@@ -30,7 +30,7 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
 
   return (
     <Section {...editable(blok)} spacing="tight">
-      <Container>
+      <Container width="design">
         {/*
           Side by side only from `xl`: the heading's longer line is ~675px at
           64px, and below 1280 that leaves the intro a sliver beside it.
@@ -55,17 +55,19 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
 
           {/*
             Body size, as the intro copy is set on every other page (`TextColumns`).
-            One width for both grids, so the Lyocell and Viscose intros line up
-            as they do in the design (2053:719, 2053:731) whatever the heading.
+            624 of the 1446px column, as drawn — the same for both grids, so the
+            Lyocell and Viscose intros line up (2053:719, 2053:731) whatever the heading.
+            Where the column runs short of that, both cap at what the longer
+            heading (~675px) and its gap leave, so they still line up at 1280.
           */}
           {blok.intro ? (
-            <p className="text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-2 xl:w-[34%]">
+            <p className="text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-2 xl:w-[43%] xl:max-w-[calc(100%_-_46.25rem)]">
               {blok.intro}
             </p>
           ) : null}
         </div>
 
-        <ul className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-x-9 lg:gap-y-14">
           {items.map((item) => (
             <li key={item._uid}>
               <FiberProductCard blok={item} labels={labels} />
