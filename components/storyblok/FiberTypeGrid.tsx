@@ -4,6 +4,7 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import type { FiberTypeCardBlok, FiberTypeGridBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
 
 /**
  * The fiber families — lyocell, viscose, viscostar — as the first thing under the
@@ -28,7 +29,9 @@ export function FiberTypeGrid({ blok }: { blok: FiberTypeGridBlok }) {
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mb-12 max-w-xl text-center text-sm leading-relaxed text-ink-muted">
+          <p
+            className={`mx-auto mb-12 max-w-xl text-center text-ink-muted ${textSizeClass(blok.intro_size, "text-sm leading-relaxed")}`}
+          >
             {blok.intro}
           </p>
         ) : null}

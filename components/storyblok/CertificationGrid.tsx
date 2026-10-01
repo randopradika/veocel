@@ -4,6 +4,7 @@ import type { CertificationGridBlok } from "@/lib/types";
 
 import { CertificationTile } from "./CertificationTile";
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
 
 /**
  * The wall of certification marks — FSC, PEFC, the OK biodegradable family,
@@ -82,7 +83,7 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
 
         {blok.intro ? (
           <p
-            className={`mb-12 max-w-xl text-sm leading-relaxed text-ink-muted ${
+            className={`mb-12 max-w-xl text-ink-muted ${textSizeClass(blok.intro_size, "text-sm leading-relaxed")} ${
               left ? "" : "mx-auto text-center"
             }`}
           >

@@ -643,6 +643,29 @@
       "intro": {
         "type": "textarea"
       },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
+      },
       "items": {
         "type": "bloks",
         "restrict_components": true,
@@ -779,6 +802,29 @@
       },
       "intro": {
         "type": "textarea"
+      },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
       },
       "items": {
         "type": "bloks",
@@ -962,6 +1008,29 @@
       "intro": {
         "type": "textarea"
       },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
+      },
       "diameter_label": {
         "type": "text",
         "description": "Label of the first spec row on every card. Defaults to 'fiber diameter'."
@@ -1043,6 +1112,29 @@
       "intro": {
         "type": "textarea"
       },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
+      },
       "items": {
         "type": "bloks",
         "restrict_components": true,
@@ -1095,6 +1187,29 @@
       },
       "intro": {
         "type": "textarea"
+      },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
       },
       "align": {
         "type": "option",
@@ -1321,6 +1436,29 @@
       "intro": {
         "type": "textarea"
       },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
+      },
       "row_labels": {
         "type": "textarea",
         "description": "One row label per line, e.g. 'Fiber Diameter'. Each column fills these rows in this order."
@@ -1347,6 +1485,29 @@
       },
       "intro": {
         "type": "textarea"
+      },
+      "intro_size": {
+        "type": "option",
+        "display_name": "Intro text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the intro; phones get a step smaller. Empty keeps the block's own size."
       },
       "categories": {
         "type": "bloks",

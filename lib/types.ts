@@ -15,6 +15,9 @@ export type StoryblokAsset = {
   focus?: string | null;
 };
 
+/** A copy size an editor picks in Storyblok (see `components/storyblok/textSize.ts`). */
+export type TextSize = "small" | "regular" | "large" | "xlarge";
+
 export type StoryblokLink = {
   id?: string;
   url?: string;
@@ -257,6 +260,8 @@ export type NewsListBlok = SbBlock & {
   component: "news_list";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   items?: NewsItemBlok[];
 };
 
@@ -280,7 +285,7 @@ export type TextColumnsBlok = SbBlock & {
   /** `center` stacks a centred heading above a right-aligned body column. */
   align?: "split" | "center";
   /** The copy's size. Empty (or anything unknown) is `regular`, the design's 20px. */
-  body_size?: "small" | "regular" | "large" | "xlarge" | "";
+  body_size?: TextSize | "";
 };
 
 export type ProductCardBlok = SbBlock & {
@@ -294,6 +299,8 @@ export type ProductGridBlok = SbBlock & {
   component: "product_grid";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   items?: ProductCardBlok[];
 };
 
@@ -366,6 +373,8 @@ export type FiberTypeGridBlok = SbBlock & {
   component: "fiber_type_grid";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   items?: FiberTypeCardBlok[];
 };
 
@@ -398,6 +407,8 @@ export type FiberProductGridBlok = SbBlock & {
   component: "fiber_product_grid";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   /** Labels of the three spec rows in every card's pop-up, shared by the grid. */
   diameter_label?: string;
   applications_label?: string;
@@ -422,6 +433,8 @@ export type CertificationGridBlok = SbBlock & {
   component: "certification_grid";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   /**
    * `center` is the original wall with its centred heading; `left` ranges the
    * heading with the rest of the page, as the sustainability frame draws it.
@@ -513,6 +526,8 @@ export type FiberPortfolioBlok = SbBlock & {
   component: "fiber_portfolio";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   /** One row label per line. Each column supplies its values in this order. */
   row_labels?: string;
   columns?: PortfolioColumnBlok[];
@@ -546,6 +561,8 @@ export type BrandDirectoryBlok = SbBlock & {
   component: "brand_directory";
   heading?: string;
   intro?: string;
+  /** The intro's size (`TextSize`). Empty keeps the block's own. */
+  intro_size?: TextSize | "";
   categories?: BrandCategoryBlok[];
   brands?: BrandItemBlok[];
 };

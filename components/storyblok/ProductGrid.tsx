@@ -4,6 +4,7 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import type { ProductCardBlok, ProductGridBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
 
 /**
  * Product-format cards — sheet mask, cleansing wipes, makeup removal wipes.
@@ -24,7 +25,9 @@ export function ProductGrid({ blok }: { blok: ProductGridBlok }) {
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mb-12 max-w-xl text-center text-sm leading-relaxed text-ink-muted">
+          <p
+            className={`mx-auto mb-12 max-w-xl text-center text-ink-muted ${textSizeClass(blok.intro_size, "text-sm leading-relaxed")}`}
+          >
             {blok.intro}
           </p>
         ) : null}

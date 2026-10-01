@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/date";
 import type { NewsItemBlok, NewsListBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
 
 /** "latest news" — heading left, supporting line right, then stacked rows. */
 export function NewsList({ blok }: { blok: NewsListBlok }) {
@@ -20,7 +21,9 @@ export function NewsList({ blok }: { blok: NewsListBlok }) {
           ) : null}
 
           {blok.intro ? (
-            <p className="max-w-xs text-[0.9375rem] leading-relaxed text-ink-muted md:text-right">
+            <p
+            className={`max-w-xs text-ink-muted md:text-right ${textSizeClass(blok.intro_size, "text-[0.9375rem] leading-relaxed")}`}
+          >
               {blok.intro}
             </p>
           ) : null}

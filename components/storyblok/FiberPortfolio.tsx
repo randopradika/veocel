@@ -3,6 +3,7 @@ import { Container, Section } from "@/components/ui/Container";
 import type { FiberPortfolioBlok, PortfolioColumnBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
 
 /**
  * The nonwoven portfolio comparison — one column per fiber variant, one row per
@@ -40,7 +41,11 @@ export function FiberPortfolio({ blok }: { blok: FiberPortfolioBlok }) {
           ) : null}
 
           {blok.intro ? (
-            <p className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl">{blok.intro}</p>
+            <p
+              className={`text-ink-muted md:pt-2 ${textSizeClass(blok.intro_size, "text-base leading-[1.4] md:text-xl")}`}
+            >
+              {blok.intro}
+            </p>
           ) : null}
         </div>
 

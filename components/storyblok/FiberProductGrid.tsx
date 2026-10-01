@@ -6,6 +6,7 @@ import type { FiberProductGridBlok } from "@/lib/types";
 
 import { editable } from "./editable";
 import { FiberProductCard } from "./FiberProductCard";
+import { textSizeClass } from "./textSize";
 
 /**
  * A fiber family's product catalogue: heading and intro on one line, then a
@@ -68,7 +69,12 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
             heading (~675px) and its gap leave, so they still line up at 1280.
           */}
           {blok.intro ? (
-            <p className="text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-2 xl:w-[43%] xl:max-w-[calc(100%_-_46.25rem)]">
+            <p
+              className={`text-ink-muted xl:mt-2 xl:w-[43%] xl:max-w-[calc(100%_-_46.25rem)] ${textSizeClass(
+                blok.intro_size,
+                "text-base leading-[1.4] md:text-xl",
+              )}`}
+            >
               {blok.intro}
             </p>
           ) : null}

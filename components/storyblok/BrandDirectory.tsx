@@ -12,6 +12,7 @@ import type {
   BrandItemBlok,
   SbBlock,
 } from "@/lib/types";
+import { textSizeClass } from "./textSize";
 
 /**
  * "where to buy" — the brand directory, filterable by product category and by
@@ -130,7 +131,12 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mt-4 max-w-xl text-center text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-[21px] xl:max-w-[809px] xl:leading-8 xl:tracking-[-0.02em] xl:text-[#4d4d4d]">
+          <p
+            className={`mx-auto mt-4 max-w-xl text-center text-ink-muted xl:mt-[21px] xl:max-w-[809px] xl:tracking-[-0.02em] xl:text-[#4d4d4d] ${textSizeClass(
+              blok.intro_size,
+              "text-base leading-[1.4] md:text-xl xl:leading-8",
+            )}`}
+          >
             {blok.intro}
           </p>
         ) : null}

@@ -3,6 +3,7 @@ import { Markdown } from "@/components/ui/Markdown";
 import type { TextColumnsBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { TEXT_SIZE, textSizeClass } from "./textSize";
 
 /**
  * Editorial copy block, in the two arrangements the design uses:
@@ -12,25 +13,9 @@ import { editable } from "./editable";
  *            pushed to the right
  */
 
-/**
- * The copy's size, picked in Storyblok (`body_size`). `regular` is the design's
- * 20/32 (2053:1041); each step keeps a smaller phone size and its own leading.
- */
-const BODY_SIZE = {
-  small: "text-sm leading-[1.5] md:text-base md:leading-7",
-  regular: "text-base leading-[1.4] md:text-xl xl:leading-8",
-  large: "text-lg leading-[1.4] md:text-2xl md:leading-9",
-  xlarge: "text-xl leading-[1.4] md:text-[2rem] md:leading-[1.6]",
-} as const;
-
-/** Storyblok's `""` and anything unknown fall back to `regular`. */
-function bodySizeClass(size: TextColumnsBlok["body_size"]): string {
-  return size && size in BODY_SIZE ? BODY_SIZE[size as keyof typeof BODY_SIZE] : BODY_SIZE.regular;
-}
-
 export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
   const centered = blok.align === "center";
-  const bodySize = bodySizeClass(blok.body_size);
+  const bodySize = textSizeClass(blok.body_size, TEXT_SIZE.regular);
 
   // Left empty in the CMS, the block would still take a full section's padding
   // and push whatever follows — the sustainability page's claims and
