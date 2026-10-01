@@ -213,7 +213,7 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
       // Desktop rhythm from the "dev" board (2053:170): the cards 60px under the Lenzing
       // Pro panel, 136px to the band (2053:247). No padding below, or neighbours would
       // stack; the last block on a page keeps the gap to the band.
-      className="bg-brand-50 xl:pt-[60px] xl:pb-0 xl:last:pb-[136px]"
+      className="bg-brand-50 md:bg-[#e6f1f8] xl:pt-[60px] xl:pb-0 xl:last:pb-[136px]"
     >
       <Container width="design">
         {blok.heading ? (
@@ -227,7 +227,7 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
         ) : null}
 
         {steps.length > 0 ? (
-          <ol className={`${blok.heading ? "mt-12 " : ""}grid gap-6 md:grid-cols-3`}>
+          <ol className={`${blok.heading ? "mt-12 " : ""}grid gap-6 md:grid-cols-3 xl:gap-x-[31px] xl:gap-y-0`}>
             {steps.map((step) => (
               <StepCard key={step._uid} blok={step} />
             ))}
@@ -243,24 +243,34 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
  * a row of cards share a baseline whether they run to one line or two — the
  * frame bottom-aligns them and starts every description on the same line.
  */
+/**
+ * From `xl` the partners frame's card (2053:350–362): 459 x 572 with a 20px
+ * radius, the 433 x 262 photograph inset 13px, 32px titles sharing a baseline
+ * 36px under it, 16/28 copy in black 22px lower, 46px of card below the longest
+ * (four lines held, which makes the 572). 31px between cards. No row gap from
+ * `xl`: the cards are subgrids, so the list's row gap would open inside every
+ * card.
+ */
 function StepCard({ blok }: { blok: ProcessStepBlok }) {
   return (
     <li
       {...editable(blok)}
-      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center"
+      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center xl:rounded-[20px] xl:p-[13px] xl:pt-[14px] xl:pb-[46px]"
     >
       <BlockImage
         asset={blok.image}
         alt=""
         sizes="(max-width: 768px) 100vw, 33vw"
-        className="relative aspect-[433/262] w-full rounded-card"
+        className="relative aspect-[433/262] w-full rounded-card xl:rounded-[20px]"
         placeholderTone="sky"
       />
-      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand">
+      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand xl:mt-9 xl:px-0 xl:text-[2rem] xl:leading-[40px] xl:tracking-[-0.05em]">
         {blok.title}
       </h3>
       {blok.description ? (
-        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted">{blok.description}</p>
+        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted xl:mt-[22px] xl:min-h-28 xl:px-0 xl:text-base xl:leading-7 xl:tracking-[-0.05em] xl:text-black">
+          {blok.description}
+        </p>
       ) : null}
     </li>
   );

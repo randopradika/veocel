@@ -24,7 +24,7 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
       // Desktop rhythm from the "dev" board (2053:170): 136px under the hero tabs and to
       // the band (partners 2053:247). No padding below, or neighbours would stack; the
       // last block on a page keeps the gap to the band.
-      className="bg-brand-50 xl:pt-[136px] xl:pb-0 xl:last:pb-[136px]"
+      className="bg-brand-50 md:bg-[#e6f1f8] xl:pt-[136px] xl:pb-0 xl:last:pb-[136px]"
     >
       <Container width="design">
         {/*

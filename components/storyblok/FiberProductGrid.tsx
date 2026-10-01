@@ -74,9 +74,17 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
           ) : null}
         </div>
 
-        <ul className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-x-9 lg:gap-y-14">
+        {/*
+          A centred wrap rather than a grid, so a short last row — the Lyocell
+          grid's two cards — sits in the middle (asked for on 2026-10-01). The
+          widths are the grid's: two across from `sm`, three from `lg`.
+        */}
+        <ul className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-12 lg:mt-14 lg:gap-x-9 lg:gap-y-14">
           {items.map((item) => (
-            <li key={item._uid}>
+            <li
+              key={item._uid}
+              className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/3)]"
+            >
               <FiberProductCard blok={item} labels={labels} />
             </li>
           ))}
