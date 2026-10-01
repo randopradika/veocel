@@ -279,6 +279,8 @@ export type TextColumnsBlok = SbBlock & {
   body?: string;
   /** `center` stacks a centred heading above a right-aligned body column. */
   align?: "split" | "center";
+  /** The copy's size. Empty (or anything unknown) is `regular`, the design's 20px. */
+  body_size?: "small" | "regular" | "large" | "xlarge" | "";
 };
 
 export type ProductCardBlok = SbBlock & {

@@ -11,8 +11,26 @@ import { editable } from "./editable";
  *   center — heading centred and full width, body in a narrow column beneath it,
  *            pushed to the right
  */
+
+/**
+ * The copy's size, picked in Storyblok (`body_size`). `regular` is the design's
+ * 20/32 (2053:1041); each step keeps a smaller phone size and its own leading.
+ */
+const BODY_SIZE = {
+  small: "text-sm leading-[1.5] md:text-base md:leading-7",
+  regular: "text-base leading-[1.4] md:text-xl xl:leading-8",
+  large: "text-lg leading-[1.4] md:text-2xl md:leading-9",
+  xlarge: "text-xl leading-[1.4] md:text-[2rem] md:leading-[1.6]",
+} as const;
+
+/** Storyblok's `""` and anything unknown fall back to `regular`. */
+function bodySizeClass(size: TextColumnsBlok["body_size"]): string {
+  return size && size in BODY_SIZE ? BODY_SIZE[size as keyof typeof BODY_SIZE] : BODY_SIZE.regular;
+}
+
 export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
   const centered = blok.align === "center";
+  const bodySize = bodySizeClass(blok.body_size);
 
   // Left empty in the CMS, the block would still take a full section's padding
   // and push whatever follows — the sustainability page's claims and
@@ -36,7 +54,7 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
                 {blok.heading}
               </h2>
             ) : null}
-            <Markdown className="mt-12 ml-auto max-w-xl text-base leading-[1.4] md:text-xl text-ink-muted">
+            <Markdown className={`mt-12 ml-auto max-w-xl text-ink-muted ${bodySize}`}>
               {blok.body}
             </Markdown>
           </>
@@ -45,13 +63,13 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
           // 100px apart (wipes 2053:1040, hygiene 2053:904, beauty 2053:783). The
           // heading column holds 504px below that, so "VEOCEL™ fibers" keeps a line.
           <div className="grid items-start gap-8 md:grid-cols-[1fr_minmax(0,28rem)] md:gap-16 xl:grid-cols-[minmax(31.5rem,507fr)_832fr] xl:gap-[100px]">
-            {/* 72px on a 91px line, 20/32 copy 16px lower (2053:1042, 2053:1041). */}
+            {/* 72px on a 91px line, the copy 16px lower (2053:1042, 2053:1041). */}
             {blok.heading ? (
               <h2 className="text-h2 font-bold text-brand md:text-h1 xl:text-[4.5rem] xl:leading-[91px]">
                 {blok.heading}
               </h2>
             ) : null}
-            <Markdown className="text-base leading-[1.4] text-ink-muted md:pt-2 md:text-xl xl:pt-4 xl:leading-8">
+            <Markdown className={`text-ink-muted md:pt-2 xl:pt-4 ${bodySize}`}>
               {blok.body}
             </Markdown>
           </div>

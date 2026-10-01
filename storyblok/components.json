@@ -710,6 +710,18 @@
       "body": {
         "type": "textarea"
       },
+      "body_size": {
+        "type": "option",
+        "display_name": "Body text size",
+        "options": [
+          { "name": "Small — 16px", "value": "small" },
+          { "name": "Regular — 20px (the design)", "value": "regular" },
+          { "name": "Large — 24px", "value": "large" },
+          { "name": "Extra large — 32px", "value": "xlarge" }
+        ],
+        "default_value": "regular",
+        "description": "Desktop size of the copy; phones get a step smaller."
+      },
       "align": {
         "type": "option",
         "options": [
