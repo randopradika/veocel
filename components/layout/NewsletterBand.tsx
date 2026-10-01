@@ -10,7 +10,8 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  *
  * On phones the panels stack at the mobile frame's 1:1 sizes (2035:165): 140px
  * panels with 24px headings, 51px social discs and a 36px platform name. From
- * `md` the desktop frame's 0.75 scale applies, as before.
+ * `md` the desktop frame's 0.75 scale applies, as before — except the social
+ * discs, which keep the frames' 51px at every width (2053:758–767).
  *
  * The form posts directly to the email provider's own endpoint
  * (`config.newsletter_action_url`). There is no local API route and no subscriber
@@ -70,7 +71,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
           {config.social_heading ?? "follow us on social media"}
         </h2>
 
-        <ul className="mt-3 flex items-center gap-[13px] md:mt-4 md:gap-3">
+        <ul className="mt-3 flex items-center gap-[13px] md:mt-4">
           {(config.socials ?? []).map((social) => (
             <li key={social._uid}>
               {/* overflow-hidden lets the Facebook mark crop at the circle's
@@ -78,7 +79,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
               <SmartLink
                 link={social.link}
                 ariaLabel={social.platform}
-                className="flex h-[51px] w-[51px] items-center justify-center overflow-hidden rounded-full bg-brand text-white transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-[2.375rem] md:w-[2.375rem]"
+                className="flex h-[51px] w-[51px] items-center justify-center overflow-hidden rounded-full bg-[#0f7ab8] text-white transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               >
                 <SocialIcon platform={social.platform} />
               </SmartLink>
@@ -116,9 +117,14 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
  * Platform marks matched to the 2019:1441 footer revision: LinkedIn is its
  * rounded square with the "in" knocked out, YouTube its play badge with the
  * triangle knocked out, and Facebook the large "f" that fills the disc and
- * crops at its bottom edge. Sizes differ per mark, as the frame draws them —
- * set as a share of the disc, so the same ratios hold at the phone-width 51px
- * discs and the desktop 38px ones (30/26/34 of 51 in the mobile frame).
+ * crops at its bottom edge.
+ *
+ * Sizes are the drawn mark's, measured off the dev board's 51px discs
+ * (2053:758–767): Instagram 30, LinkedIn 26, YouTube 34 x 24, Facebook 23 wide
+ * from 10px down. Each SVG box is that share of the disc divided by the share
+ * of its 24-unit viewBox the path fills — Instagram's path spans 16 units, so
+ * its box is 30/51 x 24/16 = 88% — which is what earlier sizes missed: they
+ * sized the box, and the mark came out a third smaller.
  */
 function SocialIcon({ platform }: { platform: SocialLinkBlok["platform"] }) {
   const common = {
@@ -131,7 +137,7 @@ function SocialIcon({ platform }: { platform: SocialLinkBlok["platform"] }) {
   switch (platform) {
     case "linkedin":
       return (
-        <svg {...common} className="h-[51%] w-[51%]">
+        <svg {...common} className="h-[68%] w-[68%] shrink-0">
           <path
             fillRule="evenodd"
             d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm3.35 6.6H5.9v7.9h2.45V9.6ZM7.12 6.2a1.42 1.42 0 1 0 0 2.84 1.42 1.42 0 0 0 0-2.84ZM18.1 12.98c0-2.36-1.26-3.56-2.94-3.56-1.36 0-1.97.75-2.31 1.28V9.6h-2.44v7.9h2.44v-4.4c0-1.1.52-1.76 1.44-1.76.9 0 1.36.62 1.36 1.76v4.4h2.45v-4.52Z"
@@ -140,13 +146,13 @@ function SocialIcon({ platform }: { platform: SocialLinkBlok["platform"] }) {
       );
     case "instagram":
       return (
-        <svg {...common} className="h-[59%] w-[59%]">
+        <svg {...common} className="h-[88%] w-[88%] shrink-0">
           <path d="M12 4c-2.2 0-2.5 0-3.3.05-.85.04-1.4.17-1.9.36a3.9 3.9 0 0 0-1.4.9 3.9 3.9 0 0 0-.9 1.4c-.19.5-.32 1.05-.36 1.9C4.1 9.4 4.1 9.7 4.1 12s0 2.6.05 3.4c.04.85.17 1.4.36 1.9a3.9 3.9 0 0 0 .9 1.4 3.9 3.9 0 0 0 1.4.9c.5.19 1.05.32 1.9.36.8.05 1.1.05 3.3.05s2.5 0 3.3-.05c.85-.04 1.4-.17 1.9-.36a4.2 4.2 0 0 0 2.3-2.3c.19-.5.32-1.05.36-1.9.05-.8.05-1.1.05-3.4s0-2.6-.05-3.4c-.04-.85-.17-1.4-.36-1.9a3.9 3.9 0 0 0-.9-1.4 3.9 3.9 0 0 0-1.4-.9c-.5-.19-1.05-.32-1.9-.36C14.5 4 14.2 4 12 4Zm0 1.8c2.15 0 2.45 0 3.25.05.7.03 1.05.15 1.3.24.3.12.52.27.75.5.23.23.38.45.5.75.09.25.21.6.24 1.3.05.8.05 1.1.05 3.36s0 2.56-.05 3.36c-.03.7-.15 1.05-.24 1.3-.12.3-.27.52-.5.75-.23.23-.45.38-.75.5-.25.09-.6.21-1.3.24-.8.05-1.1.05-3.25.05s-2.45 0-3.25-.05c-.7-.03-1.05-.15-1.3-.24-.3-.12-.52-.27-.75-.5a2.1 2.1 0 0 1-.5-.75c-.09-.25-.21-.6-.24-1.3C5.9 14.56 5.9 14.26 5.9 12s0-2.56.05-3.36c.03-.7.15-1.05.24-1.3.12-.3.27-.52.5-.75.23-.23.45-.38.75-.5.25-.09.6-.21 1.3-.24C9.55 5.8 9.85 5.8 12 5.8Zm0 2.9a3.3 3.3 0 1 0 0 6.6 3.3 3.3 0 0 0 0-6.6Zm0 5.44a2.14 2.14 0 1 1 0-4.28 2.14 2.14 0 0 1 0 4.28Zm4.2-5.62a.77.77 0 1 1-1.54 0 .77.77 0 0 1 1.54 0Z" />
         </svg>
       );
     case "youtube":
       return (
-        <svg {...common} className="h-[67%] w-[67%]">
+        <svg {...common} className="h-[80%] w-[80%] shrink-0">
           <path
             fillRule="evenodd"
             d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2C2 8.8 2 12 2 12s0 3.2.4 4.8a2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8C22 15.2 22 12 22 12s0-3.2-.4-4.8ZM10 15.2V8.8L15.5 12 10 15.2Z"
@@ -154,10 +160,11 @@ function SocialIcon({ platform }: { platform: SocialLinkBlok["platform"] }) {
         </svg>
       );
     case "facebook":
-      // Drawn at the full button size so the stem meets the viewBox bottom,
-      // where the circle's overflow clipping crops it.
+      // Drawn past the disc (the path is 10.1 units wide, 23px wanted) and
+      // nudged down to start 10px in; the circle's overflow clipping crops
+      // the stem at its bottom edge.
       return (
-        <svg {...common} className="h-full w-full">
+        <svg {...common} className="h-[107%] w-[107%] shrink-0 translate-y-[10%]">
           <path d="M16.4 13.6l.5-3.4h-3.3V8c0-.95.45-1.85 1.95-1.85h1.55V3.2S15.75 3 14.45 3c-2.8 0-4.6 1.7-4.6 4.7v2.5H6.8v3.4h3.05V24h3.75V13.6h2.8Z" />
         </svg>
       );
