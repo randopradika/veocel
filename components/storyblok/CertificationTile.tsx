@@ -6,15 +6,20 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { resolveHref, SmartLink } from "@/components/ui/SmartLink";
+import { naturalSize } from "@/lib/image";
 import type { CertificationItemBlok, SbBlock } from "@/lib/types";
 
 /**
  * One mark on the certificates wall.
  *
- * With a `detail_image` the mark opens it in a pop-up — the certificate itself,
- * say — on the same native `<dialog>` as the fiber pop-up (`FiberProductCard`):
- * focus trapping, Escape and an inert page for free, and a click on the scrim
- * closes it. Without one the mark keeps its `link`, if it has one.
+ * With a `detail_image` the mark — artwork and name both — opens it in a pop-up,
+ * the certificate itself, on the same native `<dialog>` as the fiber pop-up
+ * (`FiberProductCard`): focus trapping, Escape and an inert page for free, and a
+ * click on the scrim closes it. The name then reads as a link. Without one the
+ * mark is not clickable at all; its `link` lives only inside the pop-up.
+ *
+ * `detail_pages` carries a certificate's further pages — the TÜV "OK" PDFs hold
+ * three certificates each — and the pop-up scrolls through them.
  *
  * The pop-up itself is `CertificateDialog`, shared with `CertificateLink` —
  * the same certificate opened from a claim card's proof list.
@@ -41,7 +46,7 @@ const TILE =
 const DIALOG_SIZE = "h-[min(100dvh_-_2rem,44rem)] w-[min(100vw_-_2rem,56rem)]";
 
 export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
-  const detail = blok.detail_image?.filename ? blok.detail_image : null;
+  const detail = Boolean(blok.detail_image?.filename);
   const [open, setOpen] = useState(false);
 
   const face = (
@@ -60,7 +65,13 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
         dropping it to `ink-faint` at this size would put it under 3:1 on white.
       */}
       {blok.label ? (
-        <span className="mt-2.5 block text-center text-base font-bold leading-[2] text-ink-muted">
+        <span
+          className={`mt-2.5 block text-center text-base font-bold leading-[2] ${
+            detail
+              ? "text-brand underline decoration-brand/40 underline-offset-4 transition-colors group-hover:decoration-brand"
+              : "text-ink-muted"
+          }`}
+        >
           {blok.label}
         </span>
       ) : null}
@@ -73,13 +84,7 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
     </span>
   );
 
-  if (!detail) {
-    return (
-      <SmartLink link={blok.link} className={TILE}>
-        {face}
-      </SmartLink>
-    );
-  }
+  if (!detail) return <div className="block w-full">{face}</div>;
 
   return (
     <>
@@ -140,6 +145,9 @@ function CertificateDialog({
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
+  const pages = [blok.detail_image, ...(blok.detail_pages ?? [])].filter(
+    (page): page is NonNullable<typeof page> => Boolean(page?.filename),
+  );
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -193,21 +201,49 @@ function CertificateDialog({
         ) : null}
         {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
 
-        <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
-          <BlockImage
-            asset={blok.detail_image}
-            alt={blok.label ?? ""}
-            sizes="(max-width: 768px) 100vw, 56rem"
-            className="absolute inset-0"
-            imageClassName="object-contain"
-            placeholderTone="neutral"
-            // A right-click or a drag both hand a visitor the file underneath
-            // the pop-up in one step; the wall's other marks don't carry a
-            // document worth saving, so only this view needs the guard.
-            onContextMenu={(event) => event.preventDefault()}
-            draggable={false}
-          />
-        </div>
+        {pages.length > 1 ? (
+          // Several pages scroll, each at the panel's width and its own shape —
+          // fitting three A4 pages into one box would leave none of them legible.
+          <div
+            className={`min-h-0 w-full flex-1 space-y-4 overflow-y-auto overscroll-contain ${
+              blok.label || blok.note ? "mt-6" : ""
+            }`}
+          >
+            {pages.map((page, index) => {
+              const size = naturalSize(page.filename);
+              return (
+                <BlockImage
+                  key={page.id ?? index}
+                  asset={page}
+                  alt={blok.label ? `${blok.label}, page ${index + 1}` : ""}
+                  sizes="(max-width: 768px) 100vw, 56rem"
+                  className="relative w-full rounded-sm border border-hairline"
+                  style={{ aspectRatio: size ? `${size.width} / ${size.height}` : "595 / 842" }}
+                  imageClassName="object-contain"
+                  placeholderTone="neutral"
+                  onContextMenu={(event) => event.preventDefault()}
+                  draggable={false}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
+            <BlockImage
+              asset={blok.detail_image}
+              alt={blok.label ?? ""}
+              sizes="(max-width: 768px) 100vw, 56rem"
+              className="absolute inset-0"
+              imageClassName="object-contain"
+              placeholderTone="neutral"
+              // A right-click or a drag both hand a visitor the file underneath
+              // the pop-up in one step; the wall's other marks don't carry a
+              // document worth saving, so only this view needs the guard.
+              onContextMenu={(event) => event.preventDefault()}
+              draggable={false}
+            />
+          </div>
+        )}
 
         {/*
           The mark's own `link` — the issuer's page, set whether or not this

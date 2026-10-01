@@ -1174,7 +1174,14 @@
         "filetypes": [
           "images"
         ],
-        "description": "Opens in a pop-up when the mark is clicked, such as the certificate itself. Leave empty and the mark keeps its link, if it has one."
+        "description": "Opens in a pop-up when the mark or its name is clicked: the certificate itself, or its first page. Leave empty and the mark is not clickable."
+      },
+      "detail_pages": {
+        "type": "multiasset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "The certificate's further pages, in order. They scroll under the first page in the same pop-up."
       },
       "label": {
         "type": "text",

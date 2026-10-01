@@ -408,6 +408,8 @@ export type CertificationItemBlok = SbBlock & {
   logo?: StoryblokAsset;
   /** Shown in a pop-up when the mark is clicked — the certificate itself, say. */
   detail_image?: StoryblokAsset;
+  /** A certificate's further pages, under `detail_image` in the same pop-up. */
+  detail_pages?: StoryblokAsset[];
   label?: string;
   /** Qualifier under the label — scope, certificate number, product class. */
   note?: string;
