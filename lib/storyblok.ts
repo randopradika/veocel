@@ -3,7 +3,14 @@ import { draftMode } from "next/headers";
 import { DEFAULT_LOCALE, storyblokLanguage } from "./i18n";
 import { mockConfig } from "./mock/config";
 import { mockStories } from "./mock/pages";
-import type { ArticleBlok, ConfigBlok, SbStory, StoryContent } from "./types";
+import type {
+  ArticleBlok,
+  CertificationItemBlok,
+  ConfigBlok,
+  ProofLinkBlok,
+  SbStory,
+  StoryContent,
+} from "./types";
 
 /**
  * Content access layer.
@@ -126,6 +133,41 @@ export async function getStory(
   throw new Error(
     `Storyblok request for "${normalised}" failed with status ${result.status}`,
   );
+}
+
+/** The certificates and documents a claim card's proof list can open. */
+export type ProofLibrary = {
+  certificates: CertificationItemBlok[];
+  proofLinks: ProofLinkBlok[];
+};
+
+/**
+ * The page whose certificates wall and proof links stand for the whole site.
+ * Claims sections on pages without a wall of their own — wipes, hygiene,
+ * beauty — open the same certificates and documents from here, so a document
+ * is attached once and every proof line that names it links.
+ */
+const PROOF_LIBRARY_SLUG = "claims-and-certifications";
+
+/** Every blok of one component anywhere in a content tree. */
+function collectBloks<T>(value: unknown, component: string, found: T[] = []): T[] {
+  if (Array.isArray(value)) {
+    for (const item of value) collectBloks(item, component, found);
+  } else if (value && typeof value === "object") {
+    if ((value as { component?: string }).component === component) found.push(value as T);
+    for (const item of Object.values(value)) collectBloks(item, component, found);
+  }
+  return found;
+}
+
+/** The site's proof library (see `PROOF_LIBRARY_SLUG`). Empty if it can't be read. */
+export async function getProofLibrary(locale: string = DEFAULT_LOCALE): Promise<ProofLibrary> {
+  const story = await getStory(PROOF_LIBRARY_SLUG, locale).catch(() => null);
+  if (!story) return { certificates: [], proofLinks: [] };
+  return {
+    certificates: collectBloks<CertificationItemBlok>(story.content, "certification_item"),
+    proofLinks: collectBloks<ProofLinkBlok>(story.content, "proof_link"),
+  };
 }
 
 /**

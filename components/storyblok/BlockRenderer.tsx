@@ -1,7 +1,14 @@
 import type { ComponentType } from "react";
 
 import { DEFAULT_LOCALE } from "@/lib/i18n";
-import type { CertificationGridBlok, CertificationItemBlok, SbBlock } from "@/lib/types";
+import type { ProofLibrary } from "@/lib/storyblok";
+import type {
+  CertificationGridBlok,
+  CertificationItemBlok,
+  ClaimGridBlok,
+  ProofLinkBlok,
+  SbBlock,
+} from "@/lib/types";
 
 import { ArticleHub } from "./ArticleHub";
 import { BrandDirectory } from "./BrandDirectory";
@@ -40,9 +47,12 @@ import { TextColumns } from "./TextColumns";
  * for the few that fetch content of their own — the article hub — since
  * Storyblok links are stored without a language and a server component cannot
  * read it off the URL the way `SmartLink` does. `certificates` are the marks on
- * the page's certificates wall, for the claim cards' proof entries to open.
+ * the page's certificates wall — or the site's, on a page without one — for the
+ * claim cards' proof entries to open, and `proofLinks` every document a proof
+ * entry can name, from any card on the page or in the site's proof library.
  */
-type BlockProps = { blok: SbBlock; locale: string; certificates?: CertificationItemBlok[] };
+type ProofProps = { certificates?: CertificationItemBlok[]; proofLinks?: ProofLinkBlok[] };
+type BlockProps = { blok: SbBlock; locale: string } & ProofProps;
 
 /**
  * Narrows a block component to the registry's uniform signature.
@@ -52,7 +62,7 @@ type BlockProps = { blok: SbBlock; locale: string; certificates?: CertificationI
  * The renderer guarantees the match by looking components up by `component` name.
  */
 function block<T extends SbBlock>(
-  component: ComponentType<{ blok: T; locale: string; certificates?: CertificationItemBlok[] }>,
+  component: ComponentType<{ blok: T; locale: string } & ProofProps>,
 ) {
   return component as ComponentType<BlockProps>;
 }
@@ -102,15 +112,26 @@ const OPENERS = new Set(["hero", "page_hero", "article_hub"]);
 export function BlockRenderer({
   blocks,
   locale = DEFAULT_LOCALE,
+  library,
 }: {
   blocks?: SbBlock[];
   locale?: string;
+  /** The site's certificates and documents, loaded when the page has claims. */
+  library?: ProofLibrary;
 }) {
   if (!blocks || blocks.length === 0) return null;
 
-  const certificates = blocks
+  const wall = blocks
     .filter((blok): blok is CertificationGridBlok => blok.component === "certification_grid")
     .flatMap((grid) => grid.items ?? []);
+  const certificates = wall.length > 0 ? wall : (library?.certificates ?? []);
+  const proofLinks = [
+    ...blocks
+      .filter((blok): blok is ClaimGridBlok => blok.component === "claim_grid")
+      .flatMap((grid) => grid.items ?? [])
+      .flatMap((card) => card.proof_links ?? []),
+    ...(library?.proofLinks ?? []),
+  ];
 
   return (
     <>
@@ -125,7 +146,13 @@ export function BlockRenderer({
         const Component = registry[blok.component];
         if (!Component) return <UnknownBlock key={blok._uid} component={blok.component} />;
         return (
-          <Component key={blok._uid} blok={blok} locale={locale} certificates={certificates} />
+          <Component
+            key={blok._uid}
+            blok={blok}
+            locale={locale}
+            certificates={certificates}
+            proofLinks={proofLinks}
+          />
         );
       })}
     </>

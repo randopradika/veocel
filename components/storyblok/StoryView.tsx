@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { StoryblokBridge } from "@/components/StoryblokBridge";
 import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
-import { getNextArticle, getStory, storyPath } from "@/lib/storyblok";
+import { getNextArticle, getProofLibrary, getStory, storyPath } from "@/lib/storyblok";
 import type { ArticleBlok, SbStory } from "@/lib/types";
 
 import { Article } from "./Article";
@@ -41,6 +41,13 @@ export async function StoryView({
       : null;
   const hub = story.full_slug.replace(/\/+$/, "").split("/").slice(0, -1).join("/");
 
+  // A claims section links its proof lines to the site's certificates and documents.
+  const library =
+    content.component !== "article" &&
+    (content.body ?? []).some((blok) => blok.component === "claim_grid")
+      ? await getProofLibrary(locale)
+      : undefined;
+
   return (
     <>
       {draft ? <StoryblokBridge storyId={story.id} /> : null}
@@ -51,7 +58,7 @@ export async function StoryView({
           next={next ? { href: localePath(locale, storyPath(next)), title: next.content.title } : null}
         />
       ) : (
-        <BlockRenderer blocks={content.body} locale={locale} />
+        <BlockRenderer blocks={content.body} locale={locale} library={library} />
       )}
     </>
   );

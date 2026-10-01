@@ -73,7 +73,19 @@ const PROOF_CERTIFICATES: { text: RegExp; label: RegExp }[] = [
   { text: /FSC®?(?:\s*\(FSC-[^)]*\))?/, label: /^FSC\b/ },
   { text: /PEFC(?:\s*\(PEFC\/[^)]*\))?/, label: /^PEFC\b/ },
   { text: /EU Ecolabel/i, label: /EU Ecolabel/i },
+  { text: /OEKO-TEX®?\s*STANDARD\s*100/i, label: /STANDARD 100/i },
+  { text: /ISEGA/, label: /^ISEGA\b/ },
+  { text: /Medically Tested\s*[–-]\s*Tested for Toxins/i, label: /^Medically Tested\b/i },
 ];
+
+/**
+ * The mark a proof entry's name opens: one with a pop-up where several share
+ * the name — the two ISEGA certificates — so the name links if either can.
+ */
+function findCertificate(certificates: CertificationItemBlok[], label: RegExp) {
+  const named = certificates.filter((item) => label.test(item.label ?? ""));
+  return named.find((item) => item.detail_image?.filename) ?? named[0];
+}
 
 type ProofPart =
   | string
@@ -115,7 +127,7 @@ function linkProof(
     return found ? [{ ...found, link }] : [];
   });
   const marks = PROOF_CERTIFICATES.flatMap(({ text, label }) => {
-    const certificate = certificates.find((item) => label.test(item.label ?? ""));
+    const certificate = findCertificate(certificates, label);
     const match = certificate ? text.exec(entry) : null;
     return match && certificate ? [{ at: match.index, text: match[0], certificate }] : [];
   });
@@ -153,9 +165,12 @@ function lines(value?: string): string[] {
 export function ClaimGrid({
   blok,
   certificates = [],
+  proofLinks = [],
 }: {
   blok: ClaimGridBlok;
   certificates?: CertificationItemBlok[];
+  /** Documents named anywhere in the site's claims (see `BlockRenderer`). */
+  proofLinks?: ProofLinkBlok[];
 }) {
   const items = blok.items ?? [];
   if (!blok.heading && items.length === 0) return null;
@@ -194,7 +209,12 @@ export function ClaimGrid({
             className={`${blok.heading ? "mt-10 xl:mt-[47px] " : ""}grid gap-6 md:grid-cols-2 md:gap-10 xl:gap-x-[52px] xl:gap-y-[50px] md:[&>:nth-child(odd):has([aria-expanded=true])+*]:self-start md:[&>:nth-child(odd):has(+*_[aria-expanded=true])]:self-start`}
           >
             {items.map((item) => (
-              <ClaimCard key={item._uid} blok={item} certificates={certificates} />
+              <ClaimCard
+                key={item._uid}
+                blok={item}
+                certificates={certificates}
+                proofLinks={proofLinks}
+              />
             ))}
           </div>
         ) : null}
@@ -236,9 +256,11 @@ function ProofLink({ blok, children }: { blok: ProofLinkBlok; children: string }
 function ClaimCard({
   blok,
   certificates,
+  proofLinks,
 }: {
   blok: ClaimCardBlok;
   certificates: CertificationItemBlok[];
+  proofLinks: ProofLinkBlok[];
 }) {
   const proof = lines(blok.proof);
   const { lead, rest } = splitBody(escapeFootnotes(blok.body));
@@ -261,7 +283,7 @@ function ClaimCard({
             <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80">
               {proof.map((entry, index) => (
                 <li key={index}>
-                  {linkProof(entry, certificates, blok.proof_links ?? []).map((part, at) =>
+                  {linkProof(entry, certificates, [...(blok.proof_links ?? []), ...proofLinks]).map((part, at) =>
                     typeof part === "string" ? (
                       <KeepLastWords key={at} text={part} />
                     ) : "certificate" in part ? (
