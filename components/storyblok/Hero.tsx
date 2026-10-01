@@ -144,8 +144,10 @@ export function Hero({ blok }: { blok: HeroBlok }) {
     to on 2026-09-23 — balancing it would read "care begins / within." The home
     hero is the left-aligned one, with the subline hanging from its edge.
   */
-  const lines =
-    size === "title" && !left ? headlineLines(blok.headline) : [blok.headline];
+  // An empty headline is allowed — a hero can be its photograph alone — and
+  // then no heading renders at all.
+  const headline = blok.headline?.trim() ?? "";
+  const lines = !headline ? [] : size === "title" && !left ? headlineLines(headline) : [headline];
   const x = resolveOption(HEADLINE_X, blok.headline_horizontal, "center");
   const y = resolveOption(HEADLINE_Y, blok.headline_vertical, "middle");
   const placed = x !== "center";
@@ -167,7 +169,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
     >
       <BlockImage
         asset={blok.background_image}
-        alt={blok.headline}
+        alt={headline}
         priority
         sizes="100vw"
         className="absolute inset-0 -z-10"
@@ -227,6 +229,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
               line at the design's 128px, "with VEOCEL™ fibers" (1150px) was cut
               off at 125% zoom on a 1440 laptop.
             */}
+            {lines.length > 0 ? (
             <h1 className={`font-bold ${headlineSize}`}>
               {lines.map((line, index) => (
                 <span key={index} className="block">
@@ -239,6 +242,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
                 </span>
               ))}
             </h1>
+            ) : null}
 
             {blok.subline ? (
               <p

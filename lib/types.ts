@@ -129,7 +129,8 @@ export type SocialLinkBlok = SbBlock & {
 export type HeroBlok = SbBlock & {
   component: "hero";
   eyebrow?: string;
-  headline: string;
+  /** Optional: a hero can be its photograph alone. */
+  headline?: string;
   /**
    * A word or phrase inside `headline` to set in a pale blue plate — the fibers
    * page boxes "fibers" that way. Ignored when it isn't found in the headline.

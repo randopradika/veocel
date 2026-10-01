@@ -233,7 +233,7 @@
       },
       "headline": {
         "type": "text",
-        "required": true
+        "description": "Optional — leave empty for a hero that is its photograph alone."
       },
       "headline_highlight": {
         "type": "text",
