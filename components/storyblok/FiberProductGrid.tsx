@@ -24,9 +24,9 @@ export function FiberProductGrid({ blok }: { blok: FiberProductGridBlok }) {
   if (items.length === 0) return null;
 
   const labels = {
-    diameter: blok.diameter_label || "fiber diameter",
-    applications: blok.applications_label || "key applications",
-    features: blok.features_label || "fiber features",
+    diameter: blok.diameter_label || "Fiber Diameter",
+    applications: blok.applications_label || "Key Applications",
+    features: blok.features_label || "Fiber features",
   };
 
   return (

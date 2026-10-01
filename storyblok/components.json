@@ -1033,15 +1033,15 @@
       },
       "diameter_label": {
         "type": "text",
-        "description": "Label of the first spec row on every card. Defaults to 'fiber diameter'."
+        "description": "Label of the first spec row on every card. Defaults to 'Fiber Diameter'."
       },
       "applications_label": {
         "type": "text",
-        "description": "Label of the second spec row on every card. Defaults to 'key applications'."
+        "description": "Label of the second spec row on every card. Defaults to 'Key Applications'."
       },
       "features_label": {
         "type": "text",
-        "description": "Label of the third spec row on every card. Defaults to 'fiber features'."
+        "description": "Label of the third spec row on every card. Defaults to 'Fiber features'."
       },
       "items": {
         "type": "bloks",
