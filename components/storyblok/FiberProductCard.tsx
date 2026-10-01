@@ -160,7 +160,10 @@ export function FiberProductCard({
                 <ArrowMarker icon="close" tone="brand" size="md" />
               </button>
 
-              <h2 id={titleId} className="text-2xl font-bold tracking-[-0.02em] text-brand">
+              <h2
+                id={titleId}
+                className="text-2xl font-bold tracking-[-0.02em] text-brand md:text-[2rem] md:leading-tight"
+              >
                 {blok.name}
               </h2>
 
@@ -175,19 +178,28 @@ export function FiberProductCard({
                 </p>
               ))}
 
+              {/*
+                From `md` the plate is sized to hold its own beside the photo
+                (asked for on 2026-10-01, from the client's mock-up): 20px
+                type, 28px between rows, labels and values breaking onto two
+                lines ("fiber / diameter", "standard, fine, / coarse"), values
+                right-aligned.
+              */}
               {specs.length > 0 ? (
-                <dl className="mt-8 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:px-8 md:py-6">
+                <dl className="mt-8 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-xl md:leading-[1.3]">
                   {specs.map(([label, value]) => (
-                    <div key={label} className="flex items-baseline justify-between gap-4 md:gap-6">
-                      <dt className="font-bold whitespace-nowrap text-ink">{label}</dt>
-                      <dd className="text-right text-ink-muted">{value}</dd>
+                    <div key={label} className="flex items-baseline justify-between gap-4 md:gap-8">
+                      <dt className="font-bold whitespace-nowrap text-ink md:max-w-[7rem] md:whitespace-normal">
+                        {label}
+                      </dt>
+                      <dd className="text-right text-ink-muted md:max-w-[10.5rem]">{value}</dd>
                     </div>
                   ))}
                 </dl>
               ) : null}
 
               {footnotes.length > 0 ? (
-                <ul className="mt-3 text-xs leading-[1.5] text-ink-muted md:px-1">
+                <ul className="mt-3 text-xs leading-[1.5] text-ink-muted md:mt-4 md:px-1 md:text-sm">
                   {footnotes.map((line, index) => (
                     <li key={index}>{line}</li>
                   ))}
