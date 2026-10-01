@@ -33,7 +33,7 @@ function editableAttrs(blok: SbBlock) {
 
 const GRID = {
   tiles: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3",
-  cards: "grid gap-5 md:grid-cols-2 xl:gap-[21px]", // 21px apart in 2053:1040
+  cards: "grid items-start gap-5 md:grid-cols-2 xl:gap-[21px]", // 21px apart in 2053:1040; a closed card keeps its height beside an open one
   rows: "flex flex-col gap-5",
 } as const;
 
@@ -85,6 +85,13 @@ type ItemProps = { blok: AccordionItemBlok; open: boolean; onToggle: () => void 
  * for a filled blue disc across the site. The design draws the open marker
  * hollow on the full-width rows and filled on these cards; keeping it filled in
  * both places is a deliberate deviation.
+ *
+ * From `xl` the card is the frame's (wipes 2053:1057, 2053:1064): 709px wide
+ * with a 30px radius, white behind a #9cd3eb hairline closed and #e2f7ff open;
+ * the 663 x 269 photograph inset 23px and 22px (less the 1px border) with a
+ * 20px radius; the 32px
+ * name in a 42px line 25px under it; the 16/24 copy in #4d4d4d, 579px wide,
+ * 14px lower; 21px of card under the name, 29px under the copy.
  */
 function AccordionCard({ blok, open, onToggle }: ItemProps) {
   const panelId = `feature-panel-${blok._uid}`;
@@ -92,8 +99,8 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
   return (
     <div
       {...editableAttrs(blok)}
-      className={`rounded-panel p-4 transition-colors duration-200 ${
-        open ? "bg-brand-100" : "border border-hairline bg-white hover:border-brand-300"
+      className={`rounded-panel border p-4 transition-colors duration-200 xl:rounded-[30px] xl:px-[22px] xl:pt-[21px] xl:pb-[20px] ${
+        open ? "border-transparent bg-[#e2f7ff]" : "border-[#9cd3eb] bg-white hover:border-brand-300"
       }`}
     >
       <button
@@ -108,19 +115,20 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
             asset={blok.image}
             alt=""
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="relative block aspect-[12/5] w-full rounded-card"
+            className="relative block aspect-[12/5] w-full rounded-card xl:aspect-[663/269] xl:rounded-[20px]"
             placeholderTone="sky"
           />
-          <span className="absolute top-3 right-3">
+          <span className="absolute top-3 right-3 xl:top-[13px] xl:right-[13px]">
             <ArrowMarker
               icon={open ? "chevron-up" : "chevron-down"}
               tone={open ? "brand" : "onImage"}
               size="md"
+              className="xl:h-10 xl:w-10"
             />
           </span>
         </span>
 
-        <span className="mt-4 block text-center font-display text-h3 font-bold text-brand">
+        <span className="mt-4 block text-center font-display text-h3 font-bold text-brand xl:mt-[25px] xl:text-[2rem] xl:leading-[42px]">
           {blok.title}
         </span>
       </button>
@@ -128,7 +136,7 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
       <div id={panelId} hidden={!open}>
         {/* Held to a narrower column than the card so the copy sits in the middle. */}
         <Markdown
-          className="mx-auto mt-2 max-w-[27rem] px-4 text-center text-[0.9375rem] leading-[1.8] text-pretty text-brand-800/80"
+          className="mx-auto mt-2 max-w-[27rem] px-4 text-center text-[0.9375rem] leading-[1.8] text-pretty text-brand-800/80 xl:mt-[14px] xl:mb-2 xl:max-w-[579px] xl:px-0 xl:text-base xl:leading-6 xl:tracking-[-0.02em] xl:text-[#4d4d4d]"
           gap="tight"
           keepLastWords
         >
