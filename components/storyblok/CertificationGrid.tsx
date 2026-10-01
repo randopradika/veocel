@@ -16,10 +16,42 @@ import { editable } from "./editable";
  * Each mark keeps a white plate with a hairline edge — certification artwork is
  * drawn for white, and several of these logos carry no background of their own.
  */
+/**
+ * Where each mark sits from `lg`, on a 40-column grid with 20px gaps.
+ *
+ * The frames set the wall in rows of 4, 5 and 4 (claims & certifications
+ * 2097:207–258, sustainability 2053:474): 341 x 204 tiles 25px apart in the
+ * rows of four, 272 x 164 tiles 20px apart in the row of five. Ten columns
+ * make the larger tile (345px at 1920) and eight the smaller (272px), and a
+ * short row is centred by offsetting its first mark. `row_sizes` sets the
+ * pattern; the last number repeats.
+ */
+function placements(count: number, rowSizes?: string) {
+  const sizes = (rowSizes || "4,5,4")
+    .split(",")
+    .map((value) => Number.parseInt(value.trim(), 10))
+    .filter((value) => value > 0 && value <= 5);
+  if (sizes.length === 0) sizes.push(5);
+
+  const out: string[] = [];
+  for (let row = 0, placed = 0; placed < count; row++) {
+    const size = sizes[Math.min(row, sizes.length - 1)];
+    const inRow = Math.min(size, count - placed);
+    const span = size <= 4 ? 10 : 8;
+    const start = (40 - inRow * span) / 2 + 1;
+    for (let i = 0; i < inRow; i++) {
+      out.push(i === 0 ? `${start} / span ${span}` : `span ${span}`);
+    }
+    placed += inRow;
+  }
+  return out;
+}
+
 export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
   const items = blok.items ?? [];
   const left = blok.align === "left";
   if (items.length === 0) return null;
+  const columns = placements(items.length, blok.row_sizes);
 
   return (
     <Section
@@ -58,11 +90,16 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
           </p>
         ) : null}
 
-        <ul className="flex flex-wrap justify-center gap-x-4 gap-y-7">
-          {items.map((item) => (
+        {/*
+          A centred wrap below `lg`; from `lg` the frames' rows (see
+          `placements`). `grid-column` is inert until the list becomes a grid.
+        */}
+        <ul className="flex flex-wrap justify-center gap-x-4 gap-y-7 lg:grid lg:grid-cols-[repeat(40,minmax(0,1fr))] lg:gap-x-5 lg:gap-y-6">
+          {items.map((item, index) => (
             <li
               key={item._uid}
-              className="w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] lg:w-[calc(20%-0.85rem)]"
+              className="w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.75rem)] lg:w-auto"
+              style={{ gridColumn: columns[index] }}
             >
               <CertificationTile blok={item} />
             </li>

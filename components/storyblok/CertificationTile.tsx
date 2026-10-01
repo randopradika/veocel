@@ -51,14 +51,21 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
 
   const face = (
     <span {...editableAttrs(blok)} className="block">
-      <BlockImage
-        asset={blok.logo}
-        alt={blok.label ?? ""}
-        sizes="(max-width: 640px) 50vw, 20vw"
-        className="relative block h-24 rounded-card border border-hairline bg-white transition-colors duration-200 group-hover:border-brand-300"
-        imageClassName="object-contain p-4"
-        placeholderTone="neutral"
-      />
+      {/*
+        From `lg` the frames' tile: 5:3 (341 x 204, 272 x 164), a 20px radius
+        and a #0f7ab8 hairline, the mark inset about a quarter of the width and
+        a sixth of the height — FSC 149px tall, OK SOIL 143px wide, as drawn.
+      */}
+      <span className="relative block h-24 rounded-card border border-hairline bg-white transition-colors duration-200 group-hover:border-brand-300 lg:aspect-[5/3] lg:h-auto lg:rounded-[20px] lg:border-[#0f7ab8] lg:group-hover:border-brand-700">
+        <BlockImage
+          asset={blok.logo}
+          alt={blok.label ?? ""}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+          className="absolute inset-4 lg:inset-x-[23.5%] lg:inset-y-[17.5%]"
+          imageClassName="object-contain"
+          placeholderTone="neutral"
+        />
+      </span>
 
       {/*
         Both lines stay on `ink-muted`. The note is secondary by size alone —
@@ -66,10 +73,10 @@ export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
       */}
       {blok.label ? (
         <span
-          className={`mt-2.5 block text-center text-base font-bold leading-[2] ${
+          className={`mt-2.5 block text-center lg:mt-2 text-base font-bold leading-[2] ${
             detail
               ? "text-brand underline decoration-brand/40 underline-offset-4 transition-colors group-hover:decoration-brand"
-              : "text-ink-muted"
+              : "text-ink-muted lg:text-[#4d4d4d]"
           }`}
         >
           {blok.label}

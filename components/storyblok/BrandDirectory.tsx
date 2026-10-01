@@ -119,17 +119,24 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
       className="bg-brand-50 xl:pt-[100px] xl:pb-0 xl:last:pb-[124px]"
     >
       <Container>
+        {/*
+          From `xl` the frame's header (2053:368): a 96px heading, the 20/32
+          intro on one 809px line 21px under it, and the filter 29px lower.
+        */}
         {blok.heading ? (
-          <h2 className="text-center text-h2 font-bold text-brand md:text-h1">{blok.heading}</h2>
+          <h2 className="text-center text-h2 font-bold text-brand md:text-h1 xl:text-[6rem] xl:leading-[121px]">
+            {blok.heading}
+          </h2>
         ) : null}
 
         {blok.intro ? (
-          <p className="mx-auto mt-4 max-w-xl text-center text-base leading-[1.4] text-ink-muted md:text-xl">
+          <p className="mx-auto mt-4 max-w-xl text-center text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-[21px] xl:max-w-[809px] xl:leading-8 xl:tracking-[-0.02em] xl:text-[#4d4d4d]">
             {blok.intro}
           </p>
         ) : null}
 
-        <div className="mt-10 flex flex-wrap justify-center gap-6 md:gap-9">
+        {/* 76px discs 32px apart, 16px labels 9px under them (2053:369). */}
+        <div className="mt-10 flex flex-wrap justify-center gap-6 md:gap-9 xl:mt-[29px] xl:gap-8">
           <CategoryButton
             label={ALL}
             count={counts.get(ALL) ?? 0}
@@ -256,10 +263,10 @@ function CategoryButton({
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className="group flex w-16 flex-col items-center gap-2.5 md:w-20 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+      className="group flex w-16 flex-col items-center gap-2.5 md:w-20 xl:w-[76px] xl:gap-[9px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
     >
       <span
-        className={`flex h-14 w-14 items-center justify-center rounded-full border md:h-16 md:w-16 transition-colors duration-200 ${
+        className={`flex h-14 w-14 items-center justify-center rounded-full border md:h-16 md:w-16 xl:h-[76px] xl:w-[76px] transition-colors duration-200 ${
           active
             ? "border-brand bg-brand text-white"
             : "border-hairline bg-white text-brand group-hover:border-brand-300"
@@ -270,7 +277,7 @@ function CategoryButton({
             asset={blok.icon}
             alt=""
             sizes="36px"
-            className="relative h-7 w-7 md:h-9 md:w-9"
+            className="relative h-7 w-7 md:h-9 md:w-9 xl:h-10 xl:w-10"
             /*
               The icon artwork is a dark glyph. On the filled active circle it
               would stay dark, so invert it to white there — the raster can't
@@ -284,7 +291,7 @@ function CategoryButton({
             fill="none"
             stroke="currentColor"
             strokeWidth={1.2}
-            className="h-7 w-7 md:h-9 md:w-9"
+            className="h-7 w-7 md:h-9 md:w-9 xl:h-10 xl:w-10"
             aria-hidden
           >
             <rect x="4" y="4" width="7" height="7" rx="1.5" />
@@ -295,7 +302,7 @@ function CategoryButton({
         )}
       </span>
 
-      <span className="text-sm leading-none text-brand">
+      <span className="whitespace-nowrap text-sm leading-none text-brand xl:text-base">
         {label}
         <sup className="ml-0.5 text-xs">{count}</sup>
       </span>

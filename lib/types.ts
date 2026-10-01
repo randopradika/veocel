@@ -426,6 +426,11 @@ export type CertificationGridBlok = SbBlock & {
    */
   align?: "center" | "left";
   items?: CertificationItemBlok[];
+  /**
+   * Marks per row from `lg`, comma separated — "4,5,4" as the frames draw it.
+   * The last number repeats. Rows of up to four take the larger tile.
+   */
+  row_sizes?: string;
   /** A button centred under the marks. It only renders when a label is set. */
   link_label?: string;
   link?: StoryblokLink;

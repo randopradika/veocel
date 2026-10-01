@@ -1068,6 +1068,10 @@
         ],
         "default_value": "center"
       },
+      "row_sizes": {
+        "type": "text",
+        "description": "Marks per row on desktop, comma separated. The design draws 4,5,4; the last number repeats. Rows of up to four use the larger tile. Empty means 4,5,4."
+      },
       "items": {
         "type": "bloks",
         "restrict_components": true,

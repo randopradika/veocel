@@ -129,11 +129,12 @@ export function ClaimGrid({
       <Container width="design">
         {blok.heading ? (
           <>
-            <h2 className="text-h2 font-bold text-brand md:text-h1">
+            {/* 72px on a 110px line from `xl` (2053:475, 2097:205). */}
+            <h2 className="text-h2 font-bold text-brand md:text-h1 xl:text-[4.5rem] xl:leading-[110px]">
               {blok.heading}
             </h2>
             {/* The design rules a hairline under the heading, across the column. */}
-            <div className="mt-5 border-t border-hairline" aria-hidden />
+            <div className="mt-5 border-t border-hairline xl:mt-[5px]" aria-hidden />
           </>
         ) : null}
 
@@ -142,10 +143,12 @@ export function ClaimGrid({
           partner in the row — the next card after an odd one, the one before
           an even one — drops back to its own height, rather than growing an
           empty plate beside the open card. Two columns only, so from `md`.
+          From `xl` the frames' 694px cards, 52px apart and ~50px between rows
+          (claims & certifications 2097:116), 47px under the rule (2053:474).
         */}
         {items.length > 0 ? (
           <div
-            className={`${blok.heading ? "mt-10 " : ""}grid gap-6 md:grid-cols-2 md:gap-10 md:[&>:nth-child(odd):has([aria-expanded=true])+*]:self-start md:[&>:nth-child(odd):has(+*_[aria-expanded=true])]:self-start`}
+            className={`${blok.heading ? "mt-10 xl:mt-[47px] " : ""}grid gap-6 md:grid-cols-2 md:gap-10 xl:gap-x-[52px] xl:gap-y-[50px] md:[&>:nth-child(odd):has([aria-expanded=true])+*]:self-start md:[&>:nth-child(odd):has(+*_[aria-expanded=true])]:self-start`}
           >
             {items.map((item) => (
               <ClaimCard key={item._uid} blok={item} certificates={certificates} />
