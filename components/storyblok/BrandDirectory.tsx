@@ -223,10 +223,17 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
               <li key={brand._uid} className="border-b border-hairline">
                 <SmartLink
                   link={brand.link}
-                  className="flex h-full flex-col px-4 pt-2 pb-6 transition-colors duration-200 hover:bg-brand-100/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
+                  className="flex h-full flex-col px-4 pt-2 pb-6 transition-colors xl:px-[33px] xl:pt-4 xl:pb-[29px] duration-200 hover:bg-brand-100/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
                 >
                   <span {...editableAttrs(brand)} className="flex h-full flex-col">
-                    <span className="h-4 text-sm font-semibold text-brand" aria-hidden>
+                    {/*
+                      From `xl` the frame's letter (2053:370): 24px, its glyph
+                      24px under the rule and 34px in, in rows 162px apart.
+                    */}
+                    <span
+                      className="h-4 text-sm font-semibold text-brand xl:h-6 xl:text-2xl xl:leading-6"
+                      aria-hidden
+                    >
                       {starts ? current : ""}
                     </span>
 
