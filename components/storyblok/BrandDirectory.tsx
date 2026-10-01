@@ -119,7 +119,8 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
       // the last block on a page keeps the gap to the band.
       className="bg-brand-50 xl:pt-[100px] xl:pb-0 xl:last:pb-[124px]"
     >
-      <Container>
+      {/* The frame's 1220px column from `xl` (2053:368, 350 to 1570 at 1920). */}
+      <Container className="xl:max-w-[1300px]">
         {/*
           From `xl` the frame's header (2053:368): a 96px heading, the 20/32
           intro on one 809px line 21px under it, and the filter 29px lower.
@@ -161,7 +162,12 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-1.5">
+        {/*
+          From `xl` the frame's letter row, spanning the column (2053:370):
+          36px discs 7px apart, 16px letters, 60px under the filter labels and
+          21px over the rule. A letter with no brands is bare text, no disc.
+        */}
+        <div className="mt-10 flex flex-wrap justify-center gap-1.5 xl:mt-[60px] xl:gap-[7px]">
           {ALPHABET.map((entry) => {
             const enabled = available.has(entry);
             const active = letter === entry;
@@ -174,12 +180,12 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
                 aria-pressed={active}
                 aria-label={entry === OTHER ? "brands starting with a number or symbol" : entry}
                 onClick={() => setLetter(active ? null : entry)}
-                className={`h-6 w-6 rounded-full text-sm leading-none transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                className={`h-6 w-6 rounded-full text-sm leading-none transition-colors xl:h-9 xl:w-9 xl:text-base duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
                   active
                     ? "bg-brand text-white"
                     : enabled
                       ? "bg-brand-200 text-brand-800 hover:bg-brand-300"
-                      : "bg-brand-100 text-brand-300"
+                      : "text-brand-300"
                 }`}
               >
                 {entry}
@@ -208,7 +214,7 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
           them. The trade is that a hover tint would darken through the logo
           too, so the hover cue is the cell's own tint, kept light.
         */}
-        <ul className="mt-10 grid grid-cols-2 border-t border-hairline sm:grid-cols-3 lg:grid-cols-5">
+        <ul className="mt-10 grid grid-cols-2 border-t border-hairline sm:grid-cols-3 lg:grid-cols-5 xl:mt-[21px]">
           {visible.map((brand, index) => {
             const current = letterOf(brand.name);
             const starts = index === 0 || letterOf(visible[index - 1].name) !== current;
