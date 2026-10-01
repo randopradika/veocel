@@ -1,7 +1,14 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
 import { KeepLastWords, Markdown } from "@/components/ui/Markdown";
-import type { CertificationItemBlok, ClaimCardBlok, ClaimGridBlok } from "@/lib/types";
+import { SmartLink } from "@/components/ui/SmartLink";
+import type {
+  CertificationItemBlok,
+  ClaimCardBlok,
+  ClaimGridBlok,
+  ProofLinkBlok,
+  StoryblokLink,
+} from "@/lib/types";
 
 import { CertificateLink } from "./CertificationTile";
 import { ClaimDetails } from "./ClaimDetails";
@@ -68,26 +75,62 @@ const PROOF_CERTIFICATES: { text: RegExp; label: RegExp }[] = [
   { text: /EU Ecolabel/i, label: /EU Ecolabel/i },
 ];
 
+type ProofPart =
+  | string
+  | { text: string; certificate: CertificationItemBlok }
+  | { text: string; link: ProofLinkBlok };
+
 /**
- * A proof entry cut into plain runs and the certificates it names, each paired
- * with its mark on the page. A name whose mark isn't on the page stays text.
+ * Whether a link field points anywhere. `resolveHref` would say, but it lives
+ * in a client module and this list renders on the server.
+ */
+function hasTarget(link?: StoryblokLink): boolean {
+  return Boolean(link?.url || link?.cached_url || link?.anchor);
+}
+
+/** The case-blind first occurrence of any of a proof link's alternatives. */
+function findProofLink(entry: string, link: ProofLinkBlok) {
+  const haystack = entry.toLowerCase();
+  for (const words of (link.text ?? "").split(/\r?\n/).map((line) => line.trim())) {
+    const at = words ? haystack.indexOf(words.toLowerCase()) : -1;
+    if (at >= 0) return { at, text: entry.slice(at, at + words.length) };
+  }
+  return null;
+}
+
+/**
+ * A proof entry cut into plain runs and the things it names: the card's own
+ * proof links first (Storyblok's `proof_links`), then the certificates on the
+ * page's wall. A name with nowhere to go stays text, and where two matches
+ * overlap the earlier one wins.
  */
 function linkProof(
   entry: string,
   certificates: CertificationItemBlok[],
-): (string | { text: string; certificate: CertificationItemBlok })[] {
-  const matches = PROOF_CERTIFICATES.flatMap(({ text, label }) => {
+  proofLinks: ProofLinkBlok[],
+): ProofPart[] {
+  const own = proofLinks.flatMap((link) => {
+    const found =
+      link.detail_image?.filename || hasTarget(link.link) ? findProofLink(entry, link) : null;
+    return found ? [{ ...found, link }] : [];
+  });
+  const marks = PROOF_CERTIFICATES.flatMap(({ text, label }) => {
     const certificate = certificates.find((item) => label.test(item.label ?? ""));
     const match = certificate ? text.exec(entry) : null;
     return match && certificate ? [{ at: match.index, text: match[0], certificate }] : [];
-  }).sort((a, b) => a.at - b.at);
+  });
+  const matches = [...own, ...marks].sort((a, b) => a.at - b.at);
 
-  const parts: (string | { text: string; certificate: CertificationItemBlok })[] = [];
+  const parts: ProofPart[] = [];
   let from = 0;
   for (const match of matches) {
     if (match.at < from) continue;
     if (match.at > from) parts.push(entry.slice(from, match.at));
-    parts.push({ text: match.text, certificate: match.certificate });
+    parts.push(
+      "link" in match
+        ? { text: match.text, link: match.link }
+        : { text: match.text, certificate: match.certificate },
+    );
     from = match.at + match.text.length;
   }
   if (from < entry.length) parts.push(entry.slice(from));
@@ -160,6 +203,36 @@ export function ClaimGrid({
   );
 }
 
+const PROOF_LINK =
+  "text-brand underline decoration-brand/40 underline-offset-2 transition-colors hover:decoration-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+
+/**
+ * A card's own proof link: a document in the certificate pop-up when it has an
+ * image, otherwise its `link` — a study or a folder that lives elsewhere.
+ */
+function ProofLink({ blok, children }: { blok: ProofLinkBlok; children: string }) {
+  if (blok.detail_image?.filename) {
+    return (
+      <CertificateLink
+        blok={{
+          _uid: blok._uid,
+          component: "certification_item",
+          label: blok.title || children,
+          detail_image: blok.detail_image,
+          detail_pages: blok.detail_pages,
+        }}
+      >
+        {children}
+      </CertificateLink>
+    );
+  }
+  return (
+    <SmartLink link={blok.link} className={PROOF_LINK}>
+      {children}
+    </SmartLink>
+  );
+}
+
 function ClaimCard({
   blok,
   certificates,
@@ -188,13 +261,17 @@ function ClaimCard({
             <ul className="mt-1 list-disc pl-5 text-[0.9375rem] leading-[1.6] text-pretty text-brand-800/80">
               {proof.map((entry, index) => (
                 <li key={index}>
-                  {linkProof(entry, certificates).map((part, at) =>
+                  {linkProof(entry, certificates, blok.proof_links ?? []).map((part, at) =>
                     typeof part === "string" ? (
                       <KeepLastWords key={at} text={part} />
-                    ) : (
+                    ) : "certificate" in part ? (
                       <CertificateLink key={at} blok={part.certificate}>
                         {part.text}
                       </CertificateLink>
+                    ) : (
+                      <ProofLink key={at} blok={part.link}>
+                        {part.text}
+                      </ProofLink>
                     ),
                   )}
                 </li>

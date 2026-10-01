@@ -284,9 +284,18 @@
         "display_name": "Headline position — horizontal",
         "description": "Where the headline sits across the photo. Centre is the design's layout.",
         "options": [
-          { "name": "Left", "value": "left" },
-          { "name": "Centre", "value": "center" },
-          { "name": "Right", "value": "right" }
+          {
+            "name": "Left",
+            "value": "left"
+          },
+          {
+            "name": "Centre",
+            "value": "center"
+          },
+          {
+            "name": "Right",
+            "value": "right"
+          }
         ],
         "default_value": "center"
       },
@@ -295,9 +304,18 @@
         "display_name": "Headline position — vertical",
         "description": "Where the headline sits down the photo. Middle is the design's layout.",
         "options": [
-          { "name": "Top", "value": "top" },
-          { "name": "Middle", "value": "middle" },
-          { "name": "Bottom", "value": "bottom" }
+          {
+            "name": "Top",
+            "value": "top"
+          },
+          {
+            "name": "Middle",
+            "value": "middle"
+          },
+          {
+            "name": "Bottom",
+            "value": "bottom"
+          }
         ],
         "default_value": "middle"
       },
@@ -714,10 +732,22 @@
         "type": "option",
         "display_name": "Body text size",
         "options": [
-          { "name": "Small — 16px", "value": "small" },
-          { "name": "Regular — 20px (the design)", "value": "regular" },
-          { "name": "Large — 24px", "value": "large" },
-          { "name": "Extra large — 32px", "value": "xlarge" }
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px (the design)",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
         ],
         "default_value": "regular",
         "description": "Desktop size of the copy; phones get a step smaller."
@@ -1169,6 +1199,49 @@
       "proof": {
         "type": "textarea",
         "description": "One certification or document per line."
+      },
+      "proof_links": {
+        "type": "bloks",
+        "restrict_components": true,
+        "component_whitelist": [
+          "proof_link"
+        ],
+        "display_name": "Proof links",
+        "description": "Words in the proof list that open a document in a pop-up, or a page elsewhere."
+      }
+    }
+  },
+  {
+    "name": "proof_link",
+    "display_name": "Proof link",
+    "is_root": false,
+    "is_nestable": true,
+    "schema": {
+      "text": {
+        "type": "textarea",
+        "description": "The words to link, exactly as the proof list writes them (case doesn't matter). One alternative per line."
+      },
+      "title": {
+        "type": "text",
+        "description": "Heading of the pop-up. Empty uses the linked words."
+      },
+      "detail_image": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "First page of the document. Set, and the words open it in a pop-up. Empty, and they follow the link below."
+      },
+      "detail_pages": {
+        "type": "multiasset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "The document's further pages, in order. They scroll under the first page."
+      },
+      "link": {
+        "type": "multilink",
+        "description": "Where the words go when there is no pop-up image — a study, a folder, a page."
       }
     }
   },
@@ -1501,7 +1574,9 @@
       },
       "banner_image": {
         "type": "asset",
-        "filetypes": ["images"],
+        "filetypes": [
+          "images"
+        ],
         "description": "The banner photograph at the top of the page, under the header. Drawn at 1920×540; set a focal point to steer the crop on narrower screens."
       },
       "folder": {

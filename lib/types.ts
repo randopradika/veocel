@@ -449,6 +449,24 @@ export type ClaimCardBlok = SbBlock & {
   proof_label?: string;
   /** One certification or document per line. */
   proof?: string;
+  /** Words in the proof lines that open a document or a page (see `ProofLinkBlok`). */
+  proof_links?: ProofLinkBlok[];
+};
+
+/**
+ * Turns words in a claim card's proof list into a link. With a `detail_image`
+ * the words open it in the certificate pop-up (`detail_pages` carry the rest
+ * of a multi-page document); without one they follow `link`.
+ */
+export type ProofLinkBlok = SbBlock & {
+  component: "proof_link";
+  /** The words to link, as the proof list writes them. One alternative per line. */
+  text?: string;
+  /** The pop-up's heading. Falls back to the linked words. */
+  title?: string;
+  detail_image?: StoryblokAsset;
+  detail_pages?: StoryblokAsset[];
+  link?: StoryblokLink;
 };
 
 export type ClaimGridBlok = SbBlock & {
