@@ -6,7 +6,6 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { BlockImage } from "@/components/ui/BlockImage";
 import { resolveHref, SmartLink } from "@/components/ui/SmartLink";
-import { naturalSize } from "@/lib/image";
 import type { CertificationItemBlok, SbBlock } from "@/lib/types";
 
 /**
@@ -44,6 +43,13 @@ const TILE =
  * square logo.
  */
 const DIALOG_SIZE = "h-[min(100dvh_-_2rem,44rem)] w-[min(100vw_-_2rem,56rem)]";
+
+/**
+ * A document of several pages takes the screen's height (less the same 1rem
+ * margin), so each page — fitted whole into the scroll area, see
+ * `CertificateDialog` — is as large as the screen allows.
+ */
+const DOCUMENT_SIZE = "h-[calc(100dvh_-_2rem)] w-[min(100vw_-_2rem,64rem)]";
 
 export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
   const detail = Boolean(blok.detail_image?.filename);
@@ -189,7 +195,7 @@ function CertificateDialog({
           event.clientY <= box.bottom;
         if (!inside) onClose();
       }}
-      className={`m-auto ${DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
+      className={`m-auto ${pages.length > 1 ? DOCUMENT_SIZE : DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
     >
       <div className="relative flex h-full flex-col px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-10">
         <button
@@ -209,23 +215,22 @@ function CertificateDialog({
         {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
 
         {pages.length > 1 ? (
-          // Several pages scroll, each at the panel's width and its own shape —
-          // fitting three A4 pages into one box would leave none of them legible.
+          // Several pages scroll one whole page at a time: each is fitted into the
+          // full height of the scroll area, so a page reads without scrolling
+          // inside it, and the scroll snaps from one page to the next.
           <div
-            className={`min-h-0 w-full flex-1 space-y-4 overflow-y-auto overscroll-contain ${
+            className={`min-h-0 w-full flex-1 snap-y snap-mandatory space-y-4 overflow-y-auto overscroll-contain ${
               blok.label || blok.note ? "mt-6" : ""
             }`}
           >
             {pages.map((page, index) => {
-              const size = naturalSize(page.filename);
               return (
                 <BlockImage
                   key={page.id ?? index}
                   asset={page}
                   alt={blok.label ? `${blok.label}, page ${index + 1}` : ""}
-                  sizes="(max-width: 768px) 100vw, 56rem"
-                  className="relative w-full rounded-sm border border-hairline"
-                  style={{ aspectRatio: size ? `${size.width} / ${size.height}` : "595 / 842" }}
+                  sizes="(max-width: 768px) 100vw, 64rem"
+                  className="relative h-full w-full snap-start"
                   imageClassName="object-contain"
                   placeholderTone="neutral"
                   onContextMenu={(event) => event.preventDefault()}
