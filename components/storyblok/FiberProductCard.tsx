@@ -180,19 +180,19 @@ export function FiberProductCard({
 
               {/*
                 From `md` the plate is sized to hold its own beside the photo
-                (asked for on 2026-10-01, from the client's mock-up): 20px
-                type, 28px between rows, labels and values breaking onto two
-                lines ("fiber / diameter", "standard, fine, / coarse"), values
-                right-aligned.
+                (asked for on 2026-10-01, from the client's mock-up): 18px
+                type, 28px between rows, each label on one line ("Fiber
+                Diameter", revised on 2026-10-02) and the value taking the rest
+                of the row, right-aligned, wrapping only when it must.
               */}
               {specs.length > 0 ? (
-                <dl className="mt-8 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-xl md:leading-[1.3]">
+                <dl className="mt-8 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-lg md:leading-[1.35]">
                   {specs.map(([label, value]) => (
                     <div key={label} className="flex items-baseline justify-between gap-4 md:gap-8">
-                      <dt className="font-bold whitespace-nowrap text-ink md:max-w-[7rem] md:whitespace-normal">
+                      <dt className="shrink-0 font-bold whitespace-nowrap text-ink">
                         {label}
                       </dt>
-                      <dd className="text-right text-ink-muted md:max-w-[10.5rem]">{value}</dd>
+                      <dd className="text-right text-ink-muted">{value}</dd>
                     </div>
                   ))}
                 </dl>
