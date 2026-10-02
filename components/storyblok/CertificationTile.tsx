@@ -36,20 +36,15 @@ const TILE =
   "group block w-full rounded-card focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand";
 
 /**
- * One size for every certificate pop-up, whatever its image: 56rem × 44rem, or
- * the screen less a 1rem margin where that is smaller. The image takes whatever
- * height the name, note and link leave and scales to fit inside it, so the
- * dialog never scrolls and a landscape certificate opens in the same box as a
- * square logo.
+ * One size for every certificate and document pop-up, single page or many:
+ * the screen's height less a 1rem margin (60rem at most), and a width taken
+ * from that height so an A4 page fills the frame edge to edge — the page area
+ * (the height less 6.5rem of header and padding) times 1/√2, plus 3rem of
+ * side padding. Wider pages (landscape certificates, slide decks) fit by
+ * width inside the same box; a narrow screen caps the width at its own.
  */
-const DIALOG_SIZE = "h-[min(100dvh_-_2rem,44rem)] w-[min(100vw_-_2rem,56rem)]";
-
-/**
- * A document of several pages takes the screen's height (less the same 1rem
- * margin), so each page — fitted whole into the scroll area, see
- * `CertificateDialog` — is as large as the screen allows.
- */
-const DOCUMENT_SIZE = "h-[calc(100dvh_-_2rem)] w-[min(100vw_-_2rem,64rem)]";
+const DIALOG_SIZE =
+  "h-[min(100dvh_-_2rem,60rem)] w-[min(100vw_-_2rem,calc((min(100dvh_-_2rem,60rem)_-_6.5rem)*0.7071_+_3rem))]";
 
 export function CertificationTile({ blok }: { blok: CertificationItemBlok }) {
   const detail = Boolean(blok.detail_image?.filename);
@@ -195,33 +190,46 @@ function CertificateDialog({
           event.clientY <= box.bottom;
         if (!inside) onClose();
       }}
-      className={`m-auto ${pages.length > 1 ? DOCUMENT_SIZE : DIALOG_SIZE} overflow-hidden rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
+      className={`m-auto ${DIALOG_SIZE} overflow-hidden rounded-[1.75rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70`}
     >
-      <div className="relative flex h-full flex-col px-6 pt-16 pb-8 md:px-12 md:pt-20 md:pb-10">
-        <button
-          type="button"
-          onClick={() => onClose()}
-          aria-label="close"
-          className="group absolute top-5 right-5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
-        >
-          <ArrowMarker icon="close" tone="brand" size="md" />
-        </button>
-
-        {blok.label ? (
-          <h2 id={titleId} className="text-2xl font-bold tracking-[-0.02em] text-brand">
-            {blok.label}
-          </h2>
+      <div className="relative flex h-full flex-col px-6 pt-5 pb-6">
+        {/*
+          Title and close button share one line: the title takes what the
+          button leaves and is cut with an ellipsis rather than wrapping, so
+          every pop-up keeps the same header height and the page below it the
+          same room.
+        */}
+        <div className="flex shrink-0 items-center gap-4">
+          {blok.label ? (
+            <h2
+              id={titleId}
+              title={blok.label}
+              className="min-w-0 flex-1 truncate text-xl font-bold tracking-[-0.02em] text-brand md:text-2xl"
+            >
+              {blok.label}
+            </h2>
+          ) : (
+            <span className="flex-1" />
+          )}
+          <button
+            type="button"
+            onClick={() => onClose()}
+            aria-label="close"
+            className="group shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            <ArrowMarker icon="close" tone="brand" size="md" />
+          </button>
+        </div>
+        {blok.note ? (
+          <p className="mt-1 shrink-0 truncate text-sm leading-snug text-ink-muted">{blok.note}</p>
         ) : null}
-        {blok.note ? <p className="mt-1 text-sm leading-snug text-ink-muted">{blok.note}</p> : null}
 
         {pages.length > 1 ? (
           // Several pages scroll one whole page at a time: each is fitted into the
           // full height of the scroll area, so a page reads without scrolling
           // inside it, and the scroll snaps from one page to the next.
           <div
-            className={`min-h-0 w-full flex-1 snap-y snap-mandatory space-y-4 overflow-y-auto overscroll-contain ${
-              blok.label || blok.note ? "mt-6" : ""
-            }`}
+            className="mt-4 min-h-0 w-full flex-1 snap-y snap-mandatory space-y-4 overflow-y-auto overscroll-contain"
           >
             {pages.map((page, index) => {
               return (
@@ -240,7 +248,7 @@ function CertificateDialog({
             })}
           </div>
         ) : (
-          <div className={`relative min-h-0 w-full flex-1 ${blok.label || blok.note ? "mt-6" : ""}`}>
+          <div className="relative mt-4 min-h-0 w-full flex-1">
             <BlockImage
               asset={blok.detail_image}
               alt={blok.label ?? ""}
