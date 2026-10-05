@@ -3,6 +3,7 @@ import { BlockImage } from "@/components/ui/BlockImage";
 import { Container, Section } from "@/components/ui/Container";
 import { Markdown } from "@/components/ui/Markdown";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { headlineLines } from "@/lib/headlineLines";
 import type { ProcessRowBlok, ProcessStepBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -226,8 +227,16 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
           </h2>
         ) : null}
 
+        {/*
+          From `lg` the row is the frame scaled to fit: `--u` is one design pixel
+          of the 1440px row, so every card measurement below is written in frame
+          pixels and the type shrinks with the card rather than wrapping
+          differently. The column gap is the frame's 31px as a share of the row.
+        */}
         {steps.length > 0 ? (
-          <ol className={`${blok.heading ? "mt-12 " : ""}grid gap-6 md:grid-cols-3 xl:gap-x-[31px] xl:gap-y-0`}>
+          <ol
+            className={`${blok.heading ? "mt-12 " : ""}grid gap-6 md:grid-cols-3 lg:[container-type:inline-size] lg:gap-x-[2.153%] lg:gap-y-0 lg:[--u:calc(100cqw/1440)]`}
+          >
             {steps.map((step) => (
               <StepCard key={step._uid} blok={step} />
             ))}
@@ -244,37 +253,53 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
  * frame bottom-aligns them and starts every description on the same line.
  */
 /**
- * From `xl` the partners frame's card (2053:350–362): 459 x 572 with a 20px
- * radius, the 433 x 262 photograph inset 13px, 32px titles sharing a baseline
- * 36px under it, 16/28 copy in black 22px lower, 46px of card below the longest
- * (four lines held, which makes the 572). 31px between cards. No row gap from
- * `xl`: the cards are subgrids, so the list's row gap would open inside every
- * card.
+ * From `lg` the partners frame's card (2053:350–362), in frame pixels: 459 x 572
+ * with a 20px radius, the 433 x 262 photograph inset 13px, 32/40 titles sharing a
+ * baseline 36px under it, 16/28 copy in black 22px lower, 46px of card below the
+ * longest (four lines held, which makes the 572). No row gap from `lg`: the
+ * cards are subgrids, so the list's row gap would open inside every card.
+ *
+ * The frame breaks its lines by hand. Titles are a one-line field, so a title
+ * too long for one line is split the way the hero headlines are, which gives
+ * the frame's "send us a physical sample / for testing and verifications"; the
+ * description is a textarea and keeps the editor's own line breaks. Below `lg`
+ * both wrap freely.
  */
 function StepCard({ blok }: { blok: ProcessStepBlok }) {
+  const title = blok.title ?? "";
+  const titleLines = title.length > TITLE_ONE_LINE || /\n/.test(title) ? headlineLines(title) : [title];
+
   return (
     <li
       {...editable(blok)}
-      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center xl:rounded-[20px] xl:p-[13px] xl:pt-[14px] xl:pb-[46px]"
+      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center lg:rounded-[calc(20*var(--u))] lg:px-[calc(13*var(--u))] lg:pt-[calc(14*var(--u))] lg:pb-[calc(46*var(--u))]"
     >
       <BlockImage
         asset={blok.image}
         alt=""
         sizes="(max-width: 768px) 100vw, 33vw"
-        className="relative aspect-[433/262] w-full rounded-card xl:rounded-[20px]"
+        className="relative aspect-[433/262] w-full rounded-card lg:rounded-[calc(20*var(--u))]"
         placeholderTone="sky"
       />
-      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand xl:mt-9 xl:px-0 xl:text-[2rem] xl:leading-[40px] xl:tracking-[-0.05em]">
-        {blok.title}
+      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand lg:mt-[calc(36*var(--u))] lg:px-0 lg:text-[length:calc(32*var(--u))] lg:leading-[calc(40*var(--u))] lg:tracking-[-0.05em]">
+        {titleLines.map((line, i) => (
+          <span key={i} className="lg:block">
+            {i > 0 ? " " : ""}
+            {line}
+          </span>
+        ))}
       </h3>
       {blok.description ? (
-        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted xl:mt-[22px] xl:min-h-28 xl:px-0 xl:text-base xl:leading-7 xl:tracking-[-0.05em] xl:text-black">
+        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted lg:mt-[calc(22*var(--u))] lg:min-h-[calc(112*var(--u))] lg:px-0 lg:text-[length:calc(16*var(--u))] lg:leading-[calc(28*var(--u))] lg:tracking-[-0.05em] lg:whitespace-pre-line lg:text-black">
           {blok.description}
         </p>
       ) : null}
     </li>
   );
 }
+
+/** Longest title the card sets on one line — "fill out the online forms" is 25. */
+const TITLE_ONE_LINE = 28;
 
 function RowStep({ blok }: { blok: ProcessStepBlok }) {
   return (

@@ -1191,23 +1191,24 @@ const partners: PageBlok = {
           component: "process_step",
           title: "fill out the online forms",
           description:
-            "Lenzing Partners from Nonwoven Industry planning to use VEOCEL™ can start right away.",
+            "Lenzing Partners from Nonwoven Industry\nplanning to use VEOCEL™ can start right away.",
         },
         {
           _uid: "pt-step-2",
           component: "process_step",
           title: "send us a physical sample for testing and verifications",
           description:
-            "Lenzing reviews your license application and a sample needs to be provided for testing.",
+            "Lenzing reviews your license application\nand a sample needs to be provided for testing.",
         },
         {
           _uid: "pt-step-3",
           component: "process_step",
           title: "receive your license confirmation letter",
           description:
-            "After successful review by Lenzing, you will receive a VEOCEL™ brand license. " +
-            "then prepare your product launch using our brand logos, benefit, claims with " +
-            "the support of our Licensing team.",
+            "After successful review by Lenzing, you will\n" +
+            "receive a VEOCEL™ brand license. then prepare\n" +
+            "your product launch using our brand logos, benefit,\n" +
+            "claims with the support of our Licensing team.",
         },
       ],
     },
