@@ -138,6 +138,8 @@ export type HeroBlok = SbBlock & {
   headline_highlight?: string;
   subline?: string;
   background_image?: StoryblokAsset;
+  /** Shown below `md` instead of `background_image`; empty falls back to it. */
+  background_image_mobile?: StoryblokAsset;
   scroll_hint?: string;
   /**
    * `display` is the home page's word-as-poster type. `title` is the smaller
@@ -275,6 +277,8 @@ export type PageHeroBlok = SbBlock & {
   title: string;
   subtitle?: string;
   image?: StoryblokAsset;
+  /** Shown below `md` instead of `image`; empty falls back to it. */
+  image_mobile?: StoryblokAsset;
   /** `dark` = white type over a scrim; `light` = brand-blue type on a tint. */
   theme?: "dark" | "light";
 };

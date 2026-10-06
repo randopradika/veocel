@@ -248,6 +248,13 @@
           "images"
         ]
       },
+      "background_image_mobile": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Optional crop for phones. Leave empty to use the background image."
+      },
       "scroll_hint": {
         "type": "text"
       },
@@ -722,6 +729,13 @@
         "filetypes": [
           "images"
         ]
+      },
+      "image_mobile": {
+        "type": "asset",
+        "filetypes": [
+          "images"
+        ],
+        "description": "Optional crop for phones. Leave empty to use the image."
       },
       "theme": {
         "type": "option",

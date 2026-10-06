@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import type { CSSProperties, MouseEventHandler } from "react";
 
 import { altText } from "@/lib/image";
@@ -21,8 +21,16 @@ const TONE_CLASSES = {
   neutral: "from-hairline to-ink-faint/40",
 } as const;
 
+/** Where `mobileAsset` takes over: below Tailwind's `md`, the site's phone/desktop split. */
+const MOBILE_MEDIA = "(width < 48rem)";
+
 type BlockImageProps = {
   asset?: StoryblokAsset;
+  /**
+   * A separate crop for phones, swapped in below `md` through `<picture>` so a
+   * phone downloads only its own file. Empty falls back to `asset`.
+   */
+  mobileAsset?: StoryblokAsset;
   /** Used when the asset has no alt text of its own. */
   alt?: string;
   sizes?: string;
@@ -57,6 +65,7 @@ type BlockImageProps = {
 
 export function BlockImage({
   asset,
+  mobileAsset,
   alt = "",
   sizes = "100vw",
   className = "",
@@ -69,7 +78,9 @@ export function BlockImage({
   draggable,
   onContextMenu,
 }: BlockImageProps) {
-  const filename = asset?.filename;
+  const mobileFilename = mobileAsset?.filename;
+  // With only a mobile image set, it stands in at every width.
+  const filename = asset?.filename || mobileFilename;
 
   if (!filename) {
     return (
@@ -83,6 +94,28 @@ export function BlockImage({
             {placeholderLabel}
           </span>
         ) : null}
+      </div>
+    );
+  }
+
+  if (mobileFilename && mobileFilename !== filename) {
+    const common = { alt: altText(asset, alt), fill: true, sizes, priority };
+    const { props: mobile } = getImageProps({ ...common, src: mobileFilename });
+    const { props: desktop } = getImageProps({ ...common, src: filename });
+
+    return (
+      <div className={`overflow-hidden ${className}`} style={style}>
+        <picture>
+          <source media={MOBILE_MEDIA} srcSet={mobile.srcSet} sizes={mobile.sizes} />
+          <img
+            {...desktop}
+            alt={desktop.alt}
+            className={imageClassName}
+            style={objectPosition ? { ...desktop.style, objectPosition } : desktop.style}
+            draggable={draggable}
+            onContextMenu={onContextMenu}
+          />
+        </picture>
       </div>
     );
   }

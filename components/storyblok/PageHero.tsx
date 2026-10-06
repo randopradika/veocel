@@ -30,6 +30,7 @@ export function PageHero({ blok }: { blok: PageHeroBlok }) {
         <>
           <BlockImage
             asset={blok.image}
+            mobileAsset={blok.image_mobile}
             alt={blok.title}
             priority
             sizes="100vw"

@@ -169,6 +169,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
     >
       <BlockImage
         asset={blok.background_image}
+        mobileAsset={blok.background_image_mobile}
         alt={headline}
         priority
         sizes="100vw"
