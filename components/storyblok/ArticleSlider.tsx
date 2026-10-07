@@ -128,7 +128,7 @@ export function ArticleSlider({ slides }: { slides: ArticleSlide[] }) {
                   ) : null}
                 </div>
 
-                <h2 className="mt-1 max-w-[1112px] text-h2 font-bold text-brand md:text-h1">
+                <h2 className="mt-1 line-clamp-3 max-w-[1112px] text-[min(1.5rem,6.4vw)] leading-[1.15] font-bold tracking-[-0.05em] text-brand md:line-clamp-none md:text-h1">
                   <Link
                     href={slide.href}
                     className={`${STRETCHED_LINK} focus-visible:after:-outline-offset-4`}

@@ -50,11 +50,19 @@ export function FeatureAccordion({ blok }: { blok: FeatureAccordionBlok }) {
   return (
     <Section
       {...editableAttrs(blok)}
-      spacing={layout === "tiles" ? "default" : "tight"}
+      spacing={layout === "tiles" ? "default" : layout === "cards" ? "none" : "tight"}
       // Desktop rhythm from the "dev" board (2053:170): the cards 80px under the copy
       // above, 96px to the band (2053:1040). No padding below, or neighbours would stack;
       // the last block on a page keeps the gap to the band.
-      className={layout === "cards" ? "xl:pt-20 xl:pb-0 xl:last:pb-24" : ""}
+      // Below `xl` a block takes padding above only, so neighbours meet at one
+      // gap rather than two stacked — 48px on a phone, asked for on 2026-10-07
+      // ("space jangan kejauhan"), where the two paddings had added up to 120.
+      // The last block on the page keeps its padding below, to the band.
+      className={
+        layout === "cards"
+          ? "pt-12 last:pb-12 md:pt-16 md:last:pb-16 xl:pt-20 xl:last:pb-24"
+          : ""
+      }
     >
       <Container width="design">
         {blok.heading ? (

@@ -20,11 +20,10 @@ import { editable } from "./editable";
  * the same strip is repeated across every page in a section, so a flag would have
  * to be re-pointed on each copy and would go stale the moment a slug changed.
  *
- * On a phone or tablet the strip collapses into the mobile frame's dropdown
- * (2035:137 / 2035:211): one pill naming the page you are on — or inviting you
- * to "select destination" where no card matches, as on the home page — that
- * opens the same list of links. It used to scroll sideways there, which left
- * five of the seven destinations off-screen.
+ * On a phone or tablet the strip collapses into the mobile frame's dropdown:
+ * one pill reading "select destination" that opens the same list of links. It
+ * used to scroll sideways there, which left five of the seven destinations
+ * off-screen, and until 2026-10 the pill named the page you were on.
  *
  * A mouse or trackpad keeps the cards at every width. Browser zoom narrows the
  * CSS viewport — Cmd + to 125% puts a 1440 laptop at 1152 — so a width
@@ -53,7 +52,12 @@ export function HeroNavCards({
 
   return (
     <>
-      <HeroNavDropdown cards={cards} currentIndex={currentIndex} placeholder={placeholder} />
+      <HeroNavDropdown
+        cards={cards}
+        currentIndex={currentIndex}
+        placeholder={placeholder}
+        home={pathname === localePath(locale, "/")}
+      />
 
       {/*
         `gap-2.5` is the design's 10px between tabs (nodes 2053:1230 and
@@ -171,11 +175,15 @@ export function HeroNavCards({
 }
 
 /**
- * The touch-screen form of the strip, under `xl`: a 64px pill (20px radius, white hairline)
- * with a 40px chevron disc, drawn as the frame does — outlined in white with
- * white type when nothing is selected, the strip's pale plate with blue type
- * and a filled disc when the page is in the list. The pill is drawn 1:1 from
- * the 402-wide frame: 20px bold type on a 30px line, 24px inset.
+ * The touch-screen form of the strip, under `xl`: a 64px pill (20px radius,
+ * hairline) with a 40px chevron disc, drawn 1:1 from the 402-wide frame: 20px
+ * bold type on a 30px line, 24px inset.
+ *
+ * It reads "select destination" on every page, outlined in white — the 2026-10
+ * banner frames (2122:194 and the five section banners). The page you are on
+ * is marked in the list it opens, no longer on the pill. The home page alone
+ * draws it in brand blue (asked for alongside those frames): its photograph is
+ * pale, and a white outline vanished into it.
  *
  * The list opens upwards: the pill is pinned near the hero's bottom edge and
  * the hero clips its overflow, so a menu dropping below it would be cut off.
@@ -188,16 +196,18 @@ function HeroNavDropdown({
   cards,
   currentIndex,
   placeholder,
+  home,
 }: {
   cards: HeroNavCardBlok[];
   currentIndex: number;
   placeholder?: string;
+  /** The home page, whose pill is blue rather than white. */
+  home: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const listId = useId();
-  const current = currentIndex >= 0 ? cards[currentIndex] : undefined;
 
   useEffect(() => {
     if (!open) return;
@@ -231,15 +241,17 @@ function HeroNavDropdown({
         aria-controls={listId}
         // `min-h`, not a fixed height: a long label ("daily care products w/
         // VEOCEL™ fibers") wraps to two lines rather than being cut off.
-        className={`flex min-h-16 w-full items-center justify-between gap-4 rounded-panel border border-white py-2 pr-5 pl-6 text-left text-xl leading-[1.5] font-bold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-          current ? "bg-brand-200 text-brand" : "text-white"
+        className={`flex min-h-16 w-full items-center justify-between gap-4 rounded-panel border py-2 pr-5 pl-6 text-left text-xl leading-[1.5] font-bold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          home
+            ? "border-brand text-brand focus-visible:outline-brand"
+            : "border-white text-white focus-visible:outline-white"
         }`}
       >
-        <span>{current?.label ?? placeholder ?? "select destination"}</span>
+        <span>{placeholder || "select destination"}</span>
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-transform duration-200 ${
             open ? "rotate-180" : ""
-          } ${current ? "border-brand bg-brand text-white" : "border-white text-white"}`}
+          } ${home ? "border-brand" : "border-white"}`}
           aria-hidden
         >
           <ChevronIcon />

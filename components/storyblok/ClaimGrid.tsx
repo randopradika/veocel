@@ -43,6 +43,26 @@ function escapeFootnotes(body?: string): string | undefined {
 }
 
 /**
+ * The bare "lenzing.com" the claim copy cites its policies by — "Lenzing Wood
+ * & Pulp Policy (lenzing.com)" — which the client asked to be a link to the
+ * site (2026-10-07). Matched in the copy rather than linked in Storyblok, so
+ * every card that cites it, on every page, links the same way. Not a word that
+ * is already part of a link or a longer address.
+ */
+const LENZING = /(?<![\w./[@-])lenzing\.com(?![\w/\]-])/gi;
+const LENZING_URL = "https://www.lenzing.com";
+
+function linkLenzing(body?: string): string | undefined {
+  return body?.replace(LENZING, (match) => `[${match}](${LENZING_URL})`);
+}
+
+const LENZING_LINK: ProofLinkBlok = {
+  _uid: "lenzing.com",
+  component: "proof_link",
+  link: { linktype: "url", url: LENZING_URL, target: "_blank" },
+};
+
+/**
  * The body's first paragraph, which stays on the folded card, and the rest —
  * the footnotes, on the cards that have them. Paragraphs are split on a blank
  * line, as Markdown splits them.
@@ -113,7 +133,7 @@ function findProofLink(entry: string, link: ProofLinkBlok) {
 /**
  * A proof entry cut into plain runs and the things it names: the card's own
  * proof links first (Storyblok's `proof_links`), then the certificates on the
- * page's wall. A name with nowhere to go stays text, and where two matches
+ * page's wall, then "lenzing.com". A name with nowhere to go stays text, and where two matches
  * overlap the earlier one wins.
  */
 function linkProof(
@@ -131,7 +151,12 @@ function linkProof(
     const match = certificate ? text.exec(entry) : null;
     return match && certificate ? [{ at: match.index, text: match[0], certificate }] : [];
   });
-  const matches = [...own, ...marks].sort((a, b) => a.at - b.at);
+  const site = [...entry.matchAll(LENZING)].map((match) => ({
+    at: match.index,
+    text: match[0],
+    link: LENZING_LINK,
+  }));
+  const matches = [...own, ...marks, ...site].sort((a, b) => a.at - b.at);
 
   const parts: ProofPart[] = [];
   let from = 0;
@@ -178,11 +203,15 @@ export function ClaimGrid({
   return (
     <Section
       {...editable(blok)}
-      spacing="default"
+      spacing="none"
       // Desktop rhythm from the "dev" board (2053:170): 90px above, 94px to the band
       // (sustainability 2053:474). No padding below, or neighbours would stack; the last
       // block on a page keeps the gap to the band.
-      className="xl:pt-[90px] xl:pb-0 xl:last:pb-[94px]"
+      // Below `xl` a block takes padding above only, so neighbours meet at one
+      // gap rather than two stacked — 48px on a phone, asked for on 2026-10-07
+      // ("space jangan kejauhan"), where the two paddings had added up to 120.
+      // The last block on the page keeps its padding below, to the band.
+      className="pt-12 last:pb-section-sm md:pt-16 md:last:pb-section xl:pt-[90px] xl:last:pb-[94px]"
     >
       <Container width="design">
         {blok.heading ? (
@@ -263,7 +292,7 @@ function ClaimCard({
   proofLinks: ProofLinkBlok[];
 }) {
   const proof = lines(blok.proof);
-  const { lead, rest } = splitBody(escapeFootnotes(blok.body));
+  const { lead, rest } = splitBody(linkLenzing(escapeFootnotes(blok.body)));
 
   const details =
     rest || proof.length > 0 ? (

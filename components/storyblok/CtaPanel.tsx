@@ -4,6 +4,18 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import type { CtaPanelBlok } from "@/lib/types";
 
 import { editable } from "./editable";
+import { textSizeClass } from "./textSize";
+
+/**
+ * The body's own size when `body_size` is empty: the frame's 32/54 (2053:363)
+ * came down to 24/40 on 2026-10-07 ("kecilin font yg interested in becoming
+ * …"), with a field so an editor can pick the step instead.
+ *
+ * The measure is the frame's 1125px box as ems of its 32px type, 35.16em, so
+ * the copy breaks into the frame's three lines at whatever size is picked —
+ * a fixed 1125px let the smaller type run to two.
+ */
+const BODY_SIZE = "text-base leading-[1.4] md:text-xl xl:text-2xl xl:leading-10";
 
 /**
  * A white call-to-action panel on the tinted band: centred heading, a short
@@ -20,11 +32,11 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
   return (
     <Section
       {...editable(blok)}
-      spacing="tight"
+      spacing="none"
       // Desktop rhythm from the "dev" board (2053:170): 136px under the hero tabs and to
       // the band (partners 2053:247). No padding below, or neighbours would stack; the
-      // last block on a page keeps the gap to the band.
-      className="bg-brand-50 md:bg-[#e6f1f8] xl:pt-[136px] xl:pb-0 xl:last:pb-[136px]"
+      // last block on a page keeps the gap to the band — below `xl` too.
+      className="bg-brand-50 pt-12 last:pb-12 md:bg-[#e6f1f8] md:pt-16 md:last:pb-16 xl:pt-[136px] xl:last:pb-[136px]"
     >
       <Container width="design">
         {/*
@@ -42,7 +54,10 @@ export function CtaPanel({ blok }: { blok: CtaPanelBlok }) {
           ) : null}
 
           <Markdown
-            className="mx-auto mt-5 max-w-3xl text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-10 xl:max-w-[1125px] xl:text-[2rem] xl:leading-[54px] xl:tracking-[-0.05em] xl:text-[#4d4d4d]"
+            className={`mx-auto mt-5 max-w-3xl text-ink-muted xl:mt-10 xl:max-w-[35.16em] xl:tracking-[-0.05em] xl:text-[#4d4d4d] ${textSizeClass(
+              blok.body_size,
+              BODY_SIZE,
+            )}`}
             gap="loose"
           >
             {blok.body}

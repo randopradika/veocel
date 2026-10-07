@@ -142,8 +142,14 @@ export function BrandDirectory({ blok }: { blok: BrandDirectoryBlok }) {
           </p>
         ) : null}
 
-        {/* 76px discs 32px apart, 16px labels 9px under them (2053:369). */}
-        <div className="mt-10 flex flex-wrap justify-center gap-6 md:gap-9 xl:mt-[29px] xl:gap-8">
+        {/*
+          76px discs 32px apart, 16px labels 9px under them (2053:369).
+
+          On a phone, three to a row — each a third of it — so the five read
+          3 + 2 with the second row centred, rather than four and a lone
+          "beauty" (asked for on 2026-10-07).
+        */}
+        <div className="mt-10 flex flex-wrap justify-center gap-6 max-md:[&>*]:basis-[calc((100%-3rem)/3)] md:gap-9 xl:mt-[29px] xl:gap-8">
           <CategoryButton
             label={ALL}
             count={counts.get(ALL) ?? 0}

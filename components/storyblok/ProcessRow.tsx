@@ -210,11 +210,14 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
   return (
     <Section
       {...editable(blok)}
-      spacing="tight"
+      spacing="none"
       // Desktop rhythm from the "dev" board (2053:170): the cards 60px under the Lenzing
       // Pro panel, 136px to the band (2053:247). No padding below, or neighbours would
       // stack; the last block on a page keeps the gap to the band.
-      className="bg-brand-50 md:bg-[#e6f1f8] xl:pt-[60px] xl:pb-0 xl:last:pb-[136px]"
+      //
+      // Below `xl` the cards follow the panel at the cards' own 24px gap (40px on a
+      // tablet) — the two blocks' paddings had stacked to 96 (2026-10-07).
+      className="bg-brand-50 pt-6 pb-12 md:bg-[#e6f1f8] md:pt-10 md:pb-16 xl:pt-[60px] xl:pb-0 xl:last:pb-[136px]"
     >
       <Container width="design">
         {blok.heading ? (
@@ -255,8 +258,14 @@ function ProcessCards({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessSte
 /**
  * From `lg` the partners frame's card (2053:350–362), in frame pixels: 459 x 572
  * with a 20px radius, the 433 x 262 photograph inset 13px, 32/40 titles sharing a
- * baseline 36px under it, 16/28 copy in black 22px lower, 46px of card below the
- * longest (four lines held, which makes the 572). No row gap from `lg`: the
+ * baseline 36px under it, copy in black 22px lower, 46px of card below the
+ * longest (four lines held). The frame sets the copy 16/28; it is 18/30 since
+ * 2026-10-07, when the client's own Figma showed it a size larger than the
+ * site ("font yg di web masih belum persis sebesar kayak di figma").
+ *
+ * Below `md` a card is a plain column rather than a subgrid: the list's 24px
+ * row gap opened inside every card as well, which with the margins put ~50px
+ * between photograph, title and copy on a phone (asked closer, 2026-10-07). No row gap from `lg`: the
  * cards are subgrids, so the list's row gap would open inside every card.
  *
  * The frame breaks its lines by hand. Titles are a one-line field, so a title
@@ -272,7 +281,7 @@ function StepCard({ blok }: { blok: ProcessStepBlok }) {
   return (
     <li
       {...editable(blok)}
-      className="row-span-3 grid grid-rows-subgrid rounded-panel bg-white p-2.5 pb-9 text-center lg:rounded-[calc(20*var(--u))] lg:px-[calc(13*var(--u))] lg:pt-[calc(14*var(--u))] lg:pb-[calc(46*var(--u))]"
+      className="flex flex-col rounded-panel bg-white p-2.5 pb-8 text-center md:row-span-3 md:grid md:grid-rows-subgrid md:pb-9 lg:rounded-[calc(20*var(--u))] lg:px-[calc(13*var(--u))] lg:pt-[calc(14*var(--u))] lg:pb-[calc(46*var(--u))]"
     >
       <BlockImage
         asset={blok.image}
@@ -281,7 +290,7 @@ function StepCard({ blok }: { blok: ProcessStepBlok }) {
         className="relative aspect-[433/262] w-full rounded-card lg:rounded-[calc(20*var(--u))]"
         placeholderTone="sky"
       />
-      <h3 className="mt-7 self-end px-4 text-2xl leading-tight font-bold tracking-tight text-brand lg:mt-[calc(36*var(--u))] lg:px-0 lg:text-[length:calc(32*var(--u))] lg:leading-[calc(40*var(--u))] lg:tracking-[-0.05em]">
+      <h3 className="mt-5 px-4 md:mt-7 md:self-end text-2xl leading-tight font-bold tracking-tight text-brand lg:mt-[calc(36*var(--u))] lg:px-0 lg:text-[length:calc(32*var(--u))] lg:leading-[calc(40*var(--u))] lg:tracking-[-0.05em]">
         {titleLines.map((line, i) => (
           <span key={i} className="lg:block">
             {i > 0 ? " " : ""}
@@ -290,7 +299,7 @@ function StepCard({ blok }: { blok: ProcessStepBlok }) {
         ))}
       </h3>
       {blok.description ? (
-        <p className="mt-4 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted lg:mt-[calc(22*var(--u))] lg:min-h-[calc(112*var(--u))] lg:px-0 lg:text-[length:calc(16*var(--u))] lg:leading-[calc(28*var(--u))] lg:tracking-[-0.05em] lg:whitespace-pre-line lg:text-black">
+        <p className="mt-2 px-4 text-[0.9375rem] leading-[1.75] text-ink-muted md:mt-4 lg:mt-[calc(22*var(--u))] lg:min-h-[calc(120*var(--u))] lg:px-0 lg:text-[length:calc(18*var(--u))] lg:leading-[calc(30*var(--u))] lg:tracking-[-0.05em] lg:whitespace-pre-line lg:text-black">
           {blok.description}
         </p>
       ) : null}

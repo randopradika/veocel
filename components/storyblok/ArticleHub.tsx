@@ -10,7 +10,7 @@ import { getArticles, storyPath } from "@/lib/storyblok";
 import type { ArticleBlok, ArticleHubBlok, SbStory, StoryblokAsset } from "@/lib/types";
 
 import { ArticlePager } from "./ArticlePager";
-import { ArticleDate, ArticlePill, ArticleScrim, STRETCHED_LINK } from "./ArticleParts";
+import { ArticleDate, ArticlePill, ArticleScrim, STRETCHED_LINK, TAGS_VISIBLE } from "./ArticleParts";
 import { ArticleSlider, type ArticleSlide } from "./ArticleSlider";
 import { editable } from "./editable";
 
@@ -139,10 +139,13 @@ function HubBanner({
   return (
     <div
       data-hero={behindHeader ? "" : undefined}
-      className={`relative isolate flex min-h-64 items-center overflow-hidden bg-brand-800 md:min-h-[25rem] ${
+      // A phone gets a strip rather than a block: 144px, about the 2.7 : 1 the
+      // client sketched on 2026-10-07, with the headline a size down so it sits
+      // well inside the photograph ("text jangan nabrak … image crop bawah").
+      className={`relative isolate flex min-h-36 items-center overflow-hidden bg-brand-800 md:min-h-[25rem] ${
         behindHeader
-          ? "pt-[83px] pb-10 md:pt-header-bar md:pb-[5.25rem]"
-          : "py-10 md:py-[5.25rem]"
+          ? "pt-[83px] pb-6 md:pt-header-bar md:pb-[5.25rem]"
+          : "py-6 md:py-[5.25rem]"
       }`}
     >
       <BlockImage
@@ -161,7 +164,7 @@ function HubBanner({
       />
 
       <Container width="wide" className="text-center text-white">
-        <h1 className="text-[length:min(9vw,2.25rem)] leading-[1.09375] font-bold tracking-[-0.05em] md:text-[3rem] lg:text-hero">
+        <h1 className="text-[length:min(7.5vw,1.75rem)] leading-[1.09375] font-bold tracking-[-0.05em] md:text-[3rem] lg:text-hero">
           {heading}
         </h1>
       </Container>
@@ -212,7 +215,8 @@ function ArticleRow({ story, locale }: { story: SbStory<ArticleBlok>; locale: st
         {content.category ? <ArticlePill size="md">{content.category}</ArticlePill> : null}
 
         <h2
-          className={`${content.category ? "mt-4 " : ""}text-[1.75rem] leading-[1.2] font-bold tracking-[-0.05em] text-brand md:text-[2.5rem] md:leading-[48px]`}
+          // The pill's clearance only where the pill takes space (see ArticlePill).
+          className={`${content.category ? (TAGS_VISIBLE ? "mt-4 " : "md:mt-4 ") : ""}text-[1.75rem] leading-[1.2] font-bold tracking-[-0.05em] text-brand md:text-[2.5rem] md:leading-[48px]`}
         >
           <Link
             href={href(story, locale)}

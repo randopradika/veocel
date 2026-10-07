@@ -141,6 +141,22 @@ export function FiberProductCard({
           }}
           className="m-auto max-h-[calc(100dvh_-_2rem)] w-[min(100%_-_2rem,67.5rem)] overflow-y-auto rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70"
         >
+          {/*
+            The close button belongs to the dialog, not the text column: on a
+            phone, where the photo stacks on top, it sits in the dialog's top
+            corner over the photo (asked for on 2026-10-07 — it used to sit
+            halfway down, under the photo). From `md` the text column is the
+            dialog's right half, so the same corner is where it always was.
+          */}
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            aria-label="close"
+            className="group absolute top-3 right-3 z-10 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
+          >
+            <ArrowMarker icon="close" tone="brand" size="md" />
+          </button>
+
           <div className="grid md:grid-cols-2">
             <BlockImage
               asset={blok.detail_image?.filename ? blok.detail_image : blok.image}
@@ -150,15 +166,12 @@ export function FiberProductCard({
               placeholderTone="sky"
             />
 
-            <div className="relative flex flex-col px-7 pt-16 pb-10 md:min-h-[36rem] md:px-14 md:pt-24 md:pb-24">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="close"
-                className="group absolute top-5 right-5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
-              >
-                <ArrowMarker icon="close" tone="brand" size="md" />
-              </button>
+            {/*
+              On a phone the title follows the photo at 24px and the plate the
+              copy at 20px — 64 and 32 until 2026-10-07 ("jaraknya jangan
+              terlalu jauh").
+            */}
+            <div className="flex flex-col px-7 pt-6 pb-10 md:min-h-[36rem] md:px-14 md:pt-24 md:pb-24">
 
               <h2
                 id={titleId}
@@ -186,7 +199,7 @@ export function FiberProductCard({
                 of the row, right-aligned, wrapping only when it must.
               */}
               {specs.length > 0 ? (
-                <dl className="mt-8 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-lg md:leading-[1.35]">
+                <dl className="mt-5 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:mt-8 md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-lg md:leading-[1.35]">
                   {specs.map(([label, value]) => (
                     <div key={label} className="flex items-baseline justify-between gap-4 md:gap-8">
                       <dt className="shrink-0 font-bold whitespace-nowrap text-ink">

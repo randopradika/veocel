@@ -86,7 +86,7 @@ export function Article({
 
           <div className="mt-6 rounded-[30px] bg-white px-6 pt-10 pb-12 md:mt-[57px] md:rounded-[60px] md:px-16 md:py-22">
             <div className="mx-auto max-w-[1431px]">
-              <h1 className="max-w-[1110px] text-h2 font-bold text-brand md:text-h1">{blok.title}</h1>
+              <h1 className="max-w-[1110px] text-[min(1.5rem,6.4vw)] leading-[1.15] font-bold tracking-[-0.05em] text-brand md:text-h1">{blok.title}</h1>
 
               <div className="mt-4 flex flex-wrap items-center gap-x-6 border-b border-ink-faint md:mt-6">
                 {date ? (

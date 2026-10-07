@@ -1292,6 +1292,29 @@
         "type": "textarea",
         "description": "Blank lines start a new paragraph."
       },
+      "body_size": {
+        "type": "option",
+        "display_name": "Body text size",
+        "options": [
+          {
+            "name": "Small — 16px",
+            "value": "small"
+          },
+          {
+            "name": "Regular — 20px",
+            "value": "regular"
+          },
+          {
+            "name": "Large — 24px",
+            "value": "large"
+          },
+          {
+            "name": "Extra large — 32px",
+            "value": "xlarge"
+          }
+        ],
+        "description": "Desktop size of the body; phones get a step smaller. Empty keeps the panel's own 24px."
+      },
       "link_label": {
         "type": "text",
         "description": "Button text. The button only renders when this is set."

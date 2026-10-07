@@ -498,6 +498,8 @@ export type CtaPanelBlok = SbBlock & {
   heading?: string;
   /** Blank lines start a new paragraph. */
   body?: string;
+  /** Desktop size of the body; empty keeps the panel's own (24px from `xl`). */
+  body_size?: TextSize | "";
   /** The button only renders when a label is set. */
   link_label?: string;
   link?: StoryblokLink;

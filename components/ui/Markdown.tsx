@@ -1,5 +1,5 @@
 import type { Element, ElementContent, Root } from "hast";
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 
 /**
  * Renders a Storyblok plain-text field as Markdown.
@@ -38,6 +38,23 @@ const GAP = {
   /** A whole blank line of 32px leading, as the article body is drawn. */
   line: "[&>*+*]:mt-8",
 } as const;
+
+/**
+ * A link off the site opens in a new tab, as `SmartLink` opens one — a reader
+ * following a claim's source to lenzing.com keeps the claim open behind it.
+ */
+const MARKDOWN_COMPONENTS: Components = {
+  a: ({ href, title, children }) =>
+    href && /^https?:/.test(href) ? (
+      <a href={href} title={title} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    ) : (
+      <a href={href} title={title}>
+        {children}
+      </a>
+    ),
+};
 
 /**
  * The longest pair of closing words worth holding together. Past this the pair
@@ -161,7 +178,10 @@ export function Markdown({
 
   return (
     <div className={`${PROSE} ${GAP[gap]} ${className}`}>
-      <ReactMarkdown rehypePlugins={keepLastWords ? [rehypeKeepLastWords] : undefined}>
+      <ReactMarkdown
+        rehypePlugins={keepLastWords ? [rehypeKeepLastWords] : undefined}
+        components={MARKDOWN_COMPONENTS}
+      >
         {children}
       </ReactMarkdown>
     </div>

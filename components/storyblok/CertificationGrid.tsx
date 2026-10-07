@@ -57,11 +57,15 @@ export function CertificationGrid({ blok }: { blok: CertificationGridBlok }) {
   return (
     <Section
       {...editable(blok)}
-      spacing="tight"
+      spacing="none"
       // Desktop rhythm from the "dev" board (2053:170): 90px under the claims, 94px to
       // the band (2053:474). No padding below, or neighbours would stack; the last block
       // on a page keeps the gap to the band.
-      className="xl:pt-[90px] xl:pb-0 xl:last:pb-[94px]"
+      // Below `xl` a block takes padding above only, so neighbours meet at one
+      // gap rather than two stacked — 48px on a phone, asked for on 2026-10-07
+      // ("space jangan kejauhan"), where the two paddings had added up to 120.
+      // The last block on the page keeps its padding below, to the band.
+      className="pt-12 last:pb-12 md:pt-16 md:last:pb-16 xl:pt-[90px] xl:last:pb-[94px]"
     >
       <Container width="design">
         {/*

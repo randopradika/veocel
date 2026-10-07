@@ -25,11 +25,19 @@ export function TextColumns({ blok }: { blok: TextColumnsBlok }) {
   return (
     <Section
       {...editable(blok)}
-      spacing="default"
+      spacing={centered ? "default" : "none"}
       // Desktop rhythm from the "dev" board (2053:170): 80px under the hero tabs, 96px to
       // the band (wipes 2053:1040). No padding below, or neighbours would stack; the last
       // block on a page keeps the gap to the band.
-      className={centered ? "" : "xl:pt-20 xl:pb-0 xl:last:pb-24"}
+      // Below `xl` a block takes padding above only, so neighbours meet at one
+      // gap rather than two stacked — 48px on a phone, asked for on 2026-10-07
+      // ("space jangan kejauhan"), where the two paddings had added up to 120.
+      // The last block on the page keeps its padding below, to the band.
+      className={
+        centered
+          ? ""
+          : "pt-section-sm last:pb-section-sm md:pt-section md:last:pb-section xl:pt-20 xl:last:pb-24"
+      }
     >
       <Container width="design">
         {centered ? (

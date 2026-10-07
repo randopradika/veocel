@@ -34,9 +34,17 @@ import { HeroNavCards } from "./HeroNavCards";
  * `PageHero` and the `#ItsInOurHands` banner read, and those keep the drawn
  * size. Leading and tracking are the token's, spelled out alongside.
  */
+/*
+ * On a phone `title` is the 2026-10 banner frames' 36px on a 42px line
+ * (2122:248, 2122:276), down from 42px so every section name holds to two
+ * lines — "daily care products / with VEOCEL™ fibers" is 327px of the 342 a
+ * 390px phone leaves. Under ~380px it steps down with the screen so that
+ * line still fits (34px at 360).
+ */
 const HEADLINE_SIZE = {
   display: "hero-display",
-  title: "text-[2.625rem] leading-[1.09375] tracking-[-0.05em] md:text-[5.25rem]",
+  title:
+    "text-[min(2.25rem,9.5vw)] leading-[1.1667] tracking-[-0.05em] md:text-[5.25rem] md:leading-[1.09375]",
 } as const;
 
 /**
@@ -151,7 +159,14 @@ export function Hero({ blok }: { blok: HeroBlok }) {
   const x = resolveOption(HEADLINE_X, blok.headline_horizontal, "center");
   const y = resolveOption(HEADLINE_Y, blok.headline_vertical, "middle");
   const placed = x !== "center";
-
+  /*
+    A section banner on a phone sets its headline at the foot of the picture,
+    centred, 18px over the destination pill — the 2026-10 banner frames
+    (2122:249 and its neighbours), asked for on every banner but the home one,
+    which keeps its own arrangement. It overrides the placement fields below
+    `md`; they are a desktop arrangement.
+  */
+  const footed = size === "title" && !left;
   return (
     <section
       {...editable(blok)}
@@ -165,7 +180,13 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       // any width, so the photograph and the stage over it (`.hero-stage`)
       // scale as one under browser zoom. `min-h-auto` lets a long translation
       // grow it rather than spill. It is also the container the stage measures.
-      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
+      //
+      // A phone gets the 2026-10 banner frames' 402×502 instead of the screen
+      // (2122:194 and the five section banners), so the page's first block
+      // shows under it. A minimum rather than `aspect-ratio`: the hero clips
+      // its overflow, which stops an aspect box growing to its content, and
+      // the home headline and subline need a few pixels more on a narrow phone.
+      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 max-md:min-h-[calc(100vw*502/402)] desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
     >
       <BlockImage
         asset={blok.background_image}
@@ -202,7 +223,9 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       <div className="hero-stage flex flex-1 flex-col">
         <Container
           width={placed ? "default" : "wide"}
-          className={`flex flex-1 flex-col ${HEADLINE_Y[y]} pt-32 pb-10 ${HEADLINE_X[x].text} text-white md:pt-40`}
+          className={`flex flex-1 flex-col ${HEADLINE_Y[y]} pt-24 pb-10 ${HEADLINE_X[x].text} text-white md:pt-40 ${
+            footed ? "max-md:justify-end max-md:pb-[18px] max-md:text-center" : ""
+          }`}
         >
           {/*
             Both frames centre the headline; they part company under it. The phone
@@ -217,7 +240,15 @@ export function Hero({ blok }: { blok: HeroBlok }) {
             it anyway — after "begins" on the phone, nowhere on the desktop — and
             letting it happen naturally is what keeps a longer translation readable.
           */}
-          <div className={placed ? HEADLINE_X[x].block : left ? "md:mx-auto md:w-fit" : undefined}>
+          <div
+            className={
+              placed
+                ? `${HEADLINE_X[x].block}${footed ? " max-md:mx-auto" : ""}`
+                : left
+                  ? "md:mx-auto md:w-fit"
+                  : undefined
+            }
+          >
             {blok.eyebrow ? (
               <p className="mb-3 text-sm font-medium text-white/85 md:text-base">{blok.eyebrow}</p>
             ) : null}
@@ -272,8 +303,8 @@ export function Hero({ blok }: { blok: HeroBlok }) {
 
         {cards.length > 0 ? (
           /*
-            The mobile frame pins its dropdown 40px above the hero's bottom edge;
-            the desktop strip keeps its 32px.
+            The phone banners pin the dropdown 24px above the hero's bottom edge
+            (478 of 502); a tablet keeps 40px and the desktop strip its 32px.
 
             Not the shared `Container`: that caps at 1440px, which leaves the
             seven tabs 187px wide against the design's 215px and costs every
@@ -282,7 +313,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
             across — narrower than the design's 1565 at 1920 (node 2053:1192),
             the price of a strip that zooms with the page.
           */
-          <div className="mx-auto w-full px-6 pb-10 md:px-10 lg:pb-8">
+          <div className="mx-auto w-full px-6 pb-6 md:px-10 md:pb-10 lg:pb-8">
             <HeroNavCards cards={cards} placeholder={blok.nav_placeholder} />
           </div>
         ) : null}

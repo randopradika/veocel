@@ -33,12 +33,13 @@ export const TAGS_VISIBLE = false;
  * in the list. The frame's `#d8f4ff` plate is barely apart from the hub's ground,
  * so it steps to `brand-200` to still read as a pill on `brand-100`. While
  * `TAGS_VISIBLE` is off it renders `invisible` — keeping its space, and skipped
- * by screen readers.
+ * by screen readers — from `md` only. A phone drops it altogether: the empty
+ * 45px read as a gap between photograph and title (2026-10-07).
  */
 export function ArticlePill({ size, children }: { size: "lg" | "md"; children: string }) {
   return (
     <span
-      className={`${TAGS_VISIBLE ? "" : "invisible "}inline-flex h-[45px] items-center rounded-full bg-brand-200 font-bold tracking-[-0.05em] text-ink ${
+      className={`${TAGS_VISIBLE ? "" : "invisible max-md:hidden "}inline-flex h-[45px] items-center rounded-full bg-brand-200 font-bold tracking-[-0.05em] text-ink ${
         size === "lg" ? "px-4.5 text-xl" : "px-5 text-base"
       }`}
     >
