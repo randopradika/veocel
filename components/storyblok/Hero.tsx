@@ -186,7 +186,10 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       // shows under it. A minimum rather than `aspect-ratio`: the hero clips
       // its overflow, which stops an aspect box growing to its content, and
       // the home headline and subline need a few pixels more on a narrow phone.
-      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 max-md:min-h-[calc(100vw*502/402)] desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
+      //
+      // Where the destination pill replaces the cards (touch, below `xl`) the
+      // hero lets its list drop out over the next block, and sits above it.
+      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 max-xl:not-pointer-fine:z-20 max-xl:not-pointer-fine:overflow-visible max-md:min-h-[calc(100vw*502/402)] desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
     >
       <BlockImage
         asset={blok.background_image}

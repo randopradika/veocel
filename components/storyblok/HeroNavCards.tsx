@@ -185,8 +185,10 @@ export function HeroNavCards({
  * draws it in brand blue (asked for alongside those frames): its photograph is
  * pale, and a white outline vanished into it.
  *
- * The list opens upwards: the pill is pinned near the hero's bottom edge and
- * the hero clips its overflow, so a menu dropping below it would be cut off.
+ * The list drops down, over the top of the next block (asked for on
+ * 2026-10-07): opening upwards on the home page carried its first link under
+ * the fixed header, where a tap landed on the logo instead. The hero lets it
+ * overflow wherever this pill shows — see `Hero`.
  * Closes on Escape, on an outside tap, and once a destination is chosen.
  *
  * A plain disclosure (button + list of links) rather than an ARIA menu: these
@@ -261,7 +263,7 @@ function HeroNavDropdown({
       <ul
         id={listId}
         hidden={!open}
-        className="absolute inset-x-0 bottom-full z-10 mb-2 overflow-hidden rounded-panel border border-hairline bg-white py-2 text-brand shadow-lg"
+        className="absolute inset-x-0 top-full z-10 mt-2 overflow-hidden rounded-panel border border-hairline bg-white py-2 text-brand shadow-lg"
       >
         {cards.map((card, index) => {
           const isCurrent = index === currentIndex;
