@@ -7,8 +7,9 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  * signup, and — when `config.responsibility_label` is set — the social
  * responsibility platform. That is the phone order, and the source order so
  * screen readers and tabbing follow it; from `md` the newsletter moves back to
- * the first column. Each panel centres its own content, and the tints run edge
- * to edge rather than sitting inside the page gutters.
+ * the first column. The middle panel takes the deeper tint, so on phones social
+ * and newsletter swap theirs. Each panel centres its own content, and the tints
+ * run edge to edge rather than sitting inside the page gutters.
  *
  * On phones the panels stack at the mobile frame's 1:1 sizes (2035:165): 140px
  * panels with 24px headings, 51px social discs and a 36px platform name. From
@@ -29,7 +30,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
       className={`grid text-brand-800 ${responsibility ? "md:grid-cols-3" : "md:grid-cols-2"}`}
       aria-labelledby="newsletter-heading"
     >
-      <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:py-12">
+      <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:bg-brand-200 md:py-12">
         <h2 className="text-2xl font-bold md:text-[1.75rem]">
           {config.social_heading ?? "follow us on social media"}
         </h2>
@@ -51,7 +52,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
         </ul>
       </div>
 
-      <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:order-first md:py-12">
+      <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:order-first md:bg-brand-100 md:py-12">
         <h2 id="newsletter-heading" className="text-2xl font-bold md:text-[1.75rem]">
           {config.newsletter_heading ?? "newsletter subscriptions"}
         </h2>
