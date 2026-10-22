@@ -13,8 +13,8 @@ import { Logo } from "./Logo";
  * a legal row along the bottom.
  *
  * On phones the mobile frame (2035:191) reorders it: the search row first, the
- * lockup beneath, the Lenzing mark centred (left in the frame; moved on the
- * client's request, right 2026-10-07, centre 2026-10-22), a full-bleed rule, the legal
+ * lockup beneath, the Lenzing mark under it (both left in the frame; centred on
+ * the client's request, 2026-10-22), a full-bleed rule, the legal
  * links in one 16px row, and the copyright centred under them.
  *
  * The search form is a plain GET to `/search`, so it works without JavaScript and
@@ -44,7 +44,7 @@ export function SiteFooter({
           it; the DOM keeps the lockup first on every width.
         */}
         <div className="flex flex-col-reverse gap-8 pt-10 pb-12 md:flex-row md:items-center md:justify-between md:pt-11 md:pb-0">
-          <div className="flex flex-wrap items-center gap-8">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:justify-start">
             <Link
               href={localePath(locale, "")}
               className="inline-block text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:flex"
