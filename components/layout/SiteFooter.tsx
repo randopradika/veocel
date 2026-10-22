@@ -13,8 +13,8 @@ import { Logo } from "./Logo";
  * a legal row along the bottom.
  *
  * On phones the mobile frame (2035:191) reorders it: the search row first, the
- * lockup beneath, the Lenzing mark right-aligned (left in the frame; moved on
- * the client's request, 2026-10-07), a full-bleed rule, the legal
+ * lockup beneath, the Lenzing mark centred (left in the frame; moved on the
+ * client's request, right 2026-10-07, centre 2026-10-22), a full-bleed rule, the legal
  * links in one 16px row, and the copyright centred under them.
  *
  * The search form is a plain GET to `/search`, so it works without JavaScript and
@@ -123,17 +123,17 @@ export function SiteFooter({
         ) : null}
 
         {config.parent_logo?.filename ? (
-          // The frame's 145×46 at every width, right-set — on phones too since
-          // 2026-10-07, opposite the lockup — and from `md` 6px short of the
-          // search button (2053:741).
-          <div className="flex justify-end pb-10 md:justify-end md:pt-[100px] md:pr-1.5 md:pb-[29px]">
+          // The frame's 145×46 at every width: centred on phones (on the
+          // client's request, 2026-10-22), and from `md` right-set, 6px short of
+          // the search button (2053:741).
+          <div className="flex justify-center pb-10 md:justify-end md:pt-[100px] md:pr-1.5 md:pb-[29px]">
             <SmartLink link={config.parent_logo_link} ariaLabel="Parent company">
               <BlockImage
                 asset={config.parent_logo}
                 alt="Lenzing"
                 sizes="150px"
                 className="relative h-[46px] w-[145px]"
-                imageClassName="object-contain object-left md:object-right"
+                imageClassName="object-contain object-center md:object-right"
               />
             </SmartLink>
           </div>
