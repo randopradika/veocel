@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container, Section } from "@/components/ui/Container";
@@ -12,17 +13,25 @@ import { searchStories, storyPath } from "@/lib/storyblok";
  * — and the form needs no JavaScript at all.
  */
 
-export const metadata = { title: "search" };
+/** Longer than any real search; the rest is dropped rather than sent on to Storyblok. */
+const MAX_TERM = 100;
+
+export const metadata: Metadata = {
+  title: "search",
+  // A results page repeats whatever was put in its URL, so it stays out of search engines.
+  robots: { index: false },
+};
 
 export default async function SearchPage({
   params,
   searchParams,
 }: {
   params: Promise<{ lang: string }>;
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string | string[] }>;
 }) {
   const [{ lang }, { q }] = await Promise.all([params, searchParams]);
-  const term = (q ?? "").trim();
+  // `?q=a&q=b` arrives as an array; the first one is the search.
+  const term = ((Array.isArray(q) ? q[0] : q) ?? "").trim().slice(0, MAX_TERM);
   const results = await searchStories(term, lang);
 
   return (

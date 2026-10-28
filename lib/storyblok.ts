@@ -1,6 +1,6 @@
 import { draftMode } from "next/headers";
 
-import { DEFAULT_LOCALE, storyblokLanguage } from "./i18n";
+import { DEFAULT_LOCALE, slugSegments, storyblokLanguage } from "./i18n";
 import { mockConfig } from "./mock/config";
 import { mockStories } from "./mock/pages";
 import type {
@@ -105,13 +105,16 @@ export function storyPath(story: Pick<SbStory, "full_slug">): string {
 
 /**
  * Fetches a single story by slug. `"home"` for the root page.
- * Returns `null` when the story genuinely does not exist.
+ * Returns `null` when the story genuinely does not exist, or is not a page.
  */
 export async function getStory(
   slug: string,
   locale: string = DEFAULT_LOCALE,
 ): Promise<SbStory<StoryContent> | null> {
-  const normalised = slug.replace(/^\/+|\/+$/g, "") || "home";
+  // Not a slug at all — `..` typed into the URL — is not a story either.
+  const segments = slugSegments(slug);
+  if (!segments) return null;
+  const normalised = segments.join("/") || "home";
 
   if (!isStoryblokConfigured()) {
     // The mock has no translations; every locale sees the same content.
@@ -122,12 +125,18 @@ export async function getStory(
   const draft = await isDraft();
   // A folder's start page (`itsinourhands/`) answers at its folder's slug too.
   const result = await cdnGet<{ story: SbStory<StoryContent> }>(
-    `stories/${normalised}`,
+    `stories/${segments.map(encodeURIComponent).join("/") || "home"}`,
     { resolve_links: "url", ...(language ? { language } : {}) },
     draft,
   );
 
-  if (result.ok) return result.data.story;
+  if (result.ok) {
+    const { story } = result.data;
+    // Only pages and articles have an address. Anything else — the config
+    // story — opens for editors alone, whose preview of it is the header and
+    // footer it fills.
+    return draft || PAGE_TYPES.split(",").includes(story.content.component) ? story : null;
+  }
   if (result.status === 404) return null;
 
   throw new Error(

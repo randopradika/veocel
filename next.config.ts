@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
    */
   turbopack: { root: import.meta.dirname },
 
+  /** No `X-Powered-By: Next.js` on every response — it only tells a scanner what to try. */
+  poweredByHeader: false,
+
   images: {
     /*
      * Resizing is delegated to Storyblok's image service rather than Next's

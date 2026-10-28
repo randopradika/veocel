@@ -1,9 +1,11 @@
+import { permanentRedirect } from "next/navigation";
+
 import { StoryView, storyMetadata } from "@/components/storyblok/StoryView";
-import { getLocales } from "@/lib/i18n";
+import { getLocales, localePath } from "@/lib/i18n";
 import { getAllPageSlugs } from "@/lib/storyblok";
 
 /**
- * Every page other than the locale home: `beauty-skincare`, nested paths, and
+ * Every page other than the locale home: `fiber-types`, nested paths, and
  * whatever editors add later. Nothing here is per-page hardcoded — the route
  * follows the Storyblok content tree.
  */
@@ -26,5 +28,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function StoryblokPage({ params }: PageProps) {
   const { lang, slug } = await params;
+  // The home story answers at the locale root; this would be a second address for it.
+  if (slug.join("/") === "home") permanentRedirect(localePath(lang, ""));
   return <StoryView slug={slug.join("/")} locale={lang} />;
 }
