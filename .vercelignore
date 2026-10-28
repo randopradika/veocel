@@ -1,0 +1,8 @@
+# What `vercel deploy` leaves out of the upload. The CLI reads this file, not
+# .gitignore, and its own list is short — without these lines every other local
+# file goes up with the source: env-file backups, notes, tool settings, caches.
+# The build needs only the app, its config and the package files.
+/.*
+*.md
+*.stackdump
+*.tsbuildinfo
