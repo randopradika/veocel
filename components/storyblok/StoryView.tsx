@@ -3,7 +3,7 @@ import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { StoryblokBridge } from "@/components/StoryblokBridge";
-import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
+import { DEFAULT_LOCALE, getLocales, localePath } from "@/lib/i18n";
 import { getNextArticle, getProofLibrary, getStory, storyPath } from "@/lib/storyblok";
 import type { ArticleBlok, SbStory } from "@/lib/types";
 
@@ -64,6 +64,9 @@ export async function StoryView({
   );
 }
 
+/** A 404's title, as `app/not-found.tsx` sets it — which a page segment's 404 cannot borrow. */
+const NOT_FOUND_METADATA: Metadata = { title: "page not found" };
+
 /**
  * Per-page `<title>` and description, from the story's SEO fields.
  *
@@ -72,9 +75,17 @@ export async function StoryView({
  * `"%s | VEOCEL™"` template appends a second suffix. Stories with no SEO title
  * fall back to the story name and do go through the template.
  */
-export async function storyMetadata(slug: string, locale?: string): Promise<Metadata> {
-  const story = await getStory(slug, locale);
-  if (!story) return {};
+export async function storyMetadata(
+  slug: string,
+  locale: string = DEFAULT_LOCALE,
+): Promise<Metadata> {
+  // A page that 404s keeps the 404's title. Returning nothing let the tab fall
+  // back to the site's default title once the page hydrated — and under an
+  // unknown locale, which the layout 404s, the home story still answered here
+  // and lent the 404 its own title and description.
+  const known = (await getLocales()).some((entry) => entry.code === locale);
+  const story = known ? await getStory(slug, locale) : null;
+  if (!story) return NOT_FOUND_METADATA;
 
   const seoTitle = story.content.seo_title?.trim();
   const description = story.content.seo_description;
