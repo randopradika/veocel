@@ -20,8 +20,8 @@ import type { AccordionItemBlok, FeatureAccordionBlok, SbBlock } from "@/lib/typ
  * they live in one block rather than three that would drift apart — the same
  * reasoning as `process_row`'s `row`/`ring`.
  *
- * The only client component in the block library, because expanding an item is
- * genuine local state. The first item is open by default, as in the design.
+ * A client component, because expanding an item is genuine local state. The
+ * first item is open by default, as in the design.
  *
  * Imports `storyblokEditable` from the root entry rather than using the shared
  * `editable()` helper: that helper reads from `@storyblok/react/rsc`, which is a

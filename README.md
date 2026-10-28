@@ -1,12 +1,15 @@
 # VEOCEL™ website
 
 Next.js (App Router) + Storyblok implementation of the VEOCEL design: the home
-page, `VEOCEL™ fibers` and `VEOCEL™ fibers for wipes`.
+page, the section pages (`fiber-types`, `wipes`, `hygiene`, `beauty`,
+`sustainability`, `daily-care`, `partners`), `claims-and-certifications`, and the
+`#ItsInOurHands` hub with its articles.
 
-- **Next.js 16** with React Server Components; one client component in the block
-  library (`FeatureAccordion`) and one in the chrome (`SiteHeader`)
+- **Next.js 16** with React Server Components; client components only where there
+  is browser state — the header, the pop-ups, the accordion, the brand filters, the
+  article slider and pager
 - **Tailwind CSS v4**, themed entirely from tokens in `app/globals.css`
-- **Storyblok** as the CMS, with an 18-block library, Visual Editor live preview and
+- **Storyblok** as the CMS, with a 22-block library, Visual Editor live preview and
   webhook-driven cache invalidation
 
 ## Getting started
@@ -38,7 +41,7 @@ placeholder in the right aspect ratio.
    npm run storyblok:login
    ```
 
-3. Push the component library into your space — this creates all 35 components with
+3. Push the component library into your space — this creates all 45 components with
    their fields, whitelists and dropdowns. Space id is under Settings › General:
 
    ```bash
@@ -59,8 +62,9 @@ placeholder in the right aspect ratio.
    ```
 
 4. Create the stories:
-   - `home`, `fiber-types`, `wipes`, `hygiene`, `beauty`, `daily-care` — content
-     type **Page**
+   - every page in `lib/mock/pages.ts` — `home`, the section pages and
+     `claims-and-certifications` — content type **Page**; the `#ItsInOurHands`
+     articles are content type **Article**, in the `itsinourhands` folder
    - `config` — content type **Site configuration** (header, footer, newsletter).
      The slug must be exactly `config`.
 
@@ -81,6 +85,10 @@ placeholder in the right aspect ratio.
    https://<your-host>/api/draft?secret=<STORYBLOK_PREVIEW_SECRET>&slug=
    ```
 
+   Storyblok appends a slug with no language in it; the route opens it under the
+   default locale (`fiber-types` → `/en/fiber-types`) and keeps the editor's
+   `_storyblok…` parameters, which the live-preview bridge reads.
+
 6. Add a webhook on story publish so changes go live immediately instead of waiting
    out the one-hour revalidate window:
 
@@ -91,7 +99,7 @@ placeholder in the right aspect ratio.
 ## How content reaches the page
 
 ```
-Storyblok CDN ──► lib/storyblok.ts ──► app/[...slug]/page.tsx
+Storyblok CDN ──► lib/storyblok.ts ──► app/[lang]/[...slug]/page.tsx
                   (fetch + cache)      └─► StoryView ──► BlockRenderer ──► one component per blok
 ```
 
@@ -134,13 +142,11 @@ Headings are written lowercase in the CMS rather than lowercased in CSS — a bl
 
 These need input that wasn't available at build time:
 
-- **Photography.** Every image field is empty; placeholders stand in. Upload assets
-  in Storyblok — no code changes needed.
-- **The logo** in `components/layout/Logo.tsx` is drawn from the mockups, not from
-  brand artwork. Replace it with the official asset.
-- **The typeface** is Nunito, the closest widely available match to the rounded sans
-  in the design. Swap the two `next/font` calls in `app/layout.tsx` for the licensed
-  brand face.
+- **Photography.** The hero photographs are the design file's placeholders;
+  licensed photography is needed before launch. Replace the assets in Storyblok —
+  no code changes needed.
+- **The logo** in `components/layout/Logo.tsx` is the design file's raster
+  artwork, slightly past 1x at its drawn size. Vector brand artwork is needed.
 - **Newsletter signup** posts to the provider endpoint set in the `config` story.
   Until that field is filled the input renders disabled rather than dropping
   addresses silently.
@@ -156,3 +162,11 @@ npm run build
 ```bash
 npm run lint
 ```
+
+```bash
+npm test
+```
+
+The tests use Node's own runner and need no install of their own; they cover the
+pure helpers in `lib/`, including the slug handling behind `/api/draft` and
+`getStory`.

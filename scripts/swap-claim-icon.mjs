@@ -7,8 +7,9 @@
  * The marks arrive from the client as artwork on opaque white — TIFF, usually,
  * at print resolution. What the cards want is a 260x260 PNG with the white
  * knocked out and the ink matching its thirteen neighbours, and getting there by
- * hand is fiddly enough to be worth a script: see `HANDOFF.md` under "Images"
- * for the two `sharp` traps that make a careless version look almost right.
+ * hand is fiddly enough to be worth a script — and `sharp` has two traps that
+ * make a careless version look almost right, both noted where they bite in
+ * `claimMark` below.
  *
  * Why this exists next to `storyblok:fill-claims`: that script copies an icon a
  * card already has to the same claim on another page. This one puts a *new* icon

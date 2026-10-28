@@ -956,7 +956,7 @@ const dailyCare: PageBlok = {
  *
  * EVERY CERTIFICATE BELOW IS A COMPLIANCE CLAIM transcribed from artwork, not
  * from the issuing bodies — names, numbers and scopes need verification before
- * launch (see HANDOFF.md). Three deliberate deviations from the frame:
+ * launch. Three deliberate deviations from the frame:
  *
  * - The frame draws a row of languages (english 简体中文 繁體中文 한국어 日本語)
  *   between the intro and the claims, with nothing linked. The site's language

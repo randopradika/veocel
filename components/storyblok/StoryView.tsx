@@ -17,8 +17,8 @@ import { BlockRenderer } from "./BlockRenderer";
  * A `page` is its body of blocks; an `article` has a fixed shape of its own and
  * renders through `Article`.
  *
- * Shared by `app/page.tsx` (the home story) and `app/[...slug]/page.tsx` so the
- * two routes can't drift apart.
+ * Shared by `app/[lang]/page.tsx` (the home story) and
+ * `app/[lang]/[...slug]/page.tsx` so the two routes can't drift apart.
  */
 export async function StoryView({
   slug,
