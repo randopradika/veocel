@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { NewsletterBand } from "@/components/layout/NewsletterBand";
@@ -38,7 +39,7 @@ export default async function LocaleLayout({
   // every mistyped URL would render a page and dilute the canonical ones.
   if (!locales.some((locale) => locale.code === lang)) notFound();
 
-  const config = await getConfig(lang);
+  const [config, { isEnabled: draft }] = await Promise.all([getConfig(lang), draftMode()]);
 
   return (
     <div lang={lang} className="contents">
@@ -56,7 +57,7 @@ export default async function LocaleLayout({
         {children}
       </main>
 
-      <NewsletterBand config={config} />
+      <NewsletterBand config={config} editing={draft || process.env.NODE_ENV === "development"} />
       <SiteFooter config={config} locale={lang} />
     </div>
   );

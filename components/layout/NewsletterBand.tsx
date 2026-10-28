@@ -19,9 +19,17 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  * The form posts directly to the email provider's own endpoint
  * (`config.newsletter_action_url`). There is no local API route and no subscriber
  * storage — so when that field is empty the input is disabled rather than
- * accepting an address it would silently drop.
+ * accepting an address it would silently drop. The note saying why is for
+ * `editing` only: a visitor has no config story to fill in.
  */
-export function NewsletterBand({ config }: { config: ConfigBlok }) {
+export function NewsletterBand({
+  config,
+  editing = false,
+}: {
+  config: ConfigBlok;
+  /** Draft mode or development — someone who can set the provider endpoint. */
+  editing?: boolean;
+}) {
   const action = config.newsletter_action_url?.trim();
   const responsibility = config.responsibility_label?.trim();
 
@@ -84,7 +92,7 @@ export function NewsletterBand({ config }: { config: ConfigBlok }) {
           </button>
         </form>
 
-        {!action ? (
+        {!action && editing ? (
           <p className="mt-2 text-sm text-brand-800/60">
             Signup opens once a provider endpoint is set in the Storyblok config story.
           </p>

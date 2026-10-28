@@ -88,8 +88,15 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  /*
+    Smooth in-page jumps (the skip link), unless the reader has asked for less
+    motion. A page navigation still jumps straight to the top: see
+    `data-scroll-behavior` in app/layout.tsx.
+  */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {

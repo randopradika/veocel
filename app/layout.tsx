@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
+import { DEFAULT_LOCALE } from "@/lib/i18n";
+
 import "./globals.css";
 
 /*
  * Document shell only. Everything locale-specific — header, footer, newsletter,
- * the `lang` attribute — lives in `app/[lang]/layout.tsx`, which is the first
- * layout that actually knows which language is being served.
+ * the page's own `lang` — lives in `app/[lang]/layout.tsx`, which is the first
+ * layout that actually knows which language is being served. `<html>` carries
+ * the default language, for what renders outside a locale (the 404) and for
+ * tools that read only the root element; the locale layout overrides it.
  *
  * Circular Std is the brand face and carries the whole site: display headlines
  * and body copy alike. It is self-hosted from `app/fonts` (converted to woff2
@@ -45,8 +49,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // The body is capped at the design's width and centred (`max-w-page`), so
   // past 1920 — a wider screen, or zooming out — the page shrinks as one piece.
   // The fixed header carries the same cap: it is placed against the window.
+  // `data-scroll-behavior` keeps the stylesheet's smooth scrolling to in-page
+  // jumps: Next switches it off around a navigation, so a new page opens at its
+  // top rather than gliding up from where the last one was left.
   return (
-    <html className={circular.variable}>
+    <html lang={DEFAULT_LOCALE} className={circular.variable} data-scroll-behavior="smooth">
       <body className="mx-auto flex min-h-svh w-full max-w-page flex-col">{children}</body>
     </html>
   );
