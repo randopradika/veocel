@@ -93,3 +93,34 @@ export function splitLocale(pathname: string, known: string[]): { locale: string
 
   return { locale: DEFAULT_LOCALE, path: pathname };
 }
+
+/**
+ * A story slug's path segments, or `null` when it is not a slug at all.
+ *
+ * Route params arrive decoded, so a `%2F` or `%3F` typed into a URL reaches
+ * here as `/` or `?`. Dot segments are refused — built into a CDN path they
+ * walk out of `stories/` — and callers encode each segment, so a `?` cannot
+ * cut the access token off the request. Empty segments (`a//b`, a trailing
+ * slash) are dropped.
+ */
+export function slugSegments(slug: string): string[] | null {
+  const segments = slug.split("/").filter(Boolean);
+  return segments.some((segment) => segment === "." || segment === "..") ? null : segments;
+}
+
+/**
+ * The page the Visual Editor's preview opens for a story slug.
+ *
+ * Storyblok appends a story's `full_slug` to the space's preview URL, and a
+ * slug carries no language — `fiber-types`, `itsinourhands/` — while every
+ * page here sits under one. A bare slug therefore opens in the default locale;
+ * one that already leads with a known locale keeps it. `home` is the locale's
+ * root. Backslashes are read as slashes, the way browsers read them, so the
+ * result is always a path on this site and never `//host`.
+ */
+export function previewPath(slug: string, known: string[]): string {
+  const segments = slugSegments(slug.replace(/\\/g, "/")) ?? [];
+  const locale = known.includes(segments[0]) ? segments.shift()! : DEFAULT_LOCALE;
+  const path = segments.length === 1 && segments[0] === "home" ? [] : segments;
+  return localePath(locale, path.map(encodeURIComponent).join("/"));
+}
