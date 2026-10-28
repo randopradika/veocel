@@ -15,11 +15,15 @@ const nextConfig: NextConfig = {
      * Resizing is delegated to Storyblok's image service rather than Next's
      * optimiser — see `lib/imageLoader.ts`. `remotePatterns` is still declared so
      * that switching back to the default loader doesn't fail on an unconfigured
-     * host.
+     * host, and it is held to this space's own assets: Vercel still answers
+     * `/_next/image`, and the bare hostname let anyone resize any Storyblok
+     * customer's images on this project's quota.
      */
     loader: "custom",
     loaderFile: "./lib/imageLoader.ts",
-    remotePatterns: [{ protocol: "https", hostname: "a.storyblok.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "a.storyblok.com", pathname: "/f/289202211280266/**" },
+    ],
   },
 };
 
