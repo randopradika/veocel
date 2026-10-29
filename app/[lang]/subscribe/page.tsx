@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Container, Section } from "@/components/ui/Container";
+import { ResizingIframe } from "@/components/ui/ResizingIframe";
 import { getConfig } from "@/lib/storyblok";
 
 /**
@@ -61,12 +62,12 @@ export default async function SubscribePage({
           {config.newsletter_heading ?? "newsletter subscriptions"}
         </h1>
 
-        {/* A fixed height, as on the old site — the form doesn't report its own.
-            It is 1101px tall in a frame under 490px wide and 798px or less from
-            there up, so the step follows the frame's width, not the viewport's.
-            The slack is for its validation messages. */}
+        {/* The frame follows the form's own height once it reports it. Until
+            then these hold it: the form is 1101px tall in a frame under 490px
+            wide and 798px or less from there up, so the step follows the frame's
+            width, not the viewport's. */}
         <div className="mt-10 @container">
-          <iframe
+          <ResizingIframe
             src={src}
             title="Newsletter subscription form"
             className="block h-[1180px] w-full @min-[490px]:h-[860px]"
