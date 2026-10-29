@@ -1,5 +1,6 @@
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { localePath } from "@/lib/i18n";
 import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
 
 /**
@@ -16,21 +17,12 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  * `md` the desktop frame's 0.75 scale applies, as before — except the social
  * discs, which keep the frames' 51px at every width (2053:758–767).
  *
- * The form posts directly to the email provider's own endpoint
- * (`config.newsletter_action_url`). There is no local API route and no subscriber
- * storage — so when that field is empty the input is disabled rather than
- * accepting an address it would silently drop. The note saying why is for
- * `editing` only: a visitor has no config story to fill in.
+ * The form only collects the address: like the old veocel.com, it goes to
+ * `/<lang>/subscribe?email=…`, where Lenzing's own signup form takes it from
+ * there (see `app/[lang]/subscribe/page.tsx`). A plain GET, so it needs no
+ * JavaScript, and the site stores no subscribers.
  */
-export function NewsletterBand({
-  config,
-  editing = false,
-}: {
-  config: ConfigBlok;
-  /** Draft mode or development — someone who can set the provider endpoint. */
-  editing?: boolean;
-}) {
-  const action = config.newsletter_action_url?.trim();
+export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale: string }) {
   const responsibility = config.responsibility_label?.trim();
 
   return (
@@ -66,8 +58,8 @@ export function NewsletterBand({
         </h2>
 
         <form
-          action={action || undefined}
-          method={action ? "post" : undefined}
+          action={localePath(locale, "subscribe")}
+          method="get"
           className="mt-4 flex w-full max-w-sm items-center gap-3 border-b border-brand-800/30 pb-2"
         >
           <label htmlFor="newsletter-email" className="sr-only">
@@ -76,27 +68,19 @@ export function NewsletterBand({
           <input
             id="newsletter-email"
             type="email"
-            name="EMAIL"
+            name="email"
             required
-            disabled={!action}
             placeholder={config.newsletter_placeholder ?? "type your e-mail address"}
-            className="w-full bg-transparent text-xl italic placeholder:text-brand-800/55 focus:outline-none disabled:cursor-not-allowed md:text-sm"
+            className="w-full bg-transparent text-xl italic placeholder:text-brand-800/55 focus:outline-none md:text-sm"
           />
           <button
             type="submit"
-            disabled={!action}
-            className="group rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-40"
+            className="group rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             <span className="sr-only">Subscribe</span>
             <ArrowMarker tone="brand" size="sm" />
           </button>
         </form>
-
-        {!action && editing ? (
-          <p className="mt-2 text-sm text-brand-800/60">
-            Signup opens once a provider endpoint is set in the Storyblok config story.
-          </p>
-        ) : null}
       </div>
 
       {responsibility ? (

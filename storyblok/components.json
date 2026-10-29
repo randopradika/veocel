@@ -71,10 +71,6 @@
       "newsletter_placeholder": {
         "type": "text"
       },
-      "newsletter_action_url": {
-        "type": "text",
-        "description": "Your email provider's form endpoint. Leave empty and the signup field stays disabled rather than discarding addresses."
-      },
       "social_heading": {
         "type": "text"
       },

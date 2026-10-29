@@ -74,12 +74,6 @@ export type ConfigBlok = SbBlock & {
   utility_nav?: NavItemBlok[];
   newsletter_heading?: string;
   newsletter_placeholder?: string;
-  /**
-   * Where the signup form posts — the provider's own form endpoint (Mailchimp,
-   * HubSpot, …). Without it the field renders disabled rather than pretending to
-   * submit; there is no in-app subscriber storage.
-   */
-  newsletter_action_url?: string;
   social_heading?: string;
   socials?: SocialLinkBlok[];
   /**

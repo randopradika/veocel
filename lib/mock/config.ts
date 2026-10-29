@@ -55,9 +55,6 @@ export const mockConfig: ConfigBlok = {
 
   newsletter_heading: "newsletter subscription",
   newsletter_placeholder: "type your e-mail address…",
-  // Left empty on purpose: no signup endpoint exists yet, so the field renders
-  // disabled instead of silently discarding an address.
-  newsletter_action_url: "",
   social_heading: "follow us on social media",
   // In the frame's order: Instagram, Facebook, LinkedIn, YouTube.
   socials: [
