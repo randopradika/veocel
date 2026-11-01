@@ -56,7 +56,8 @@ export function ResizingIframe({
   useEffect(() => {
     const frame = ref.current;
     if (!frame) return;
-    const origin = new URL(src).origin;
+    // `src` may be a path on this site.
+    const origin = new URL(src, window.location.href).origin;
 
     // Sent on every load (a submit loads the provider's next page in the frame)
     // and once now, for a frame that finished loading before hydration. A

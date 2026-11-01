@@ -9,23 +9,18 @@ import { getConfig } from "@/lib/storyblok";
  *
  * The band above the footer only collects an address and lands here as
  * `/<lang>/subscribe?email=…`. The signup itself is Lenzing's ClickDimensions
- * form (their Dynamics CRM), embedded the way the old site did: it asks for the
- * name, the data-processing consent and a "check to unlock" CAPTCHA, and posts
+ * form (their Dynamics CRM), embedded as the old site did: it asks for the name,
+ * the data-processing consent and a "check to unlock" CAPTCHA, and posts
  * straight to ClickDimensions — this site stores nothing.
  *
- * Two things the form decides for itself:
- * - It prefills its e-mail field from its own `email` parameter, read with
- *   `decodeURI`, which leaves "%40" and "%2B" as they are — so `@` and `+` go
- *   across unescaped.
- * - It picks the newsletter, the consent text and the "From …" source flag off
- *   the embedding page's hostname (the referrer). Only `www.veocel.com` gets the
- *   nonwovens list; anywhere else — the vercel.app dev box, localhost — falls
- *   through to the Carved in Blue denim newsletter. So real signups belong on
- *   www.veocel.com, and the iframe must never get `referrerPolicy="no-referrer"`.
+ * The frame loads it through `/newsletter-form`, which pins the form to VEOCEL's
+ * nonwovens newsletter and its consent text on any host — see that route. The
+ * form prefills its e-mail field from its own `email` parameter, read with
+ * `decodeURI`, which leaves "%40" and "%2B" as they are — so `@` and `+` go
+ * across unescaped.
  */
 
-const FORM_URL =
-  "https://analytics-eu.clickdimensions.com/lenzingcom-aaucu/pages/eiafr7z7eeqbbgbqvpsvia.html?PageId=479f8678fbbcea1181060050569b2f88";
+const FORM_PATH = "/newsletter-form";
 
 /** The form's e-mail field holds at most 100 characters. */
 const MAX_EMAIL = 100;
@@ -52,8 +47,8 @@ export default async function SubscribePage({
   const address = ((Array.isArray(email) ? email[0] : email) ?? "").trim();
   const prefill = address.length <= MAX_EMAIL && /^[!-~]+@[!-~]+$/.test(address);
   const src = prefill
-    ? `${FORM_URL}&email=${encodeURI(address).replace(/[&#]/g, encodeURIComponent)}`
-    : FORM_URL;
+    ? `${FORM_PATH}?email=${encodeURI(address).replace(/[&#]/g, encodeURIComponent)}`
+    : FORM_PATH;
 
   return (
     <Section className="pt-40 md:pt-header">
