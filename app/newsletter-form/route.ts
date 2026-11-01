@@ -9,10 +9,11 @@ import type { NextRequest } from "next/server";
  * Only `www.veocel.com` gets the „beyond fiber - nonwovens newsletter“ consent;
  * anywhere else — the vercel.app host this site runs on before the domain moves
  * over, localhost — falls through to the Carved in Blue denim newsletter. So this
- * route fetches the form and swaps that one hostname lookup for `www.veocel.com`.
- * Nothing else changes: its scripts, styles and post target are absolute URLs on
- * ClickDimensions, a submit posts straight there (`target="_parent"`), and this
- * site still stores nothing.
+ * route fetches the form and swaps that one hostname lookup for `www.veocel.com`,
+ * and puts the newsletter's name in English quotes in place of the form's German
+ * „…“. Nothing else changes: its scripts, styles and post target are absolute
+ * URLs on ClickDimensions, a submit posts straight there (`target="_parent"`),
+ * and this site still stores nothing.
  *
  * If the lookup is missing — Lenzing has changed the form — or the fetch fails,
  * the frame is sent to the original form instead, which picks by hostname as
@@ -27,6 +28,9 @@ const HOSTNAME_LOOKUP =
   "var url = new URL((window.location != window.parent.location) ? document.referrer : document.location.href);";
 const PINNED = 'var url = new URL("https://www.veocel.com/");';
 
+const GERMAN_QUOTED = "„beyond fiber - nonwovens newsletter“";
+const ENGLISH_QUOTED = "“beyond fiber - nonwovens newsletter”";
+
 export async function GET(request: NextRequest) {
   const response = await fetch(FORM_URL, { next: { revalidate: 3600 } }).catch(() => null);
   const html = response?.ok ? await response.text() : "";
@@ -40,7 +44,7 @@ export async function GET(request: NextRequest) {
     return Response.redirect(query ? `${FORM_URL}&${query}` : FORM_URL);
   }
 
-  return new Response(html.replace(HOSTNAME_LOOKUP, PINNED), {
+  return new Response(html.replace(HOSTNAME_LOOKUP, PINNED).replace(GERMAN_QUOTED, ENGLISH_QUOTED), {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
       "X-Robots-Tag": "noindex",
