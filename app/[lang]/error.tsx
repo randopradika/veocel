@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 
 import { ArrowTextLink } from "@/components/ui/ArrowButton";
 import { Container, Section } from "@/components/ui/Container";
@@ -15,9 +16,21 @@ import { localePath } from "@/lib/i18n";
  *
  * The `<title>` is set here because the page's own metadata is usually what
  * failed, which left the tab blank; React hoists it into the head.
+ *
+ * The error is logged to the browser console only. In production a Server
+ * Component error arrives here with a generic message, so the log carries its
+ * `digest`: search Vercel's runtime logs for it to find the real error.
  */
-export default function PageError({ unstable_retry }: { unstable_retry: () => void }) {
+export default function PageError({ error, retry }: { error: unknown; retry: () => void }) {
   const locale = useLocale();
+
+  useEffect(() => {
+    const digest = error instanceof Error && "digest" in error ? String(error.digest) : undefined;
+    console.error(
+      digest ? `[page] render failed (digest ${digest})` : "[page] render failed",
+      error,
+    );
+  }, [error]);
 
   return (
     <Section className="pt-40 md:pt-header">
@@ -30,7 +43,7 @@ export default function PageError({ unstable_retry }: { unstable_retry: () => vo
         <div className="mt-10 flex flex-wrap items-center justify-center gap-8">
           <button
             type="button"
-            onClick={() => unstable_retry()}
+            onClick={() => retry()}
             className="text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
           >
             <ArrowTextLink>try again</ArrowTextLink>
