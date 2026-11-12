@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 
+import { CONSENT_BOOTSTRAP } from "@/lib/consent";
 import { DEFAULT_LOCALE } from "@/lib/i18n";
 
 import "./globals.css";
@@ -52,8 +53,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // `data-scroll-behavior` keeps the stylesheet's smooth scrolling to in-page
   // jumps: Next switches it off around a navigation, so a new page opens at its
   // top rather than gliding up from where the last one was left.
+  //
+  // The consent script (see `lib/consent.ts`) is a plain inline script in the
+  // head, so it runs while the page is parsed, on every route. Not `next/script`'s
+  // `beforeInteractive`: in the App Router that queues the script at the end of
+  // the body for Next's async bootstrap to pick up, and a bootstrap that runs
+  // before the parser gets there never sees it.
   return (
     <html lang={DEFAULT_LOCALE} className={circular.variable} data-scroll-behavior="smooth">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: CONSENT_BOOTSTRAP }} />
+      </head>
       <body className="mx-auto flex min-h-svh w-full max-w-page flex-col">{children}</body>
     </html>
   );

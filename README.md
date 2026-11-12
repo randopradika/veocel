@@ -7,7 +7,7 @@ page, the section pages (`fiber-types`, `wipes`, `hygiene`, `beauty`,
 
 - **Next.js 16** with React Server Components; client components only where there
   is browser state — the header, the pop-ups, the accordion, the brand filters, the
-  article slider and pager
+  article slider and pager, the cookie settings link
 - **Tailwind CSS v4**, themed entirely from tokens in `app/globals.css`
 - **Storyblok** as the CMS, with a 22-block library, Visual Editor live preview and
   webhook-driven cache invalidation
@@ -112,6 +112,39 @@ deliberate:
 | No access token | Local mock content, so the design is always reviewable |
 | Token set, story missing | `null` → a real 404 |
 | Token set, request failed | Throws for pages; header/footer fall back to mock so a CDN blip can't blank the site |
+
+## Cookie consent
+
+Usercentrics (Web CMP v3, configuration `K9kNPS92B4Fqmd` in Lenzing's account)
+asks first, and www.veocel.com's tag manager, `GTM-KPQBM3D`, loads only once a
+visitor consents to its "Google Tag Manager" service. All of it is in
+`lib/consent.ts`, which the root layout runs inline in every page's head.
+"cookie settings" at the end of the footer's legal row reopens the choice — the
+configuration hides Usercentrics' own floating button.
+
+- **Draft everywhere but veocel.com.** The published configuration allows
+  veocel.com only, so every other host — veocel.vercel.app, localhost — loads the
+  configuration's draft. Try changes there, then publish them in the Usercentrics
+  admin for the live domain. No deploy is needed for either.
+- **Consent Mode** starts with everything denied; Usercentrics sends the update.
+  Withdrawing consent reloads the page, since a loaded container can't be unloaded.
+
+Before the domain moves over, two things outside this code need fixing:
+
+- **The container's Custom HTML tags have no consent checks.** The Meta Pixel and
+  wild0army fire whenever GTM is loaded, so a visitor who allows Functional (GTM)
+  but refuses Marketing still gets them. Consent Mode doesn't reach non-Google
+  tags: they need consent triggers in GTM, and wild0army a service of its own in
+  Usercentrics, where it isn't declared at all.
+- **Accepting Google Analytics never grants `analytics_storage`.** Usercentrics'
+  built-in Consent Mode only maps its own Google templates, and this configuration's
+  "Google Analytics" is a custom service (the draft has also lost the "Google Ads"
+  template the published version has), so GA4 runs cookieless even after "Accept
+  all". Use Usercentrics' own Google Analytics and Google Ads templates instead.
+
+Production's hard-coded Meta Pixel (`1115920778985402`) and StackAdapt tag, which
+bypass GTM, were not carried over; if they are wanted they belong in the container.
+Consented visits to veocel.vercel.app land in production's GA4 property.
 
 ## Adding a block
 

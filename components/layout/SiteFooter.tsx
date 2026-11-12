@@ -6,7 +6,11 @@ import { SmartLink } from "@/components/ui/SmartLink";
 import { DEFAULT_LOCALE, localePath } from "@/lib/i18n";
 import type { ConfigBlok } from "@/lib/types";
 
+import { CookieSettingsButton } from "./CookieSettingsButton";
 import { Logo } from "./Logo";
+
+const LEGAL_LINK =
+  "underline underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
 
 /**
  * Footer: lockup and site search on one row, the parent-company mark beneath, and
@@ -154,20 +158,19 @@ export function SiteFooter({
               </p>
             ) : null}
 
-            {legal.length > 0 ? (
-              <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-10 md:text-[#299dc1]">
-                {legal.map((item) => (
-                  <li key={item._uid}>
-                    <SmartLink
-                      link={item.link}
-                      className="underline underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-                    >
-                      {item.label}
-                    </SmartLink>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            {/* The cookie settings close the row, after the config story's links. */}
+            <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-10 md:text-[#299dc1]">
+              {legal.map((item) => (
+                <li key={item._uid}>
+                  <SmartLink link={item.link} className={LEGAL_LINK}>
+                    {item.label}
+                  </SmartLink>
+                </li>
+              ))}
+              <li>
+                <CookieSettingsButton className={`cursor-pointer ${LEGAL_LINK}`} />
+              </li>
+            </ul>
           </div>
         </Container>
       </div>
