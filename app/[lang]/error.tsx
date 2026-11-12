@@ -1,7 +1,9 @@
 "use client";
 
+import type { ErrorInfo } from "next/error";
 import Link from "next/link";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useTransition } from "react";
 
 import { ArrowTextLink } from "@/components/ui/ArrowButton";
 import { Container, Section } from "@/components/ui/Container";
@@ -17,19 +19,27 @@ import { localePath } from "@/lib/i18n";
  * The `<title>` is set here because the page's own metadata is usually what
  * failed, which left the tab blank; React hoists it into the head.
  *
- * The error is logged to the browser console only. In production a Server
- * Component error arrives here with a generic message, so the log carries its
- * `digest`: search Vercel's runtime logs for it to find the real error.
+ * Next already logs the caught error to the browser console. In production a
+ * Server Component error arrives here with a generic message, so this adds one
+ * line with its `digest`: search Vercel's runtime logs for it to find the real
+ * error.
+ *
+ * The props use Next's own `ErrorInfo` type because Next does not check this
+ * file's props: a hand-written type let the renamed `unstable_retry` compile
+ * and then fail on click.
  */
-export default function PageError({ error, retry }: { error: unknown; retry: () => void }) {
+export default function PageError({ error, retry }: ErrorInfo) {
   const locale = useLocale();
+  const pathname = usePathname();
+  const home = localePath(locale, "");
+  const [retrying, startRetry] = useTransition();
 
   useEffect(() => {
-    const digest = error instanceof Error && "digest" in error ? String(error.digest) : undefined;
-    console.error(
-      digest ? `[page] render failed (digest ${digest})` : "[page] render failed",
-      error,
-    );
+    const digest =
+      error instanceof Error && "digest" in error && typeof error.digest === "string"
+        ? error.digest
+        : "";
+    if (digest) console.info(`[page] render failed (digest ${digest})`);
   }, [error]);
 
   return (
@@ -41,19 +51,26 @@ export default function PageError({ error, retry }: { error: unknown; retry: () 
           Something went wrong on our side while fetching it. Try again in a moment.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-8">
+          {/* Held in a transition so the button can show the retry is running
+              and not send another full refresh on every click. */}
           <button
             type="button"
-            onClick={() => retry()}
-            className="text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            onClick={() => startRetry(retry)}
+            disabled={retrying}
+            className="text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
           >
-            <ArrowTextLink>try again</ArrowTextLink>
+            <ArrowTextLink>{retrying ? "trying again…" : "try again"}</ArrowTextLink>
           </button>
-          <Link
-            href={localePath(locale, "")}
-            className="text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
-          >
-            <ArrowTextLink>back to the homepage</ArrowTextLink>
-          </Link>
+          {/* On the homepage itself the link would go nowhere: the boundary
+              only clears its error when the path changes. */}
+          {pathname !== home && (
+            <Link
+              href={home}
+              className="text-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
+            >
+              <ArrowTextLink>back to the homepage</ArrowTextLink>
+            </Link>
+          )}
         </div>
       </Container>
     </Section>
