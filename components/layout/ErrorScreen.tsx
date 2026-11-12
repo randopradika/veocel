@@ -23,8 +23,11 @@ import { localePath } from "@/lib/i18n";
  *
  * Next already logs the caught error to the browser console. In production a
  * Server Component error arrives with a generic message, so this adds one line
- * with its `digest`: search Vercel's runtime logs for it to find the real
- * error. `source` says which boundary caught it.
+ * with its `digest`, and shows it under the buttons as a reference a visitor
+ * can quote: search Vercel's runtime logs for it to find the real error.
+ * `source` says which boundary caught it. A digest is only a hash, so showing
+ * it gives nothing away; an error thrown in the browser has none, and then
+ * there is no reference line.
  *
  * Both boundaries type their props with Next's own `ErrorInfo` because Next
  * does not check an error file's props: a hand-written type let the renamed
@@ -40,14 +43,14 @@ export function ErrorScreen({
   const pathname = usePathname();
   const home = localePath(locale, "");
   const [retrying, startRetry] = useTransition();
+  const digest =
+    error instanceof Error && "digest" in error && typeof error.digest === "string"
+      ? error.digest
+      : "";
 
   useEffect(() => {
-    const digest =
-      error instanceof Error && "digest" in error && typeof error.digest === "string"
-        ? error.digest
-        : "";
     if (digest) console.info(`[${source}] render failed (digest ${digest})`);
-  }, [error, source]);
+  }, [digest, source]);
 
   return (
     <Section className={className}>
@@ -79,6 +82,11 @@ export function ErrorScreen({
             </Link>
           )}
         </div>
+        {digest && (
+          <p className="mt-10 text-xs text-ink-muted">
+            Reference: <span className="select-all tabular-nums">{digest}</span>
+          </p>
+        )}
       </Container>
     </Section>
   );
