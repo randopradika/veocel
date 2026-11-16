@@ -78,7 +78,30 @@ const WHEEL_LABELS: ReadonlyArray<readonly [number, number]> = [
   [16, 53], // biodegradability — left
 ];
 
+/** A footnote paragraph opens on the superscript numeral the copy cites it by. */
+const FOOTNOTE = /^[¹²³⁴⁵⁶⁷⁸⁹⁰]/;
+
+/**
+ * The body's copy and its footnotes — "¹ These results were calculated…" —
+ * which are set as small print under the link rather than at the copy's size
+ * (asked 2026-11-17). Paragraphs split on a blank line, as Markdown splits them.
+ */
+function splitFootnotes(body?: string): { copy: string; footnotes: string } {
+  const paragraphs = (body ?? "")
+    .replace(/\r\n/g, "\n")
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  return {
+    copy: paragraphs.filter((paragraph) => !FOOTNOTE.test(paragraph)).join("\n\n"),
+    footnotes: paragraphs.filter((paragraph) => FOOTNOTE.test(paragraph)).join("\n\n"),
+  };
+}
+
 function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStepBlok[] }) {
+  const { copy, footnotes } = splitFootnotes(blok.body);
+
   // The wheel artwork has exactly five wedges; with any other step count the
   // titles would land on the wrong photograph, so fall back to the circles.
   // With no steps at all the artwork stands alone — deleting the labels in
@@ -184,7 +207,7 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
               className="mt-5 text-base leading-[1.4] text-ink-muted md:text-xl xl:mt-[47px] xl:leading-7 xl:[&>*+*]:mt-7"
               gap="loose"
             >
-              {blok.body}
+              {copy}
             </Markdown>
 
             {blok.link_label ? (
@@ -195,6 +218,11 @@ function ProcessRing({ blok, steps }: { blok: ProcessRowBlok; steps: ProcessStep
                 <ArrowTextLink>{blok.link_label}</ArrowTextLink>
               </SmartLink>
             ) : null}
+
+            {/* Small print at the fiber pop-up's footnote size, 12/18 rising to 14/21. */}
+            <Markdown className="mt-10 text-xs leading-[1.5] text-ink-muted md:text-sm" gap="tight">
+              {footnotes}
+            </Markdown>
           </div>
         </div>
       </Container>

@@ -213,7 +213,11 @@ export type ProcessRowBlok = SbBlock & {
    * text. When empty the ring falls back to a circle of per-step images.
    */
   diagram_image?: StoryblokAsset;
-  /** Supporting copy, shown next to the ring. Blank lines start a new paragraph. */
+  /**
+   * Supporting copy, shown next to the ring. Blank lines start a new paragraph;
+   * a paragraph opening on a superscript numeral ("¹ …") is a footnote, set as
+   * small print under the link.
+   */
   body?: string;
   link_label?: string;
   link?: StoryblokLink;
