@@ -1,26 +1,30 @@
+import Link from "next/link";
+
 import { ArrowMarker } from "@/components/ui/ArrowButton";
 import { SmartLink } from "@/components/ui/SmartLink";
+import { CONTACT_EMAIL } from "@/lib/contact";
 import { localePath } from "@/lib/i18n";
 import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
 
 /**
- * Band above the footer, split into tinted panels: social links, newsletter
- * signup, and — when `config.responsibility_label` is set — the social
- * responsibility platform. That is the phone order, and the source order so
- * screen readers and tabbing follow it; from `md` the newsletter moves back to
- * the first column. The middle panel takes the deeper tint, so on phones social
- * and newsletter swap theirs. Each panel centres its own content, and the tints
- * run edge to edge rather than sitting inside the page gutters.
+ * Band above the footer, split into tinted panels: social links, contact, and
+ * — when `config.responsibility_label` is set — the social responsibility
+ * platform. That is the phone order, and the source order so screen readers
+ * and tabbing follow it; from `md` contact moves back to the first column. The
+ * middle panel takes the deeper tint, so on phones social and contact swap
+ * theirs. Each panel centres its own content, and the tints run edge to edge
+ * rather than sitting inside the page gutters.
  *
  * On phones the panels stack at the mobile frame's 1:1 sizes (2035:165): 140px
  * panels with 24px headings, 51px social discs and a 36px platform name. From
  * `md` the desktop frame's 0.75 scale applies, as before — except the social
  * discs, which keep the frames' 51px at every width (2053:758–767).
  *
- * The form only collects the address: like the old veocel.com, it goes to
- * `/<lang>/subscribe?email=…`, where Lenzing's own signup form takes it from
- * there (see `app/[lang]/subscribe/page.tsx`). A plain GET, so it needs no
- * JavaScript, and the site stores no subscribers.
+ * The contact panel took the newsletter signup's place on the client's request
+ * (20 Nov UAT, slide 114): "contact us" and the nonwovens team's address,
+ * which leads to the contact form at `/<lang>/contact` rather than straight
+ * into a mail app — the client asked for a form. The signup's second step,
+ * `/<lang>/subscribe`, still answers for anyone holding a link to it.
  */
 export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale: string }) {
   const responsibility = config.responsibility_label?.trim();
@@ -28,7 +32,7 @@ export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale:
   return (
     <section
       className={`grid text-brand-800 ${responsibility ? "md:grid-cols-3" : "md:grid-cols-2"}`}
-      aria-labelledby="newsletter-heading"
+      aria-labelledby="contact-heading"
     >
       <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:bg-brand-200 md:py-12">
         <h2 className="text-2xl font-bold md:text-[1.75rem]">
@@ -53,34 +57,18 @@ export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale:
       </div>
 
       <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:order-first md:bg-brand-100 md:py-12">
-        <h2 id="newsletter-heading" className="text-2xl font-bold md:text-[1.75rem]">
-          {config.newsletter_heading ?? "newsletter subscriptions"}
+        <h2 id="contact-heading" className="text-2xl font-bold md:text-[1.75rem]">
+          contact us
         </h2>
 
-        <form
-          action={localePath(locale, "subscribe")}
-          method="get"
-          className="mt-4 flex w-full max-w-sm items-center gap-3 border-b border-brand-800/30 pb-2"
+        {/* The address names the team; the link opens the form that writes to it. */}
+        <Link
+          href={localePath(locale, "contact")}
+          className="group mt-4 inline-flex max-w-full items-center gap-3 text-xl font-medium underline decoration-[0.06em] underline-offset-[0.2em] transition-opacity [overflow-wrap:anywhere] hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:text-2xl"
         >
-          <label htmlFor="newsletter-email" className="sr-only">
-            E-mail address
-          </label>
-          <input
-            id="newsletter-email"
-            type="email"
-            name="email"
-            required
-            placeholder={config.newsletter_placeholder ?? "type your e-mail address"}
-            className="w-full bg-transparent text-xl italic placeholder:text-brand-800/55 focus:outline-none md:text-sm"
-          />
-          <button
-            type="submit"
-            className="group rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-          >
-            <span className="sr-only">Subscribe</span>
-            <ArrowMarker tone="brand" size="sm" />
-          </button>
-        </form>
+          {CONTACT_EMAIL}
+          <ArrowMarker tone="brand" size="sm" />
+        </Link>
       </div>
 
       {responsibility ? (
