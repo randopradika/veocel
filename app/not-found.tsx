@@ -9,7 +9,8 @@ export default function NotFound() {
   return (
     <Section className="pt-40 md:pt-header">
       <Container width="narrow" className="text-center">
-        <p className="text-sm font-semibold text-brand-400">404</p>
+        {/* brand, not brand-400: #58ade1 is 2.5:1 on white (WCAG audit, 2026-11-24). */}
+        <p className="text-sm font-semibold text-brand">404</p>
         <h1 className="mt-4 text-h2 font-bold text-brand md:text-h1">
           this page has returned to nature.
         </h1>
