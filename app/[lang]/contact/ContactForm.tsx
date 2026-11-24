@@ -7,7 +7,7 @@ import { CONTACT_EMAIL, LIMITS, TOPICS, type ContactState, type FieldName, type 
 import { submitContact } from "./actions";
 
 /**
- * The contact form, laid out as the reference on slide 114 draws it: topic,
+ * The contact form, laid out as the reference on slide 114 draws it: what the query is for,
  * description and message under "How can we support you today?", then the
  * name, e-mail and phone, company and country in pairs under "Contact
  * information". On phones the pairs stack.
@@ -30,7 +30,7 @@ export function ContactForm({
   topic,
 }: {
   countries: Array<{ code: string; name: string }>;
-  topic: TopicCode;
+  topic: TopicCode | "";
 }) {
   const [state, formAction, pending] = useActionState(submitContact, { status: "idle" } as ContactState);
 
@@ -98,8 +98,11 @@ export function ContactForm({
         <p className="mt-2 text-base text-ink-muted">Our Lenzing experts are just a message away.</p>
 
         <div className="mt-8 grid gap-6">
-          <Field name="topic" label="Topic" required error={errors.topic} className="sm:max-w-xs">
+          <Field name="topic" label="Your query is for" required error={errors.topic} className="sm:max-w-xs">
             <select {...control("topic")} defaultValue={values?.topic ?? topic} required>
+              <option value="" disabled>
+                Please select
+              </option>
               {TOPICS.map((option) => (
                 <option key={option.code} value={option.code}>
                   {option.label}

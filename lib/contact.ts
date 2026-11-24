@@ -4,11 +4,13 @@
  *
  * It replaces the footer's newsletter signup (client, 20 Nov UAT, slide 114),
  * and asks exactly what the slide's reference — Lenzing Pro's contact form,
- * lenzingpro.com/en/portal/contact — shows: a topic, a one-line description and
- * the message, then the sender's first and last name, e-mail, phone (optional),
- * company and the country of its headquarters. Labels and placeholders are the
- * reference's word for word; the topics are Lenzing Pro's own, as its API
- * returned them on 2026-11-24.
+ * lenzingpro.com/en/portal/contact — shows: what the query is for, a one-line
+ * description and the message, then the sender's first and last name, e-mail,
+ * phone (optional), company and the country of its headquarters. Labels and
+ * placeholders are the reference's word for word, except the first field: on
+ * 2026-11-24 it became VEOCEL's own "Your query is for", whose options are the
+ * where-to-buy categories plus sales and general (Lenzing Pro's three topics
+ * until then).
  *
  * Lenzing Pro's form posts into Lenzing's SAP Commerce system, which refuses
  * other origins, so this one goes to `CONTACT_EMAIL` instead — see
@@ -20,10 +22,14 @@
 
 export const CONTACT_EMAIL = "nonwoven@lenzing.com";
 
+/** In the client's order. `?topic=<code>` on the page preselects one. */
 export const TOPICS = [
-  { code: "helpdesk", label: "General inquiries" },
-  { code: "buy", label: "Purchase Lenzing fiber" },
-  { code: "sourcing", label: "Sourcing assistance" },
+  { code: "beauty", label: "Beauty" },
+  { code: "body", label: "Body" },
+  { code: "intimate", label: "Intimate" },
+  { code: "surface", label: "Surface" },
+  { code: "sales", label: "Sales" },
+  { code: "general", label: "General" },
 ] as const;
 
 export type TopicCode = (typeof TOPICS)[number]["code"];
@@ -56,7 +62,8 @@ export const LIMITS = {
 } as const;
 
 export type ContactFields = {
-  topic: TopicCode;
+  /** Empty until the visitor picks one — no option is assumed. */
+  topic: TopicCode | "";
   description: string;
   message: string;
   firstName: string;
@@ -78,7 +85,7 @@ export type ContactState =
   | { status: "fallback"; mailto: string; values: ContactFields };
 
 export function topicLabel(code: string): string {
-  return TOPICS.find((topic) => topic.code === code)?.label ?? TOPICS[0].label;
+  return TOPICS.find((topic) => topic.code === code)?.label ?? "";
 }
 
 export function countryName(code: string, locale = "en"): string {
@@ -98,7 +105,7 @@ function oneLine(value: string): string {
 export function compose(fields: ContactFields): { subject: string; body: string } {
   const subject = oneLine(`${topicLabel(fields.topic)}: ${fields.description}`);
   const body = [
-    `Topic: ${topicLabel(fields.topic)}`,
+    `Your query is for: ${topicLabel(fields.topic)}`,
     `Description of inquiry: ${oneLine(fields.description)}`,
     "",
     fields.message.trim(),

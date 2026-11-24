@@ -40,7 +40,7 @@ function text(formData: FormData, name: string): string {
 function read(formData: FormData): ContactFields {
   const topic = text(formData, "topic");
   return {
-    topic: (TOPICS.some((option) => option.code === topic) ? topic : TOPICS[0].code) as TopicCode,
+    topic: TOPICS.some((option) => option.code === topic) ? (topic as TopicCode) : "",
     description: text(formData, "description"),
     message: text(formData, "message"),
     firstName: text(formData, "firstName"),
@@ -63,6 +63,7 @@ function validate(fields: ContactFields): Partial<Record<FieldName, string>> {
     if (!errors[name] && fields[name].length > limit) errors[name] = `Please keep this to ${limit} characters.`;
   }
   if (!errors.email && !EMAIL.test(fields.email)) errors.email = "Please enter a valid e-mail address.";
+  if (!fields.topic) errors.topic = "Please select what your query is for.";
   if (!COUNTRIES.has(fields.country)) errors.country = "Please select a country.";
 
   return errors;

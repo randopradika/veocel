@@ -9,8 +9,8 @@ import { ContactForm } from "./ContactForm";
  * Where the footer's "contact us" leads (slide 114, 20 Nov UAT): the client
  * asked for a form on a page of its own or in a pop-up, and a page it is — the
  * form runs to nine fields, too many for a pop-up on a phone, and a page has
- * an address to link to. `?topic=buy` (or `helpdesk`, `sourcing`) picks the
- * topic, as on Lenzing Pro.
+ * an address to link to. `?topic=sales` (or any code in `TOPICS`) preselects
+ * what the query is for; otherwise the visitor picks.
  */
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function ContactPage({
 }) {
   const [{ lang }, { topic }] = await Promise.all([params, searchParams]);
   const asked = (Array.isArray(topic) ? topic[0] : topic)?.toLowerCase();
-  const initialTopic = (TOPICS.find((option) => option.code === asked)?.code ?? TOPICS[0].code) as TopicCode;
+  const initialTopic: TopicCode | "" = TOPICS.find((option) => option.code === asked)?.code ?? "";
 
   const collator = new Intl.Collator(lang);
   const countries = COUNTRY_CODES.map((code) => ({ code, name: countryName(code, lang) })).sort((a, b) =>
