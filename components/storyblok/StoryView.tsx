@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import { StoryblokBridge } from "@/components/StoryblokBridge";
 import { DEFAULT_LOCALE, getLocales, localePath } from "@/lib/i18n";
 import { getNextArticle, getProofLibrary, getStory, storyPath } from "@/lib/storyblok";
-import type { ArticleBlok, SbStory } from "@/lib/types";
+import { altText } from "@/lib/image";
+import type { ArticleBlok, HeroBlok, SbBlock, SbStory } from "@/lib/types";
 
 import { Article } from "./Article";
 import { BlockRenderer } from "./BlockRenderer";
@@ -58,13 +59,41 @@ export async function StoryView({
           next={next ? { href: localePath(locale, storyPath(next)), title: next.content.title } : null}
         />
       ) : (
-        <BlockRenderer blocks={content.body} locale={locale} library={library} />
+        <>
+          {opensWithHeading(content.body) ? null : (
+            <h1 className="sr-only">{pageHeading(story.name, content.seo_title)}</h1>
+          )}
+          <BlockRenderer blocks={content.body} locale={locale} library={library} />
+        </>
       )}
     </>
   );
 }
 
 /** A 404's title, as `app/not-found.tsx` sets it — which a page segment's 404 cannot borrow. */
+/**
+ * Every page has one h1 (WCAG audit, 2026-11-24): the home page and claims &
+ * certifications had none — the home headline is drawn into its photograph,
+ * and claims opens on its sections' own h2s. A hero with a headline, or with
+ * the words of its picture in the image's alt text, a page hero and the
+ * #ItsInOurHands hub each set their own; anything else gets the page's title,
+ * for screen readers only.
+ */
+function opensWithHeading(body: SbBlock[] = []): boolean {
+  return body.some((blok) => {
+    if (blok.component === "page_hero" || blok.component === "article_hub") return true;
+    if (blok.component !== "hero") return false;
+    const hero = blok as HeroBlok;
+    return Boolean(hero.headline?.trim() || altText(hero.background_image) || altText(hero.background_image_mobile));
+  });
+}
+
+/** The SEO title without the site name it ends on ("claims & certifications | VEOCEL™"). */
+function pageHeading(name: string, seoTitle?: string): string {
+  const title = seoTitle?.replace(/\s*\|\s*VEOCEL™\s*$/, "").trim();
+  return title || name;
+}
+
 const NOT_FOUND_METADATA: Metadata = { title: "page not found" };
 
 /**

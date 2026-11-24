@@ -15,7 +15,9 @@ const WINDOW = 5;
  * page numbers 16px apart, 20px regular type in grey, the current page a solid
  * blue disc with white type, thin grey chevrons either side, 30px under the
  * list, five numbers at a time. Set here in the site's own Circular Std and
- * tokens — `ink-faint` for the grey, `brand` for the blue.
+ * tokens — `ink-muted` for the grey (`ink-faint` until the 2026-11-24 WCAG
+ * audit: 2.2:1 on the hub's tint, under 4.5:1 for the numbers and 3:1 for the
+ * chevrons), `brand` for the blue.
  *
  * The page lives in the URL (`?page=2`) through the native History API, which
  * Next keeps in step with `useSearchParams` — so a page can be shared, survives
@@ -93,7 +95,7 @@ export function ArticlePager({
                     aria-current={current ? "page" : undefined}
                     aria-label={`Page ${target}`}
                     className={`flex h-11 w-11 items-center justify-center rounded-full text-xl transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
-                      current ? "bg-brand text-white" : "text-ink-faint hover:text-brand"
+                      current ? "bg-brand text-white" : "text-ink-muted hover:text-brand"
                     }`}
                   >
                     {target}
@@ -128,7 +130,7 @@ function PageArrow({
       onClick={onClick}
       disabled={disabled}
       aria-label={previous ? "Previous page" : "Next page"}
-      className="flex h-11 w-11 items-center justify-center rounded-full text-ink-faint transition-colors enabled:hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-default disabled:opacity-40"
+      className="flex h-11 w-11 items-center justify-center rounded-full text-ink-muted transition-colors enabled:hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-default disabled:opacity-40"
     >
       <svg
         viewBox="0 0 26 30"

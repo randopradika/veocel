@@ -25,7 +25,14 @@
 
   /* Neutrals. Copy is warm-grey, never pure black. */
   --color-ink: #2b2b2b;
-  --color-ink-muted: #6f7276;
+  /*
+    ink-muted was #6f7276 until the WCAG audit of 2026-11-24: 4.8:1 on white
+    but 4.1:1 on the brand-100 panels it also sits on (the #ItsInOurHands
+    dates, the fiber pop-up values). #5f6266 clears 4.5:1 on every ground the
+    site uses, brand-200 included. ink-faint stays for rules and decoration —
+    at 2.6:1 on white it is not for text.
+  */
+  --color-ink-muted: #5f6266;
   --color-ink-faint: #9ea2a7;
   --color-hairline: #e4e7ea;
   --color-canvas: #ffffff;

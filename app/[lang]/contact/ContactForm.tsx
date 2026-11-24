@@ -21,7 +21,7 @@ import { submitContact } from "./actions";
  */
 
 const INPUT =
-  "mt-2 block w-full rounded-card border bg-white px-4 py-3 text-base text-ink placeholder:text-ink-faint focus:border-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/25";
+  "mt-2 block w-full rounded-card border bg-white px-4 py-3 text-base text-ink placeholder:text-ink-muted focus:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
 const ERROR_TONE = "border-[#b3261e]";
 const IDLE_TONE = "border-[#c9d3dc]";
 

@@ -33,6 +33,13 @@ type BlockImageProps = {
   mobileAsset?: StoryblokAsset;
   /** Used when the asset has no alt text of its own. */
   alt?: string;
+  /**
+   * The picture says nothing the text beside it does not: an icon over its own
+   * label, a photo inside a link that names it, a hero under its headline.
+   * Forces `alt=""` over the asset's own alt text, which otherwise wins and has
+   * screen readers read the same words twice ("baby wipes, baby wipes").
+   */
+  decorative?: boolean;
   sizes?: string;
   /**
    * Wrapper classes — set the aspect ratio and radius here.
@@ -67,6 +74,7 @@ export function BlockImage({
   asset,
   mobileAsset,
   alt = "",
+  decorative = false,
   sizes = "100vw",
   className = "",
   style,
@@ -79,6 +87,7 @@ export function BlockImage({
   onContextMenu,
 }: BlockImageProps) {
   const mobileFilename = mobileAsset?.filename;
+  const text = decorative ? "" : altText(asset, alt);
   // With only a mobile image set, it stands in at every width.
   const filename = asset?.filename || mobileFilename;
 
@@ -99,7 +108,7 @@ export function BlockImage({
   }
 
   if (mobileFilename && mobileFilename !== filename) {
-    const common = { alt: altText(asset, alt), fill: true, sizes, priority };
+    const common = { alt: text, fill: true, sizes, priority };
     const { props: mobile } = getImageProps({ ...common, src: mobileFilename });
     const { props: desktop } = getImageProps({ ...common, src: filename });
 
@@ -124,7 +133,7 @@ export function BlockImage({
     <div className={`overflow-hidden ${className}`} style={style}>
       <Image
         src={filename}
-        alt={altText(asset, alt)}
+        alt={text}
         fill
         sizes={sizes}
         priority={priority}

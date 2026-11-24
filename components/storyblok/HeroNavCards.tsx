@@ -10,6 +10,15 @@ import type { HeroNavCardBlok } from "@/lib/types";
 import { editable } from "./editable";
 
 /**
+ * A dark halo around white type on the photograph, and a light tint on the
+ * tab, so the labels clear 4.5:1 whatever the picture does behind them — on
+ * the partners, hygiene and beauty banners they measured 1.2–3:1 (WCAG audit,
+ * 2026-11-24). Under the Understanding doc for 1.4.3 a halo this wide counts
+ * as the text's background, and it leaves the photograph itself undimmed.
+ */
+const HALO = "[text-shadow:0_0_1px_rgb(0_0_0/0.9),0_0_3px_rgb(0_0_0/0.75),0_0_12px_rgb(0_0_0/0.5)]";
+
+/**
  * The numbered shortcut cards along the bottom edge of the hero.
  *
  * A section landing page includes itself in this strip, so the card matching the
@@ -25,7 +34,10 @@ import { editable } from "./editable";
  * used to scroll sideways there, which left five of the seven destinations
  * off-screen, and until 2026-10 the pill named the page you were on.
  *
- * A mouse or trackpad keeps the cards at every width. Browser zoom narrows the
+ * A mouse or trackpad keeps the cards down to `md` (768px — a 1440 laptop at
+ * ~190% zoom); below that the two-column stack ran over the photograph and,
+ * on the home page, past it onto white, so there it gets the dropdown too.
+ * Above `md` it keeps the cards at every width. Browser zoom narrows the
  * CSS viewport — Cmd + to 125% puts a 1440 laptop at 1152 — so a width
  * breakpoint alone swapped the cards for the pill as soon as a desktop reader
  * zoomed in. Width cannot tell a zoomed laptop from a tablet; the pointer can.
@@ -50,8 +62,10 @@ export function HeroNavCards({
     return localePath(locale, href) === pathname;
   });
 
+  // A landmark, so screen-reader users can jump to the site's sections; the
+  // strip is the site navigation (WCAG audit, 2026-11-24).
   return (
-    <>
+    <nav aria-label="VEOCEL™ sections">
       <HeroNavDropdown
         cards={cards}
         currentIndex={currentIndex}
@@ -86,7 +100,7 @@ export function HeroNavCards({
         `minmax(0, …)` lets a tab give up a few pixels where a row is just
         short — 1280, or 768 — rather than overflow.
       */}
-      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] desktop:gap-[8.35px] desktop:[--tab:calc(8.23em+30px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] desktop:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-xl:not-pointer-fine:hidden">
+      <ul className="grid grid-cols-[repeat(2,minmax(0,var(--tab)))] justify-center gap-2.5 pb-1 text-base [--tab:calc(8.23em+34px)] desktop:gap-[8.35px] desktop:[--tab:calc(8.23em+30px)] md:grid-cols-[repeat(4,minmax(0,var(--tab)))] xl:grid-cols-[repeat(7,minmax(0,var(--tab)))] desktop:grid-cols-[repeat(7,minmax(0,var(--tab)))] max-md:hidden max-xl:not-pointer-fine:hidden">
         {cards.map((card, index) => {
           const current = index === currentIndex;
           /*
@@ -110,7 +124,9 @@ export function HeroNavCards({
                   about to open.
                 */
                 className={`group flex h-full rounded-panel border border-white px-4 py-3.5 transition-colors desktop:px-3.5 duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                  current ? "bg-brand-200 text-brand" : "text-white hover:bg-brand-200 hover:text-brand"
+                  current
+                    ? "bg-brand-200 text-brand-700"
+                    : `bg-black/30 text-white hover:bg-brand-200 hover:text-brand-700 hover:[text-shadow:none] ${HALO}`
                 }`}
               >
                 <span {...editable(card)} className="flex flex-1 flex-col justify-between gap-6">
@@ -170,7 +186,7 @@ export function HeroNavCards({
           );
         })}
       </ul>
-    </>
+    </nav>
   );
 }
 
@@ -234,7 +250,7 @@ function HeroNavDropdown({
   }, [open]);
 
   return (
-    <div ref={containerRef} className="relative hidden max-xl:not-pointer-fine:block">
+    <div ref={containerRef} className="relative hidden max-md:block max-xl:not-pointer-fine:block">
       <button
         ref={buttonRef}
         type="button"
@@ -246,7 +262,7 @@ function HeroNavDropdown({
         className={`flex min-h-16 w-full items-center justify-between gap-4 rounded-panel border py-2 pr-5 pl-6 text-left text-xl leading-[1.5] font-bold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 ${
           home
             ? "border-brand text-brand focus-visible:outline-brand"
-            : "border-white text-white focus-visible:outline-white"
+            : `border-white bg-black/30 text-white focus-visible:outline-white ${HALO}`
         }`}
       >
         <span>{placeholder || "select destination"}</span>
@@ -276,7 +292,7 @@ function HeroNavDropdown({
                 link={card.link}
                 current={isCurrent}
                 className={`flex items-center gap-3 px-5 py-3 text-base font-bold transition-colors hover:bg-brand-50 focus-visible:bg-brand-50 focus-visible:outline-none ${
-                  isCurrent ? "bg-brand-200" : ""
+                  isCurrent ? "bg-brand-200 text-brand-700" : ""
                 }`}
               >
                 <span

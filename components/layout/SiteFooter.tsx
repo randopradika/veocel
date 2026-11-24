@@ -90,7 +90,7 @@ export function SiteFooter({
               type="search"
               name="q"
               placeholder={config.search_placeholder ?? "search …"}
-              className="h-12 w-full min-w-0 rounded-full border border-hairline bg-white px-5 text-xl text-ink italic placeholder:text-ink-faint focus:border-brand focus:outline-none md:h-auto md:w-72 md:border-[#afcee0] md:bg-[#f8f8f8] md:py-2.5 md:text-sm md:placeholder:text-[#7c7c7c] lg:h-[68px] lg:w-[336px] lg:px-[34px] lg:py-0 lg:text-xl"
+              className="h-12 w-full min-w-0 rounded-full border border-hairline bg-white px-5 text-xl text-ink italic placeholder:text-ink-muted focus:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:h-auto md:w-72 md:border-[#afcee0] md:bg-[#f8f8f8] md:py-2.5 md:text-sm md:placeholder:text-ink-muted lg:h-[68px] lg:w-[336px] lg:px-[34px] lg:py-0 lg:text-xl"
             />
             <button
               type="submit"
@@ -159,7 +159,7 @@ export function SiteFooter({
             ) : null}
 
             {/* The cookie settings close the row, after the config story's links. */}
-            <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-10 md:text-[#299dc1]">
+            <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 md:gap-x-10 md:text-[#1e7590]">
               {legal.map((item) => (
                 <li key={item._uid}>
                   <SmartLink link={item.link} className={LEGAL_LINK}>

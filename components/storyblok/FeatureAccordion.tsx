@@ -119,9 +119,10 @@ function AccordionCard({ blok, open, onToggle }: ItemProps) {
         className="group block w-full text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
       >
         <span className="relative block">
+          {/* The button is named by the title under the photo; the photo adds nothing to read. */}
           <BlockImage
             asset={blok.image}
-            alt=""
+            decorative
             sizes="(max-width: 768px) 100vw, 50vw"
             className="relative block aspect-[12/5] w-full rounded-card xl:aspect-[663/269] xl:rounded-[20px]"
             placeholderTone="sky"
@@ -225,7 +226,7 @@ function AccordionTile({
           {blok.icon?.filename ? (
             <BlockImage
               asset={blok.icon}
-              alt=""
+              decorative
               sizes="40px"
               className="relative h-9 w-9"
               imageClassName="object-contain"

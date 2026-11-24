@@ -62,7 +62,7 @@ function NewsRow({ blok }: { blok: NewsItemBlok }) {
 
         <span className="flex-1">
           {blok.category || date ? (
-            <span className="flex flex-wrap items-center gap-3 text-sm text-ink-faint">
+            <span className="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
               {blok.category ? <span>{blok.category}</span> : null}
               {date ? <time dateTime={blok.date}>{date}</time> : null}
             </span>

@@ -300,7 +300,7 @@ function CategoryButton({
         {blok?.icon?.filename ? (
           <BlockImage
             asset={blok.icon}
-            alt=""
+            decorative
             sizes="36px"
             className="relative h-7 w-7 md:h-9 md:w-9 xl:h-10 xl:w-10"
             /*

@@ -1,6 +1,7 @@
 import { BlockImage } from "@/components/ui/BlockImage";
 import { Container } from "@/components/ui/Container";
 import { headlineLines } from "@/lib/headlineLines";
+import { altText } from "@/lib/image";
 import type { HeroBlok } from "@/lib/types";
 
 import { editable } from "./editable";
@@ -112,6 +113,15 @@ function splitHeadline(headline: string, highlight?: string) {
 }
 
 /**
+ * A soft dark halo around the white headline and subline. With no scrim over
+ * the photograph (taken out on 2026-09-29), white type on the light banners —
+ * partners, hygiene, beauty, the fibers page — measured 1.2–2.9:1 against
+ * WCAG's 3:1 for large text (audit, 2026-11-24). The halo darkens only the
+ * pixels around the letters, so the picture keeps its colour.
+ */
+const HALO = "[text-shadow:0_0_0.02em_rgb(0_0_0/0.75),0_0_0.08em_rgb(0_0_0/0.55),0_0.02em_0.35em_rgb(0_0_0/0.45)]";
+
+/**
  * One line of the headline, with `highlight` boxed if it falls in this line.
  * Runs per line rather than over the whole headline so the plate survives the
  * break — on the fibers page the boxed word sits on the second line.
@@ -155,6 +165,9 @@ export function Hero({ blok }: { blok: HeroBlok }) {
   // An empty headline is allowed — a hero can be its photograph alone — and
   // then no heading renders at all.
   const headline = blok.headline?.trim() ?? "";
+  // Words drawn into the photograph itself, as the editor described them in the
+  // image's alt text — only read when there is no live headline.
+  const imageWords = headline ? "" : altText(blok.background_image) || altText(blok.background_image_mobile);
   const lines = !headline ? [] : size === "title" && !left ? headlineLines(headline) : [headline];
   const x = resolveOption(HEADLINE_X, blok.headline_horizontal, "center");
   const y = resolveOption(HEADLINE_Y, blok.headline_vertical, "middle");
@@ -189,12 +202,18 @@ export function Hero({ blok }: { blok: HeroBlok }) {
       //
       // Where the destination pill replaces the cards (touch, below `xl`) the
       // hero lets its list drop out over the next block, and sits above it.
-      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 max-xl:not-pointer-fine:z-20 max-xl:not-pointer-fine:overflow-visible max-md:min-h-[calc(100vw*502/402)] desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
+      className="relative isolate flex min-h-[min(92svh,calc(1080px*0.92))] flex-col justify-center overflow-hidden bg-brand-800 max-xl:not-pointer-fine:z-20 max-xl:not-pointer-fine:overflow-visible max-md:z-20 max-md:overflow-visible max-md:min-h-[calc(100vw*502/402)] desktop:@container desktop:aspect-[1920/994] desktop:min-h-auto"
     >
+      {/*
+        Decorative: the headline says it, or — where the words are drawn into
+        the photograph, as on the home page — the image's own alt text does, as
+        the page's h1 for screen readers only (below). Left as the image's alt,
+        it read the headline twice, or nothing at all.
+      */}
       <BlockImage
         asset={blok.background_image}
         mobileAsset={blok.background_image_mobile}
-        alt={headline}
+        decorative
         priority
         sizes="100vw"
         className="absolute inset-0 -z-10"
@@ -265,7 +284,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
               off at 125% zoom on a 1440 laptop.
             */}
             {lines.length > 0 ? (
-            <h1 className={`font-bold ${headlineSize}`}>
+            <h1 className={`font-bold ${headlineSize} ${HALO}`}>
               {lines.map((line, index) => (
                 <span key={index} className="block">
                   {/*
@@ -277,6 +296,8 @@ export function Hero({ blok }: { blok: HeroBlok }) {
                 </span>
               ))}
             </h1>
+            ) : imageWords ? (
+              <h1 className="sr-only">{imageWords}</h1>
             ) : null}
 
             {blok.subline ? (
@@ -287,7 +308,7 @@ export function Hero({ blok }: { blok: HeroBlok }) {
                       // two frames give it; only the alignment differs between them.
                       "hero-subline font-normal text-white"
                     : "mt-6 max-w-xl text-lg leading-snug font-medium text-white/95 md:text-2xl"
-                } ${
+                } ${HALO} ${
                   // A placed block takes its side for the subline too.
                   x === "left"
                     ? "mr-auto"
