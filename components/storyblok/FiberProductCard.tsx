@@ -32,6 +32,26 @@ function editableAttrs(blok: SbBlock) {
   return storyblokEditable(blok as unknown as SbBlokData);
 }
 
+/**
+ * A spec value's comma-separated phrases, each held together: "feminine care
+ * products" or "make-up remover wipes" must never break across lines (client,
+ * 20 Nov UAT), so the spaces inside a phrase become no-break spaces, a word
+ * joiner follows each hyphen or slash (the other places a line may break), and
+ * the value wraps only after a comma. The comma stays with the phrase before it.
+ */
+function keepPhrases(value: string): string {
+  return value
+    .split(/\s*,\s*/)
+    .map((phrase) =>
+      phrase
+        .trim()
+        .replace(/\s+/g, " ")
+        .replace(/([-/‐–—])/g, "$1⁠"),
+    )
+    .filter(Boolean)
+    .join(", ");
+}
+
 /** Blank lines start a new paragraph, as elsewhere in the block library. */
 function paragraphs(body?: string): string[] {
   if (!body) return [];
@@ -139,30 +159,37 @@ export function FiberProductCard({
               event.clientY <= box.bottom;
             if (!inside) setOpen(false);
           }}
-          className="m-auto max-h-[calc(100dvh_-_2rem)] w-[min(100%_-_2rem,67.5rem)] overflow-y-auto rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70"
+          className="m-auto max-h-[calc(100dvh_-_2rem)] w-[min(100%_-_2rem,36rem)] overflow-y-auto rounded-[2.375rem] bg-white p-0 text-left text-ink shadow-2xl backdrop:bg-black/70 lg:w-[min(100%_-_2rem,67.5rem)]"
         >
           {/*
-            The close button belongs to the dialog, not the text column: on a
-            phone, where the photo stacks on top, it sits in the dialog's top
-            corner over the photo (asked for on 2026-10-07 — it used to sit
-            halfway down, under the photo). From `md` the text column is the
-            dialog's right half, so the same corner is where it always was.
+            The close button belongs to the dialog, not the text column: where
+            the photo stacks on top, it sits in the dialog's top corner over
+            the photo (asked for on 2026-10-07 — it used to sit halfway down,
+            under the photo). From `lg` the text column is the dialog's right
+            half, so the same corner is where it always was.
           */}
           <button
             type="button"
             onClick={() => setOpen(false)}
             aria-label="close"
-            className="group absolute top-3 right-3 z-10 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand md:top-7 md:right-8"
+            className="group absolute top-3 right-3 z-10 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:top-7 lg:right-8"
           >
             <ArrowMarker icon="close" tone="brand" size="md" />
           </button>
 
-          <div className="grid md:grid-cols-2">
+          {/*
+            Photo beside the text only from `lg`. Between `md` and `lg` — a
+            tablet, or a desktop browser zoomed to 150% and beyond — the half
+            left for the text was too narrow for the plate, and the values ran
+            out of it a word per line (20 Nov UAT). There the pop-up keeps its
+            phone layout instead, photo on top, in a panel held to 36rem.
+          */}
+          <div className="grid lg:grid-cols-2">
             <BlockImage
               asset={blok.detail_image?.filename ? blok.detail_image : blok.image}
               alt=""
-              sizes="(max-width: 768px) 100vw, 540px"
-              className="relative aspect-[2/1] md:aspect-auto"
+              sizes="(min-width: 1024px) 540px, min(100vw, 576px)"
+              className="relative aspect-[2/1] lg:aspect-auto"
               placeholderTone="sky"
             />
 
@@ -171,11 +198,11 @@ export function FiberProductCard({
               copy at 20px — 64 and 32 until 2026-10-07 ("jaraknya jangan
               terlalu jauh").
             */}
-            <div className="flex flex-col px-7 pt-6 pb-10 md:min-h-[36rem] md:px-14 md:pt-24 md:pb-24">
+            <div className="flex flex-col px-7 pt-6 pb-10 lg:min-h-[36rem] lg:px-14 lg:pt-24 lg:pb-24">
 
               <h2
                 id={titleId}
-                className="text-2xl font-bold tracking-[-0.02em] text-brand md:text-[2rem] md:leading-tight"
+                className="text-2xl font-bold tracking-[-0.02em] text-brand lg:text-[2rem] lg:leading-tight"
               >
                 {blok.name}
               </h2>
@@ -192,27 +219,43 @@ export function FiberProductCard({
               ))}
 
               {/*
-                From `md` the plate is sized to hold its own beside the photo
+                From `lg` the plate is sized to hold its own beside the photo
                 (asked for on 2026-10-01, from the client's mock-up): 18px
                 type, 28px between rows, each label on one line ("Fiber
                 Diameter", revised on 2026-10-02) and the value taking the rest
-                of the row, right-aligned, wrapping only when it must.
+                of the row, right-aligned, wrapping only between phrases. The
+                plate's sides (32px) and the label's gap (24px) came in from
+                36 and 32 on 2026-11-24 so that "feminine care products," fits
+                beside "key applications" at full width.
+
+                A value whose longest phrase does not fit beside its label
+                drops to the line below, still right-aligned, rather than
+                running out of the plate: the row wraps, and a flex item's
+                automatic minimum width is its longest unbreakable run — the
+                longest phrase. `max-w-full` caps that at the plate, so a
+                phrase wider than the whole plate breaks (`break-word`) instead
+                of overflowing it.
               */}
               {specs.length > 0 ? (
-                <dl className="mt-5 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] md:mt-8 md:space-y-7 md:rounded-[1.75rem] md:px-9 md:py-9 md:text-lg md:leading-[1.35]">
+                <dl className="mt-5 space-y-3 rounded-card bg-brand-100 px-5 py-5 text-sm leading-[1.4] lg:mt-8 lg:space-y-7 lg:rounded-[1.75rem] lg:px-8 lg:py-9 lg:text-lg lg:leading-[1.35]">
                   {specs.map(([label, value]) => (
-                    <div key={label} className="flex items-baseline justify-between gap-4 md:gap-8">
+                    <div
+                      key={label}
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 lg:gap-x-6"
+                    >
                       <dt className="shrink-0 font-bold whitespace-nowrap text-ink">
                         {label}
                       </dt>
-                      <dd className="text-right text-ink-muted">{value}</dd>
+                      <dd className="max-w-full flex-1 text-right text-ink-muted [overflow-wrap:break-word]">
+                        {keepPhrases(value)}
+                      </dd>
                     </div>
                   ))}
                 </dl>
               ) : null}
 
               {footnotes.length > 0 ? (
-                <ul className="mt-3 text-xs leading-[1.5] text-ink-muted md:mt-4 md:px-1 md:text-sm">
+                <ul className="mt-3 text-xs leading-[1.5] text-ink-muted lg:mt-4 lg:px-1 lg:text-sm">
                   {footnotes.map((line, index) => (
                     <li key={index}>{line}</li>
                   ))}
