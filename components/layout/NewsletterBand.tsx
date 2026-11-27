@@ -25,17 +25,29 @@ import type { ConfigBlok, SocialLinkBlok } from "@/lib/types";
  * which leads to the contact form at `/<lang>/contact` rather than straight
  * into a mail app — the client asked for a form. The signup's second step,
  * `/<lang>/subscribe`, still answers for anyone holding a link to it.
+ *
+ * Until the site can send mail itself the panel stays off (`SHOW_CONTACT`,
+ * 2026-11-27): the form only hands a message to the visitor's own mail app.
+ * The band then holds social and the platform, social takes the deeper tint
+ * at every width so the two still read apart on phones, and `/<lang>/contact`
+ * answers only for whoever has its address.
  */
+const SHOW_CONTACT = false;
+
+const COLUMNS = ["", "", "md:grid-cols-2", "md:grid-cols-3"];
+
 export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale: string }) {
   const responsibility = config.responsibility_label?.trim();
+  const panels = 1 + (SHOW_CONTACT ? 1 : 0) + (responsibility ? 1 : 0);
+  const socialTint = SHOW_CONTACT ? "bg-brand-100 md:bg-brand-200" : "bg-brand-200";
 
   return (
     <section
-      className={`grid text-brand-800 ${responsibility ? "md:grid-cols-3" : "md:grid-cols-2"}`}
-      aria-labelledby="contact-heading"
+      className={`grid text-brand-800 ${COLUMNS[panels]}`}
+      aria-labelledby={SHOW_CONTACT ? "contact-heading" : "social-heading"}
     >
-      <div className="flex flex-col items-center bg-brand-100 px-6 py-7 md:bg-brand-200 md:py-12">
-        <h2 className="text-2xl font-bold md:text-[1.75rem]">
+      <div className={`flex flex-col items-center px-6 py-7 md:py-12 ${socialTint}`}>
+        <h2 id="social-heading" className="text-2xl font-bold md:text-[1.75rem]">
           {config.social_heading ?? "follow us on social media"}
         </h2>
 
@@ -56,20 +68,22 @@ export function NewsletterBand({ config, locale }: { config: ConfigBlok; locale:
         </ul>
       </div>
 
-      <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:order-first md:bg-brand-100 md:py-12">
-        <h2 id="contact-heading" className="text-2xl font-bold md:text-[1.75rem]">
-          contact us
-        </h2>
+      {SHOW_CONTACT ? (
+        <div className="flex flex-col items-center bg-brand-200 px-6 py-7 md:order-first md:bg-brand-100 md:py-12">
+          <h2 id="contact-heading" className="text-2xl font-bold md:text-[1.75rem]">
+            contact us
+          </h2>
 
-        {/* The address names the team; the link opens the form that writes to it. */}
-        <Link
-          href={localePath(locale, "contact")}
-          className="group mt-4 inline-flex max-w-full items-center gap-3 text-xl font-medium underline decoration-[0.06em] underline-offset-[0.2em] transition-opacity [overflow-wrap:anywhere] hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:text-2xl"
-        >
-          {CONTACT_EMAIL}
-          <ArrowMarker tone="brand" size="sm" />
-        </Link>
-      </div>
+          {/* The address names the team; the link opens the form that writes to it. */}
+          <Link
+            href={localePath(locale, "contact")}
+            className="group mt-4 inline-flex max-w-full items-center gap-3 text-xl font-medium underline decoration-[0.06em] underline-offset-[0.2em] transition-opacity [overflow-wrap:anywhere] hover:opacity-75 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand md:text-2xl"
+          >
+            {CONTACT_EMAIL}
+            <ArrowMarker tone="brand" size="sm" />
+          </Link>
+        </div>
+      ) : null}
 
       {responsibility ? (
         // A size container, so the platform name can be sized off the panel.
